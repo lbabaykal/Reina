@@ -39,6 +39,8 @@ class SearchRequest extends FormRequest
                 'year_to' => ['nullable', 'integer'],
 
                 'sorting' => ['nullable', 'integer'],
+
+                'page' => ['nullable', 'integer'],
             ];
     }
 

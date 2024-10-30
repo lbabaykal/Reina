@@ -8,7 +8,7 @@ const router = createRouter({
             name: 'main'
         },
         {
-            path: '/animes', component: () => import('./Pages/Animes/Index.vue'),
+            path: '/animes', component: () => import('./Pages/Animes/AnimesIndexPage.vue'),
             name: 'animes.index',
         },
         {

@@ -31,10 +31,10 @@ Route::domain('auth.reina.online')->group(function () {
     require __DIR__.'/auth.php';
 });
 
-
 Route::domain('reina.online')->get('/{page?}', function() {
     return view('app');
 })->where('page', '[\/\w\.-]*');
+
 
 //========================================================================================
 Route::domain('reina.online')->group(function () {

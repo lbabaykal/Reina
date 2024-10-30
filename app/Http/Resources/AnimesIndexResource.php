@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MainAnimesResource extends JsonResource
+class AnimesIndexResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,4 +24,5 @@ class MainAnimesResource extends JsonResource
             'episodes_total' => $this->episodes_total,
         ];
     }
+
 }

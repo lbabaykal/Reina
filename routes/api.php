@@ -1,8 +1,7 @@
 <?php
 
-use App\Models\Anime;
-use App\Models\Dorama;
-use App\Reina;
+use App\Http\Controllers\Api\AnimeController;
+use App\Http\Controllers\Api\MainController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,25 +9,22 @@ Route::get('/user', function (Request $request) {
     return new \App\Http\Resources\UserLoginResource(auth()->user());
 })->middleware('auth:sanctum');
 
-Route::domain('reina.online')
-    ->get('/main', function () {
-        $animes = cache()->store('redis_animes')->rememberForever('main_animes', function () {
-            return Anime::query()
-                ->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])
-                ->limit(Reina::COUNT_ARTICLES_MAIN)
-                ->latest('updated_at')
-                ->get();
-        });
+Route::domain('reina.online')->group(function () {
+    Route::get('/main', MainController::class)->name('main');
 
-        $doramas = cache()->store('redis_doramas')->rememberForever('main_doramas', function () {
-            return Dorama::query()
-                ->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])
-                ->limit(Reina::COUNT_ARTICLES_MAIN)
-                ->latest('updated_at')
-                ->get();
-        });
-        return response([
-            'animes' => \App\Http\Resources\MainAnimesResource::collection($animes),
-            'doramas' => \App\Http\Resources\MainDoramasResource::collection($doramas),
-        ]);
+
+    Route::prefix('anime')->name('anime.')->group(function () {
+        Route::get('/', [AnimeController::class, 'index'])->name('index');
+
+        Route::get('/{anime:slug}', [AnimeController::class, 'show'])->name('show');
+        Route::get('/{anime:slug}/watch', [AnimeController::class, 'watch'])->name('watch');
+
+//        Route::middleware('auth')->group(function () {
+//            Route::patch('/{anime:slug}/rating', [RatingController::class, 'addToAnime'])->name('rating.add');
+//            Route::delete('/{anime:slug}/rating', [RatingController::class, 'removeToAnime'])->name('rating.remove');
+//            Route::patch('/{anime:slug}/favorite', [FavoriteController::class, 'addToAnime'])->name('favorite.add');
+//            Route::delete('/{anime:slug}/favorite', [FavoriteController::class, 'removeToAnime'])->name('favorite.remove');
+//        });
     });
+});
+

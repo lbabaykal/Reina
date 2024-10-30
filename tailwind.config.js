@@ -24,9 +24,15 @@ export default {
                     '0%': { backgroundPosition: '200% 50%' },
                     '100%': { backgroundPosition: '0% 50%' },
                 },
+                shine: {
+                    '0%': { backgroundPosition: '300% 50%' },
+                    '100%': { backgroundPosition: '0% 0%' },
+                },
             },
+
             animation: {
-                'gradient': 'gradient 2s linear infinite',
+                gradient: 'gradient 2s linear infinite',
+                shine: 'shine 4s linear infinite',
             },
             colors: {
                 love: '#EC6161',
