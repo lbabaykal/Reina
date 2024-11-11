@@ -11,13 +11,13 @@
                     @endif
 
                     <p class="mt-1 text-base">
-                        <a href="{{ route('admin.dorama.episodes.index', $dorama) }}" class="text-red-500 hover:text-blue-500 mr-2">
+                        <a href="{{ route('admin.doramas.episodes.index', $dorama->slug) }}" class="text-red-500 hover:text-blue-500 mr-2">
                             Назад к эпизодам
                         </a>
                     </p>
                 </div>
 
-                <form action="{{ route('admin.dorama.episodes.store', $dorama) }}" method="POST">
+                <form action="{{ route('admin.doramas.episodes.store', $dorama->slug) }}" method="POST">
                     @csrf
                     <div class="grid gap-6 mb-6 md:grid-cols-3">
                         <div>

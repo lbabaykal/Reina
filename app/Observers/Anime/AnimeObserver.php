@@ -20,23 +20,19 @@ class AnimeObserver
     public function updating(Anime $anime): void
     {
         if ($anime->isDirty('poster') && $anime->getOriginal('poster')) {
-            Storage::disk('anime_posters')->delete($anime->getOriginal('poster'));
+            Storage::disk('s3_animes')->delete($anime->getOriginal('poster'));
 
             $this->forgetCacheAnime($anime);
             $this->forgetCacheMainAnime();
         }
 
         if ($anime->isDirty('cover') && $anime->getOriginal('cover')) {
-            Storage::disk('anime_covers')->delete($anime->getOriginal('cover'));
+            Storage::disk('s3_animes')->delete($anime->getOriginal('cover'));
 
             $this->forgetCacheAnime($anime);
             $this->forgetCacheMainAnime();
         }
 
-        if ($anime->isDirty('slug')) {
-            cache()->store('redis_animes')->forget('anime:' . $anime->getOriginal('slug'));
-            cache()->store('redis_animes')->forget('anime_watch:' . $anime->getOriginal('slug'));
-        }
     }
 
     public function updated(Anime $anime): void
@@ -83,11 +79,11 @@ class AnimeObserver
         $anime->studios()->detach();
 
         if ($anime->getOriginal('poster') !== null) {
-            Storage::disk('anime_posters')->delete($anime->getOriginal('poster'));
+            Storage::disk('s3_animes')->delete($anime->getOriginal('poster'));
         }
 
         if ($anime->getOriginal('cover') !== null) {
-            Storage::disk('anime_covers')->delete($anime->getOriginal('cover'));
+            Storage::disk('s3_animes')->delete($anime->getOriginal('cover'));
         }
 
         $this->forgetCacheAnime($anime);
@@ -106,7 +102,7 @@ class AnimeObserver
 
     public function forgetCacheAnime(Anime $anime): void
     {
-        cache()->store('redis_animes')->forget('anime:' . $anime->slug);
-        cache()->store('redis_animes')->forget('anime_watch:' . $anime->slug);
+        cache()->store('redis_animes')->forget('anime:' . $anime->id);
+        cache()->store('redis_animes')->forget('anime_watch:' . $anime->id);
     }
 }

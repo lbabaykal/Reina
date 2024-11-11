@@ -107,7 +107,7 @@
             </div>
 
             <div class="absolute top-0 left-0 w-full h-full bg-center bg-cover shadow-[0px_-80px_100px_25px_rgba(0,0,0,1)_inset]"
-                 style="background-image: url('{{ $anime->cover ? Storage::disk('anime_covers')->url($anime->cover) : asset('assets/cover.jpg') }}')">
+                 style="background-image: url('{{ $anime->cover ? Storage::disk('s3_animes')->url($anime->cover) : asset('assets/cover.jpg') }}')">
             </div>
         </div>
 

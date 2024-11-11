@@ -21,7 +21,7 @@ class UpdateRating extends Command
 
         foreach (Anime::query()
                      ->withoutGlobalScopes()
-                     ->select(['id', 'title_org', 'title_ru', 'title_en', 'rating', 'count_assessments'])
+                     ->select(['id', 'rating', 'count_assessments'])
                      ->withCount('ratings')
                      ->cursor() as $anime) {
             $anime->rating = round($anime->ratings()->avg('assessment'), 1);
@@ -33,7 +33,7 @@ class UpdateRating extends Command
 
         foreach (Dorama::query()
                      ->withoutGlobalScopes()
-                     ->select(['id', 'title_org', 'title_ru', 'title_en', 'rating', 'count_assessments'])
+                     ->select(['id', 'rating', 'count_assessments'])
                      ->withCount('ratings')
                      ->cursor() as $dorama) {
             $dorama->rating = round($dorama->ratings()->avg('assessment'), 1);
@@ -45,7 +45,7 @@ class UpdateRating extends Command
 
         Cache::store('redis_animes')->forget('main_animes');
         Cache::store('redis_doramas')->forget('main_doramas');
-        echo 'Кеш Аниме и Дорам сброшен.' . PHP_EOL;
+        echo 'Кэш Аниме и Дорам сброшен.' . PHP_EOL;
 
         $endTime = microtime(true);
         $endMemory = memory_get_peak_usage(true);

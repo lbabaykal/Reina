@@ -25,7 +25,7 @@ class AnimeAdminController extends Controller
     {
         $animes = Anime::query()
             ->withoutGlobalScopes()
-            ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'episodes_released', 'episodes_total', 'updated_at'])
+            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'episodes_released', 'episodes_total', 'updated_at'])
             ->with('type')
             ->with('country')
             ->latest('updated_at')
@@ -58,12 +58,11 @@ class AnimeAdminController extends Controller
         return $animeServices->store($request);
     }
 
-    public function edit($animeSlug): View
+    public function edit($slug): View
     {
         $anime = Anime::query()
             ->withoutGlobalScopes()
-            ->where('slug', $animeSlug)
-            ->firstOrFail();
+            ->findOrFail(getIdFromSlug($slug));
 
         $types = Type::all();
         $genres = Genre::all();
@@ -82,23 +81,21 @@ class AnimeAdminController extends Controller
             ->with('statuses', $statuses);
     }
 
-    public function update(Request $request, $animeSlug, AnimeServices $animeServices): RedirectResponse
+    public function update(AnimeUpdateRequest $request, $slug, AnimeServices $animeServices): RedirectResponse
     {
         $anime = Anime::query()
             ->withoutGlobalScopes()
-            ->where('slug', $animeSlug)
-            ->firstOrFail();
-        $request->validate((new AnimeUpdateRequest())->rules($anime->id), (new AnimeUpdateRequest())->messages());
+            ->findOrFail(getIdFromSlug($slug));
 
         return $animeServices->update($request, $anime);
     }
 
-    public function restore($animeSlug): RedirectResponse
+    public function restore($slug): RedirectResponse
     {
         $anime = Anime::withTrashed()
             ->withoutGlobalScopes()
-            ->where('slug', $animeSlug)
-            ->firstOrFail();
+            ->findOrFail(getIdFromSlug($slug));
+
         $anime->restore();
 
         return redirect()->route('admin.anime.index')->with('message', "Аниме {$anime->title_ru} восстановлено.");
@@ -108,7 +105,7 @@ class AnimeAdminController extends Controller
     {
         $animes = Anime::query()
             ->withoutGlobalScopes()
-            ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
+            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
             ->with('type')
             ->with('country')
             ->where('status', StatusEnum::DRAFT)
@@ -123,7 +120,7 @@ class AnimeAdminController extends Controller
     {
         $animes = Anime::query()
             ->withoutGlobalScopes()
-            ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
+            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
             ->with('type')
             ->with('country')
             ->where('status', StatusEnum::PUBLISHED)
@@ -138,7 +135,7 @@ class AnimeAdminController extends Controller
     {
         $animes = Anime::query()
             ->withoutGlobalScopes()
-            ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
+            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
             ->with('type')
             ->with('country')
             ->where('status', StatusEnum::ARCHIVE)
@@ -154,7 +151,7 @@ class AnimeAdminController extends Controller
         $animes = Anime::query()
             ->onlyTrashed()
             ->withoutGlobalScopes()
-            ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
+            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
             ->with('type')
             ->with('country')
             ->latest('updated_at')
@@ -164,17 +161,4 @@ class AnimeAdminController extends Controller
         return view('admin.anime.deleted')->with('animes', $animes);
     }
 
-    public function regenerateSlug($animeSlug)
-    {
-        $anime = Anime::query()
-            ->withoutGlobalScopes()
-            ->where('slug', $animeSlug)
-            ->firstOrFail();
-
-        $anime->generateSlug();
-        $anime->timestamps = false;
-        $anime->update();
-
-        return redirect()->route('admin.anime.index')->with('message', "Для аниме {$anime->title_ru} перегенерирован слаг.");
-    }
 }

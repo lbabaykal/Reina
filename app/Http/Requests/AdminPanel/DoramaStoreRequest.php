@@ -21,8 +21,8 @@ class DoramaStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'poster' => ['nullable', 'mimes:png,jpg', File::image()->min('1kb')->max('2mb')],
-            'cover' => ['nullable', 'mimes:png,jpg', File::image()->min('1kb')->max('2mb')],
+            'poster' => ['nullable', 'file', 'mimes:png,jpg', File::image()->min('1kb')->max('4mb')],
+            'cover' => ['nullable', 'file', 'mimes:png,jpg', File::image()->min('1kb')->max('4mb')],
 
             'title_org' => ['required', 'string', 'min:1', 'max:255', 'unique:doramas,title_org'],
             'title_ru' => ['required', 'string', 'min:1', 'max:255',  'unique:doramas,title_ru'],

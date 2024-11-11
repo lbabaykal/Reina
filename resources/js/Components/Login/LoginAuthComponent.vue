@@ -5,10 +5,11 @@ import FavoriteSvg from "@/Components/Svg/FavoriteSvg.vue";
 import SubscribeSvg from "@/Components/Svg/SubscribeSvg.vue";
 import ProfileSvg from "@/Components/Svg/ProfileSvg.vue";
 import AdminPanelSvg from "@/Components/Svg/AdminPanelSvg.vue";
+import NoAvatarSvg from "@/Components/Svg/NoAvatarSvg.vue";
 
 export default {
     name: "LoginAuthComponent",
-    components: {AdminPanelSvg, ProfileSvg, SubscribeSvg, FavoriteSvg, SettingsSvg, LogoutSvg},
+    components: {NoAvatarSvg, AdminPanelSvg, ProfileSvg, SubscribeSvg, FavoriteSvg, SettingsSvg, LogoutSvg},
     data() {
         return {
             isDropdownUserMenu: false,
@@ -51,14 +52,15 @@ export default {
     },
     watch: {
         isScrolledHeader() {
+            // TODO Убрать или нет
             let menu = document.getElementById('menuAuth');
 
             if (this.isScrolledHeader) {
-                menu.classList.add('hover:bg-white/25');
-                menu.classList.remove('hover:bg-black');
+                // menu.classList.add('hover:bg-white/40');
+                // menu.classList.remove('hover:bg-black');
             } else {
-                menu.classList.remove('hover:bg-white/25');
-                menu.classList.add('hover:bg-black');
+                // menu.classList.remove('hover:bg-white/40');
+                // menu.classList.add('hover:bg-black');
             }
         },
     }
@@ -70,29 +72,29 @@ export default {
         <div v-if="dataUser.id"
              id="menuAuth"
              @click="toggleUserMenu"
-             class="group flex cursor-pointer select-none flex-row transition-all duration-300 h-[40px] rounded-full bg-black/60"
+             class="group flex cursor-pointer select-none flex-row transition-all duration-300 h-[40px] rounded-full
+             bg-black/60 hover:bg-black hover:shadow-red-600 hover:shadow-md"
         >
             <div class="relative flex flex-col justify-center text-nowrap text-center">
-                <div class="truncate max-w-80 px-4 text-lg">
-                    <span class="text-blue-500">{{ showWelcomeMessage }}</span>
+                <div class="truncate max-w-80 px-6 text-lg">
+                    <span class="text-white">{{ showWelcomeMessage }}</span>
                     <span class="text-red-500 font-bold">{{ dataUser.name }}</span>
                 </div>
             </div>
             <img :src="`${dataUser.avatar}`"
-                 class="h-10 w-10 rounded-full bg-cover bg-center group-hover:drop-shadow-[0_0_16px_rgb(255,0,0)]"
+                 class="h-10 w-10 rounded-full bg-cover bg-center duration-300 group-hover:drop-shadow-[0_0_16px_rgb(255,0,0)]"
+                 :alt="`${dataUser.name}`"
             >
         </div>
         <div v-else
-             class="flex select-none flex-row transition-all duration-200 h-[40px] rounded-full bg-black/60 hover:bg-white/25"
+             class="flex select-none flex-row transition-all duration-300 h-[40px] rounded-full bg-black/60 hover:bg-white/25"
         >
             <div class="flex flex-col justify-center text-nowrap text-center">
-                <div class="font-bold !text-lg px-4">
+                <div class="font-bold text-lg px-6">
                     Loading...
                 </div>
             </div>
-            <img :src="`/images/avatars/no_avatar.png`"
-                 class="h-10 w-10 rounded-full bg-cover bg-center"
-            >
+            <NoAvatarSvg class="h-10 w-10 rounded-full bg-cover bg-center"/>
         </div>
 
         <div v-show="isDropdownUserMenu"
@@ -101,6 +103,7 @@ export default {
             <div class="flex items-center border-b-2 border-b-blue-600">
                 <img :src="`${dataUser.avatar}`"
                      class="m-3 h-16 w-16 rounded-full bg-cover bg-center"
+                     :alt="`${dataUser.name}`"
                 >
                 <div class="flex-row w-[200px]">
                     <div class="truncate text-xl font-bold">{{ dataUser.name }}</div>

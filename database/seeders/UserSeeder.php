@@ -15,6 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::query()->create([
+            'avatar' => 'avatar/11-2024/1111.jpg',
             'name' => 'BaBaYKA',
             'email' => 'mei.babayka@gmail.com',
             'email_verified_at' => Carbon::now(),

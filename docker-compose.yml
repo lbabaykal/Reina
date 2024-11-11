@@ -1,0 +1,96 @@
+name: reina
+
+services:
+  nginx:
+    container_name: nginx
+    image: "nginx:stable-alpine"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./_docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - .:/var/www/laravel
+      - ./_docker/cert/Certificate.crt:/etc/ssl/certs/reina.online/Certificate.crt:ro
+      - ./_docker/cert/PrivateKey.key:/etc/ssl/private/reina.online/PrivateKey.key:ro
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+      - php
+    networks:
+      - laravel
+
+  php:
+    container_name: php
+    build:
+      context: .
+      dockerfile: _docker/php/php.Dockerfile
+    volumes:
+      - .:/var/www/laravel
+    restart: unless-stopped
+    networks:
+      - laravel
+# docker exec -it php /bin/sh -c "chmod -R 755 /var/www/laravel/public && chown -R www-data:www-data /var/www/laravel/public"
+# docker-compose exec php php artisan
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: reina_db
+      POSTGRES_USER: reina_user
+      POSTGRES_PASSWORD: reina_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - laravel
+
+  redis:
+    container_name: redis
+    build:
+      context: .
+      dockerfile: _docker/redis/redis.Dockerfile
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/data'
+    restart: unless-stopped
+    networks:
+      - laravel
+
+  node:
+    container_name: node
+    build:
+      context: .
+      dockerfile: _docker/dockerfiles/node.Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/var/www/laravel
+      - ./_docker/cert/Certificate.crt:/etc/ssl/certs/reina.online/Certificate.crt:ro
+      - ./_docker/cert/PrivateKey.key:/etc/ssl/private/reina.online/PrivateKey.key:ro
+    tty: true
+    networks:
+      - laravel
+# docker-compose exec node npm run dev
+
+  composer:
+    container_name: composer
+    build:
+      context: .
+      dockerfile: _docker/dockerfiles/composer.Dockerfile
+    volumes:
+      - .:/var/www/laravel
+    networks:
+      - laravel
+# docker-compose run composer install
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  laravel:

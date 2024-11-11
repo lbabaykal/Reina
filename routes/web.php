@@ -1,14 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminPanel\AdminPanelController;
-use App\Http\Controllers\AdminPanel\AnimeAdminController;
-use App\Http\Controllers\AdminPanel\AnimeEpisodesAdminController;
-use App\Http\Controllers\AdminPanel\CountriesAdminController;
-use App\Http\Controllers\AdminPanel\DoramaAdminController;
-use App\Http\Controllers\AdminPanel\DoramaEpisodesAdminController;
-use App\Http\Controllers\AdminPanel\GenreAdminController;
-use App\Http\Controllers\AdminPanel\StudiosAdminController;
-use App\Http\Controllers\AdminPanel\TypeAdminController;
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\DoramaController;
 use App\Http\Controllers\FavoriteController;
@@ -21,7 +12,15 @@ use App\Http\Controllers\RatingController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
-Route::domain('auth.reina.online')->group(function () {
+Route::pattern('slug', '[a-zA-Z0-9_-]+');
+
+
+Route::domain('auth.'.env('APP_URL'))->group(function () {
+
+    Route::get('/', function () {
+//        return phpinfo();
+    });
+
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -31,25 +30,26 @@ Route::domain('auth.reina.online')->group(function () {
     require __DIR__.'/auth.php';
 });
 
-Route::domain('reina.online')->get('/{page?}', function() {
+Route::domain(env('APP_URL'))->get('/{page?}', function() {
     return view('app');
 })->where('page', '[\/\w\.-]*');
 
 
 //========================================================================================
-Route::domain('reina.online')->group(function () {
+Route::domain(env('APP_URL'))->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 
 
     // ====SEARCH====
-//    Route::get('/', MainController::class)->name('main');
+    Route::get('/', MainController::class)->name('main');
     Route::get('/search', SearchController::class)->name('search');
 
 // ====ANIME====
     Route::prefix('anime')->name('anime.')->group(function () {
         Route::get('/{anime:slug}', [AnimeController::class, 'show'])->name('show');
+//        Route::get('/{anime}-{slug}', [AnimeController::class, 'show'])->name('show');
         Route::get('/{anime:slug}/watch', [AnimeController::class, 'watch'])->name('watch');
         Route::get('/', [AnimeController::class, 'index'])->name('index');
 
@@ -111,45 +111,4 @@ Route::domain('reina.online')->group(function () {
     });
 });
 
-
-// ====ADMIN====
-Route::domain('admin.reina.online')
-    ->middleware('auth')
-//    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-        Route::get('/', AdminPanelController::class)->name('index');
-
-        Route::resource('/anime', AnimeAdminController::class)->except(['show', 'destroy']);
-        Route::prefix('anime')->name('anime.')->group(function () {
-            Route::get('/draft', [AnimeAdminController::class, 'draft'])->name('draft');
-            Route::get('/published', [AnimeAdminController::class, 'published'])->name('published');
-            Route::get('/archive', [AnimeAdminController::class, 'archive'])->name('archive');
-            Route::get('/deleted', [AnimeAdminController::class, 'deleted'])->name('deleted');
-            Route::get('/{anime:slug}/restore', [AnimeAdminController::class, 'restore'])->name('restore');
-
-            Route::prefix('{anime}')->group(function () {
-                Route::get('/', [AnimeAdminController::class, 'regenerateSlug'])->name('regenerateSlug');
-                Route::resource('episodes', AnimeEpisodesAdminController::class)->except(['show']);
-            });
-        });
-
-        Route::resource('/dorama', DoramaAdminController::class)->except(['show', 'destroy']);
-        Route::prefix('dorama')->name('dorama.')->group(function () {
-            Route::get('/draft', [DoramaAdminController::class, 'draft'])->name('draft');
-            Route::get('/published', [DoramaAdminController::class, 'published'])->name('published');
-            Route::get('/archive', [DoramaAdminController::class, 'archive'])->name('archive');
-            Route::get('/deleted', [DoramaAdminController::class, 'deleted'])->name('deleted');
-            Route::get('/{dorama:slug}/restore', [DoramaAdminController::class, 'restore'])->name('restore');
-
-            Route::prefix('{dorama}')->group(function () {
-                Route::get('/', [DoramaAdminController::class, 'regenerateSlug'])->name('regenerateSlug');
-                Route::resource('episodes', DoramaEpisodesAdminController::class)->except(['show']);
-            });
-        });
-
-        Route::resource('/types', TypeAdminController::class)->except(['show', 'destroy']);
-        Route::resource('/genres', GenreAdminController::class)->except(['show', 'destroy']);
-        Route::resource('/studios', StudiosAdminController::class)->except(['show', 'destroy']);
-        Route::resource('/countries', CountriesAdminController::class)->except(['show', 'destroy']);
-    });
+require __DIR__.'/admin.php';

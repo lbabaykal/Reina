@@ -10,16 +10,12 @@
                         - <span class="text-lime-500">{{ $message }}</span>
                     @endif
 
-                    <a href="{{ route('admin.anime.episodes.index', $anime) }}">
+                    <a href="{{ route('admin.animes.episodes.index', $anime) }}">
                         <button type="button" class="px-4 py-2 bg-orange-400 hover:bg-orange-500 rounded">Эпизоды</button>
                     </a>
                 </div>
 
-                <a href="{{ route('admin.anime.regenerateSlug', $anime) }}">
-                    <button type="button" class="px-4 py-2 bg-red-400 hover:bg-red-500 rounded">Перегенерировать слаг</button>
-                </a>
-
-                <form action="{{ route('admin.anime.update', $anime) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.animes.update', $anime->slug) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     <div class="grid gap-6 mb-6 md:grid-cols-3">
@@ -197,6 +193,7 @@
                                    name="episodes_released"
                                    value="{{ old('episodes_released') ?? $anime->episodes_released }}"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                   disabled
                             />
                         </div>
                         <div>

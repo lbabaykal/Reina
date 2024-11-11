@@ -17,9 +17,7 @@ class UserLoginResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'avatar' => $this->avatar
-                ? Storage::disk('avatars')->url($this->avatar)
-                : Storage::disk('avatars')->url('no_avatar.png'),
+            'avatar' => $this->avatarUrl,
             'name' => $this->name,
         ];
     }

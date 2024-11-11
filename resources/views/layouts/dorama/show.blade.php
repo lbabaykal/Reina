@@ -106,7 +106,7 @@
             </div>
 
             <div class="absolute top-0 left-0 w-full h-full bg-center bg-cover shadow-[0px_-80px_100px_25px_rgba(0,0,0,1)_inset]"
-                 style="background-image: url('{{ $dorama->cover ? Storage::disk('dorama_covers')->url($dorama->cover) : asset('assets/cover.jpg') }}')">
+                 style="background-image: url('{{ $dorama->cover ? Storage::disk('s3_doramas')->url($dorama->cover) : asset('assets/cover.jpg') }}')">
             </div>
         </div>
 

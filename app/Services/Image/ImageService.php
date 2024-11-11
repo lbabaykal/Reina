@@ -2,6 +2,7 @@
 
 namespace App\Services\Image;
 
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 
 class ImageService extends AbstractImage
@@ -17,11 +18,11 @@ class ImageService extends AbstractImage
     public function save(): null|string
     {
 
+        $this->disk = Storage::disk($this->storage);
+
         if (! request()->hasFile($this->fileField)) {
             return null;
         }
-
-        $this->checkOrCreateDir();
 
         switch ($this->format) {
             case 'webp':
@@ -46,10 +47,15 @@ class ImageService extends AbstractImage
                 return null;
         }
 
-        $this->fileName = "{$this->generateUrl()}.{$this->format}";
-        $this->disk->put($this->fileName, $this->image);
+        try {
+            $this->fileName = $this->generateUrl() . '.' . $this->format;
+            $this->disk->put($this->fileName, $this->image);
 
-        return $this->fileName;
+            return $this->fileName;
+        } catch (\Exception $e) {
+            return null; //TODO Add Logging
+        }
+
     }
 
 }

@@ -13,20 +13,25 @@ class DoramaUpdateRequest extends FormRequest
         return auth()->check();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+    public function prepareForValidation(): void
+    {
+        $id = getIdFromSlug($this->route('slug'));
+
+        $this->merge([
+            'id' => $id,
+        ]);
+    }
+
     public function rules(int $id): array
     {
         return [
-            'poster' => ['nullable', 'mimes:png,jpg', File::image()->min('1kb')->max('2mb')],
-            'cover' => ['nullable', 'mimes:png,jpg', File::image()->min('1kb')->max('2mb')],
+            'id' => ['required', 'integer', 'exists:doramas,id'],
+            'poster' => ['nullable', 'file', 'mimes:png,jpg', File::image()->min('1kb')->max('4mb')],
+            'cover' => ['nullable', 'file', 'mimes:png,jpg', File::image()->min('1kb')->max('4mb')],
 
-            'title_org' => ['required', 'string', 'min:1', 'max:255', Rule::unique('doramas')->ignore($id)],
-            'title_ru' => ['required', 'string', 'min:1', 'max:255',  Rule::unique('doramas')->ignore($id)],
-            'title_en' => ['required', 'string', 'min:1', 'max:255', Rule::unique('doramas')->ignore($id)],
+            'title_org' => ['required', 'string', 'min:1', 'max:255', Rule::unique('doramas')->ignore($this->id)],
+            'title_ru' => ['required', 'string', 'min:1', 'max:255',  Rule::unique('doramas')->ignore($this->id)],
+            'title_en' => ['required', 'string', 'min:1', 'max:255', Rule::unique('doramas')->ignore($this->id)],
 
             'type' => ['required', 'integer', 'exists:types,id'],
 

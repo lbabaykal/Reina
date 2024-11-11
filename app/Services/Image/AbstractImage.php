@@ -34,18 +34,9 @@ abstract class AbstractImage implements ImageInterface
 
     abstract public function save();
 
-    protected function checkOrCreateDir(): void
-    {
-        $this->disk = Storage::disk($this->storage);
-
-        if(! $this->disk->exists(date('Y-m'))) {
-            $this->disk->makeDirectory(date('Y-m'));
-        }
-    }
-
     protected function generateUrl(): string
     {
-        return date('m-Y') . '/' . Str::random(40);
+        return $this->fileField . '/' . date('m-Y') . '/' . Str::random(40);
     }
 
 }

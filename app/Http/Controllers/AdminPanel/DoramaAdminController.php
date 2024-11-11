@@ -164,17 +164,4 @@ class DoramaAdminController extends Controller
         return view('admin.dorama.deleted')->with('doramas', $doramas);
     }
 
-    public function regenerateSlug($doramaSlug)
-    {
-        $dorama = Dorama::query()
-            ->withoutGlobalScopes()
-            ->where('slug', $doramaSlug)
-            ->firstOrFail();
-
-        $dorama->generateSlug();
-        $dorama->timestamps = false;
-        $dorama->update();
-
-        return redirect()->route('admin.dorama.index')->with('message', "Для аниме {$dorama->title_ru} перегенерирован слаг.");
-    }
 }

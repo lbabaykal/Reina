@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Observers\Dorama\DoramaObserver;
-use App\Traits\AnimeAndDoramTrait;
+use App\Traits\AnimeAndDoramaTrait;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +16,7 @@ class Dorama extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use AnimeAndDoramTrait;
+    use AnimeAndDoramaTrait;
 
     protected $fillable = [
         'slug',
@@ -57,15 +57,15 @@ class Dorama extends Model
     public function getPosterUrlAttribute(): string
     {
         return $this->poster
-            ? Storage::disk('dorama_posters')->url($this->poster)
-            : Storage::disk('images')->url('no_poster.png');
+            ? Storage::disk('s3_doramas')->url($this->poster)
+            : Storage::disk('s3_doramas')->url('no_poster.png');
     }
 
     public function getCoverUrlAttribute(): string
     {
         return $this->cover
-            ? Storage::disk('dorama_covers')->url($this->cover)
-            : Storage::disk('images')->url('no_cover.png');
+            ? Storage::disk('s3_doramas')->url($this->cover)
+            : Storage::disk('s3_doramas')->url('no_cover.png');
     }
 
 }

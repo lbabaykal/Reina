@@ -34,7 +34,6 @@ use function Amp\Dns\query;
 
 class AnimeController extends Controller
 {
-
     public function index()
     {
         request()->merge(['sorting' => request()->input('sorting', 1)]);
@@ -55,18 +54,11 @@ class AnimeController extends Controller
             ->thenReturn();
 
         return AnimesIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', request()->input('page', 1)));
-
-//        return view('layouts.anime.index')
-//            ->with('types', Type::all())
-//            ->with('genres', Genre::all())
-//            ->with('studios', Studio::all())
-//            ->with('countries', Country::all())
-//            ->with('animes', $animes->paginate(Reina::COUNT_ARTICLES_FULL)->withQueryString());
     }
 
     public function show($slug): View
     {
-        $anime = Cache::store('redis_animes')->remember('anime:'.$slug, 600, function () use ($slug) {
+        $anime = cache()->store('redis_animes')->remember('anime:'.$slug, 600, function () use ($slug) {
             return Anime::query()
                 ->where('slug', $slug)
                 ->with('type')
@@ -99,7 +91,7 @@ class AnimeController extends Controller
 
     public function watch($slug): View
     {
-        $anime = Cache::store('redis_animes')->remember('anime_watch:'.$slug, 600, function () use ($slug) {
+        $anime = cache()->store('redis_animes')->remember('anime_watch:'.$slug, 600, function () use ($slug) {
             return Anime::query()
                 ->where('slug', $slug)
                 ->with('type')

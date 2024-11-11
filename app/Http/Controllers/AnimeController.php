@@ -11,18 +11,14 @@ use App\Http\Filters\Fields\TitleFilter;
 use App\Http\Filters\Fields\TypeFilter;
 use App\Http\Filters\Fields\YearFromFilter;
 use App\Http\Filters\Fields\YearToFilter;
-use App\Http\Requests\FavoriteAnimesRequest;
-use App\Http\Requests\RatingRequest;
 use App\Models\Anime;
 use App\Models\Country;
-use App\Models\FavoriteAnime;
 use App\Models\FolderAnime;
 use App\Models\Genre;
 use App\Models\Studio;
 use App\Models\Type;
 use App\Reina;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Pipeline;
 use Illuminate\View\View;
 
@@ -59,14 +55,15 @@ class AnimeController extends Controller
 
     public function show($slug): View
     {
-        $anime = Cache::store('redis_animes')->remember('anime:'.$slug, 600, function () use ($slug) {
+        $animeId = getIdFromSlug($slug);
+
+        $anime = cache()->store('redis_animes')->remember('anime:'.$animeId, 600, function () use ($animeId) {
             return Anime::query()
-                ->where('slug', $slug)
                 ->with('type')
                 ->with('country')
                 ->with('studios')
                 ->with('genres')
-                ->firstOrFail();
+                ->findOrFail($animeId);
         });
 
         $ratingUser = $anime->ratings()
@@ -92,12 +89,13 @@ class AnimeController extends Controller
 
     public function watch($slug): View
     {
-        $anime = Cache::store('redis_animes')->remember('anime_watch:'.$slug, 600, function () use ($slug) {
+        $animeId = getIdFromSlug($slug);
+
+        $anime = cache()->store('redis_animes')->remember('anime_watch:'.$animeId, 600, function () use ($animeId) {
             return Anime::query()
-                ->where('slug', $slug)
                 ->with('type')
                 ->with('genres')
-                ->firstOrFail();
+                ->findOrFail($animeId);
         });
 
         $ratingUser = $anime->ratings()

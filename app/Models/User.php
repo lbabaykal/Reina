@@ -4,8 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -79,6 +82,13 @@ class User extends Authenticatable
     public function favoriteDoramas(): HasManyThrough
     {
         return $this->hasManyThrough(Dorama::class, FavoriteDorama::class, 'user_id', 'id', 'id', 'dorama_id');
+    }
+
+    public function getAvatarUrlAttribute(): string
+    {
+        return $this->avatar
+            ? Storage::disk('s3_images')->url($this->avatar)
+            : Storage::disk('s3_images')->url('no_avatar.png');
     }
 
 }

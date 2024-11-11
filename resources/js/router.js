@@ -7,17 +7,27 @@ const router = createRouter({
             path: '/', component: () => import('./Pages/MainPage.vue'),
             name: 'main'
         },
+        //  Anime
         {
-            path: '/animes', component: () => import('./Pages/Animes/AnimesIndexPage.vue'),
+            path: '/animes', component: () => import('./Pages/Animes/AnimeIndexPage.vue'),
             name: 'animes.index',
         },
         {
-            path: '/anime/:slug',
-            name: 'anime.show'
+            path: '/animes/:slug',
+            component: () => import('./Pages/Animes/AnimeShowPage.vue'),
+            name: 'animes.show',
+            props: true
+        },
+        //  Dorama
+        {
+            path: '/doramas', component: () => import('./Pages/Doramas/DoramaIndexPage.vue'),
+            name: 'doramas.index'
         },
         {
-            path: '/doramas', component: () => import('./Pages/Doramas/Index.vue'),
-            name: 'doramas.index'
+            path: '/doramas/:slug',
+            component: () => import('./Pages/Doramas/DoramaShowPage.vue'),
+            name: 'doramas.show',
+            props: true
         },
         {
             path: '/search', component: () => import('./Pages/SearchPage.vue'),
@@ -26,6 +36,12 @@ const router = createRouter({
         {
             path: '/subscription', component: () => import('./Pages/MainPage.vue'),
             name: 'subscription'
+        },
+        {   path: '/auth',
+            name: 'auth',
+            component: () => {
+                window.location.href = 'https://admin.reina.online';
+            }
         },
         {   path: '/admin',
             name: 'admin',

@@ -4,7 +4,7 @@
             hover:w-full hover:drop-shadow-[0_0_12px_rgb(140,0,255)]">
         <div class="absolute w-full h-full top-0 left-0 bg-center bg-cover transition-all duration-500
                 group-hover:scale-105 group-hover:brightness-110"
-             style="background-image: url('{{ $dorama->poster ? Storage::disk('dorama_posters')->url($dorama->poster) : asset('assets/no_poster.png') }}')">
+             style="background-image: url('{{ $dorama->poster ? Storage::disk('s3_doramas')->url($dorama->poster) : asset('assets/no_poster.png') }}')">
         </div>
 
         <div class="absolute px-2 top-1 right-1 bg-red-500/80 rounded">★ {{ $dorama->rating }}</div>

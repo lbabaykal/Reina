@@ -56,59 +56,41 @@ return [
             'throw' => false,
         ],
 
-        'images' => [
-            'driver' => 'local',
-            'root' => storage_path('app/images'),
-            'url' => env('APP_URL').'/images',
-            'visibility' => 'public',
+        // CUSTOM S3
+
+        's3_animes' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('REINA_ANIMES_AWS_BUCKET'), //
+            'url' => env('REINA_ANIMES_AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
 
-        'anime_posters' => [
-            'driver' => 'local',
-            'root' => storage_path('app/images/anime_posters'),
-            'url' => env('APP_URL').'/images/anime_posters',
-            'visibility' => 'public',
+        's3_doramas' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('REINA_DORAMAS_AWS_BUCKET'), //
+            'url' => env('REINA_DORAMAS_AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
 
-        'dorama_posters' => [
-            'driver' => 'local',
-            'root' => storage_path('app/images/dorama_posters'),
-            'url' => env('APP_URL').'/images/dorama_posters',
-            'visibility' => 'public',
-            'throw' => false,
-        ],
-
-        'anime_covers' => [
-            'driver' => 'local',
-            'root' => storage_path('app/images/anime_covers'),
-            'url' => env('APP_URL').'/images/anime_covers',
-            'visibility' => 'public',
-            'throw' => false,
-        ],
-
-        'dorama_covers' => [
-            'driver' => 'local',
-            'root' => storage_path('app/images/dorama_covers'),
-            'url' => env('APP_URL').'/images/dorama_covers',
-            'visibility' => 'public',
-            'throw' => false,
-        ],
-
-        'avatars' => [
-            'driver' => 'local',
-            'root' => storage_path('app/images/avatars'),
-            'url' => env('APP_URL').'/images/avatars',
-            'visibility' => 'public',
-            'throw' => false,
-        ],
-
-        'teams' => [
-            'driver' => 'local',
-            'root' => storage_path('app/images/teams'),
-            'url' => env('APP_URL').'/images/teams',
-            'visibility' => 'public',
+        's3_images' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('REINA_IMAGES_AWS_BUCKET'), //
+            'url' => env('REINA_IMAGES_AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
 
@@ -126,8 +108,7 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
-        public_path('images') => storage_path('app/images'),
+        //
     ],
 
 ];

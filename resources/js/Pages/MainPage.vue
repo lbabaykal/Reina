@@ -1,5 +1,4 @@
 <script>
-import CardComponent from "@/Components/CardDoramaComponent.vue";
 import CardLoadingComponent from "@/Components/CardLoadingComponent.vue";
 import CardAnimeComponent from "@/Components/CardAnimeComponent.vue";
 import CardDoramaComponent from "@/Components/CardDoramaComponent.vue";
@@ -16,8 +15,10 @@ export default {
     },
     methods: {
         getMainPageData() {
+            this.dataLoading = false;
             axios.get('api/main')
                 .then( response => {
+                    console.log(response)
                     this.dataAnimes = response.data['animes'];
                     this.dataDoramas = response.data['doramas'];
                 })
@@ -50,17 +51,17 @@ export default {
 
             <div class="w-full px-2.5 grid gap-3 place-items-center grid-flow-row grid-cols-8">
                 <CardAnimeComponent v-if="dataLoading"
-                               v-for="dataAnime in dataAnimes"
-                               :id="dataAnime.id"
-                               :slug="dataAnime.slug"
-                               :poster="dataAnime.poster"
-                               :title="dataAnime.title"
-                               :rating="dataAnime.rating"
-                               :episodes_released="dataAnime.episodes_released"
-                               :episodes_total="dataAnime.episodes_total"
+                                    v-for="dataAnime in dataAnimes"
+                                    :id="dataAnime.id"
+                                    :slug="dataAnime.slug"
+                                    :poster="dataAnime.poster"
+                                    :title="dataAnime.title"
+                                    :rating="dataAnime.rating"
+                                    :episodes_released="dataAnime.episodes_released"
+                                    :episodes_total="dataAnime.episodes_total"
                 />
 
-                <CardLoadingComponent v-else v-for="n in 16"/>
+                <CardLoadingComponent v-else v-for="n in 16" :key="n" />
             </div>
 
             <div class="py-2 select-none flex flex-row items-center justify-center">
@@ -75,17 +76,17 @@ export default {
 
             <div class="w-full px-2.5 grid gap-3 place-items-center grid-flow-row grid-cols-8">
                 <CardDoramaComponent v-if="dataLoading"
-                               v-for="dataDorama in dataDoramas"
-                               :id="dataDorama.id"
-                               :slug="dataDorama.slug"
-                               :poster="dataDorama.poster"
-                               :title="dataDorama.title"
-                               :rating="dataDorama.rating"
-                               :episodes_released="dataDorama.episodes_released"
-                               :episodes_total="dataDorama.episodes_total"
+                                     v-for="dataDorama in dataDoramas"
+                                     :id="dataDorama.id"
+                                     :slug="dataDorama.slug"
+                                     :poster="dataDorama.poster"
+                                     :title="dataDorama.title"
+                                     :rating="dataDorama.rating"
+                                     :episodes_released="dataDorama.episodes_released"
+                                     :episodes_total="dataDorama.episodes_total"
                 />
 
-                <CardLoadingComponent v-else v-for="n in 16"/>
+                <CardLoadingComponent v-else v-for="n in 16" :key="n" />
             </div>
         </section>
     </div>

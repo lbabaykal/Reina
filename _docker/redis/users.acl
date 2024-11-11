@@ -1,0 +1,2 @@
+user default on nopass ~* +@all
+user reina_user on >reina_password ~* +@all

@@ -4,7 +4,7 @@
             hover:w-full hover:drop-shadow-[0_0_8px_rgb(255,0,0)]">
         <div class="absolute w-full h-full top-0 left-0 bg-center bg-cover transition-all duration-500
                 group-hover:scale-105 group-hover:brightness-110"
-             style="background-image: url('{{ $anime->poster ? Storage::disk('anime_posters')->url($anime->poster) : asset('assets/no_poster.png') }}')">
+             style="background-image: url('{{ $anime->poster ? Storage::disk('s3_animes')->url($anime->poster) : asset('assets/no_poster.png') }}')">
         </div>
 
         <div class="absolute px-2 top-1 right-1 bg-red-500/80 rounded">★ {{ $anime->rating }}</div>
