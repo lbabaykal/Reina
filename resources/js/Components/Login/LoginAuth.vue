@@ -5,18 +5,16 @@ import FavoriteSvg from "@/Components/Svg/FavoriteSvg.vue";
 import SubscribeSvg from "@/Components/Svg/SubscribeSvg.vue";
 import ProfileSvg from "@/Components/Svg/ProfileSvg.vue";
 import AdminPanelSvg from "@/Components/Svg/AdminPanelSvg.vue";
-import NoAvatarSvg from "@/Components/Svg/NoAvatarSvg.vue";
 
 export default {
-    name: "LoginAuthComponent",
-    components: {NoAvatarSvg, AdminPanelSvg, ProfileSvg, SubscribeSvg, FavoriteSvg, SettingsSvg, LogoutSvg},
+    name: "LoginAuth",
+    components: { AdminPanelSvg, ProfileSvg, SubscribeSvg, FavoriteSvg, SettingsSvg, LogoutSvg},
     data() {
         return {
             isDropdownUserMenu: false,
         }
     },
     props: {
-        isScrolledHeader: Boolean,
         dataUser: null,
     },
     methods: {
@@ -50,27 +48,12 @@ export default {
             return message;
         },
     },
-    watch: {
-        isScrolledHeader() {
-            // TODO Убрать или нет
-            let menu = document.getElementById('menuAuth');
-
-            if (this.isScrolledHeader) {
-                // menu.classList.add('hover:bg-white/40');
-                // menu.classList.remove('hover:bg-black');
-            } else {
-                // menu.classList.remove('hover:bg-white/40');
-                // menu.classList.add('hover:bg-black');
-            }
-        },
-    }
 }
 </script>
 
 <template>
     <div>
-        <div v-if="dataUser.id"
-             id="menuAuth"
+        <div id="menuAuth"
              @click="toggleUserMenu"
              class="group flex cursor-pointer select-none flex-row transition-all duration-300 h-[40px] rounded-full
              bg-black/60 hover:bg-black hover:shadow-red-600 hover:shadow-md"
@@ -85,16 +68,6 @@ export default {
                  class="h-10 w-10 rounded-full bg-cover bg-center duration-300 group-hover:drop-shadow-[0_0_16px_rgb(255,0,0)]"
                  :alt="`${dataUser.name}`"
             >
-        </div>
-        <div v-else
-             class="flex select-none flex-row transition-all duration-300 h-[40px] rounded-full bg-black/60 hover:bg-white/25"
-        >
-            <div class="flex flex-col justify-center text-nowrap text-center">
-                <div class="font-bold text-lg px-6">
-                    Loading...
-                </div>
-            </div>
-            <NoAvatarSvg class="h-10 w-10 rounded-full bg-cover bg-center"/>
         </div>
 
         <div v-show="isDropdownUserMenu"
@@ -162,22 +135,15 @@ export default {
                         Настройки
                     </span>
                 </a>
-                <button type="submit"
-                        form="logout"
-                        class="group flex flex-row items-center px-4 hover:bg-gray-100"
+                <router-link :to="{name: 'auth.logout'}"
+                             class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
                     <LogoutSvg classes="m-1.5 h-8 w-8 group-hover:stroke-black"/>
                     <span class="ml-2 group-hover:text-black">
                         Выход
                     </span>
-                </button>
+                </router-link>
             </div>
-
-            <form id="logout"
-                  class="profile-menu-button"
-                  action="{{ route('logout') }}"
-                  method="POST">
-            </form>
         </div>
     </div>
 </template>

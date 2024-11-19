@@ -1,8 +1,8 @@
 <script>
-import CardLoadingComponent from "@/Components/CardLoadingComponent.vue";
-import PaginationComponent from "@/Components/PaginationComponent.vue";
-import SearchComponent from "@/Components/SearchComponent.vue";
-import CardDoramaComponent from "@/Components/CardDoramaComponent.vue";
+import CardLoadingComponent from "@/Components/CardLoading.vue";
+import PaginationComponent from "@/Components/Pagination.vue";
+import SearchComponent from "@/Components/Search.vue";
+import CardDoramaComponent from "@/Components/CardDorama.vue";
 
 export default {
     name: "DoramaIndexPage",

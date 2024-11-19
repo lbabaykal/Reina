@@ -1,9 +1,7 @@
 <script>
-
 export default {
-    name: "App",
+    name: "AuthLayout"
 }
-
 </script>
 
 <template>

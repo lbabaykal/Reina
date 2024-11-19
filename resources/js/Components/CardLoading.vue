@@ -1,6 +1,6 @@
 <script>
 export default {
-    name: "CardLoadingComponent",
+    name: "CardLoading",
 }
 </script>
 

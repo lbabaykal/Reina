@@ -14,36 +14,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::pattern('slug', '[a-zA-Z0-9_-]+');
 
-
-Route::domain('auth.'.env('APP_URL'))->group(function () {
-
-    Route::get('/', function () {
-//        return phpinfo();
-    });
-
-    Route::middleware('auth')->group(function () {
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    });
-
-    require __DIR__.'/auth.php';
-});
-
 Route::domain(env('APP_URL'))->get('/{page?}', function() {
     return view('app');
-})->where('page', '[\/\w\.-]*');
+})->where('page', '.*')->name('index');
 
+require __DIR__.'/admin.php';
 
-//========================================================================================
+//============================================
 Route::domain(env('APP_URL'))->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
-
+    Route::get('/', MainController::class)->name('main');
 
     // ====SEARCH====
-    Route::get('/', MainController::class)->name('main');
     Route::get('/search', SearchController::class)->name('search');
 
 // ====ANIME====
@@ -108,7 +89,18 @@ Route::domain(env('APP_URL'))->group(function () {
             })->name('index');
         });
 
+        // Profile
+        Route::get('/dashboard', function () {
+            return view('dashboard');
+        })->middleware(['auth', 'verified'])->name('dashboard');
+
+        Route::middleware('auth')->group(function () {
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        });
+
     });
 });
 
-require __DIR__.'/admin.php';
+

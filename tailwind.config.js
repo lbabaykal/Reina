@@ -29,7 +29,6 @@ export default {
                     '100%': { backgroundPosition: '0% 0%' },
                 },
             },
-
             animation: {
                 gradient: 'gradient 2s linear infinite',
                 shine: 'shine 4s linear infinite',
@@ -43,6 +42,7 @@ export default {
                 darkblue: 'rgba(6,1,54,0.9)',
                 darkblue2: 'rgba(6,1,54,1)',
                 darkblue3: 'rgb(0,0,35)',
+                ...defaultTheme.colors
             },
             fontFamily: {
                 main: ['Open Sans', 'Raleway'],

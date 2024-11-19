@@ -1,6 +1,6 @@
 <script>
 export default {
-    name: "CardDoramaComponent",
+    name: "CardAnime",
     props: {
         id: Number,
         slug: String,
@@ -9,17 +9,17 @@ export default {
         rating: String,
         episodes_released: Number,
         episodes_total: Number,
-    },
+    }
 }
 </script>
 
 <template>
     <div>
         <div class="w-full aspect-[5/7] flex items-center justify-center select-none">
-            <router-link :to="{ name: 'doramas.show', params: { slug: this.slug } }"
+            <router-link :to="{ name: 'animes.show', params: { slug: this.slug } }"
                          class="group relative overflow-hidden rounded-md w-95% aspect-[5/7] bg-gray-700
                          transition-all duration-500
-                         hover:w-full hover:drop-shadow-[0_0_12px_rgb(140,0,255)]"
+                         hover:w-full hover:drop-shadow-[0_0_8px_rgb(255,0,0)]"
             >
                 <img :src="poster"
                      :alt="title"

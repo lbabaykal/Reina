@@ -1,7 +1,7 @@
 <script>
-import CardLoadingComponent from "@/Components/CardLoadingComponent.vue";
-import CardAnimeComponent from "@/Components/CardAnimeComponent.vue";
-import CardDoramaComponent from "@/Components/CardDoramaComponent.vue";
+import CardLoadingComponent from "@/Components/CardLoading.vue";
+import CardAnimeComponent from "@/Components/CardAnime.vue";
+import CardDoramaComponent from "@/Components/CardDorama.vue";
 
 export default {
     name: "MainPage",
@@ -18,12 +18,11 @@ export default {
             this.dataLoading = false;
             axios.get('api/main')
                 .then( response => {
-                    console.log(response)
                     this.dataAnimes = response.data['animes'];
                     this.dataDoramas = response.data['doramas'];
                 })
                 .catch( error => {
-                    console.log(error.response)
+                    // console.log(error.response) // TODO Уведомление не получилось загрузить данные
                 })
                 .finally(() => {
                     this.dataLoading = true;

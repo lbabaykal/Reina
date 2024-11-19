@@ -6,13 +6,25 @@ use App\Http\Controllers\Api\MainController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return new \App\Http\Resources\UserLoginResource(auth()->user());
-})->middleware('auth:sanctum');
-
 Route::domain(env('APP_URL'))->group(function () {
-    Route::get('/main', MainController::class)->name('main');
+    require __DIR__.'/auth.php';
 
+    Route::get('/auth/user', function () {
+        $authCheck = auth()->check();
+
+        if ($authCheck) {
+            return response()->json([
+                'authenticated' => $authCheck,
+                'user' => new \App\Http\Resources\UserLoginResource(auth()->user()),
+            ]);
+        } else {
+            return response()->json([
+                'authenticated' => $authCheck,
+            ]);
+        }
+    });
+
+    Route::get('/main', MainController::class)->name('main');
 
     Route::prefix('animes')->name('animes.')->group(function () {
         Route::get('/', [AnimeController::class, 'index'])->name('index');

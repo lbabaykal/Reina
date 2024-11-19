@@ -1,8 +1,8 @@
 <script>
-import LoginMenuComponent from "@/Components/Login/LoginMenuComponent.vue";
+import LoginMenuComponent from "@/Components/Login/LoginMenu.vue";
 import LogoSvg from "@/Components/Svg/LogoSvg.vue";
 export default {
-    name: "HeaderComponent",
+    name: "Header",
     components: {LoginMenuComponent, LogoSvg},
     data() {
         return {
@@ -38,7 +38,7 @@ export default {
         >
             <nav class="mx-auto flex items-center justify-between h-[60px] px-[60px]">
                 <RouterLink :to="{ name: 'main' }"
-                            class="logo-shadow text-3xl font-bold text-white flex flex-row content-center items-center select-none"
+                            class="text-3xl font-bold text-white flex flex-row content-center items-center select-none"
                 >
                     Reina
                     <LogoSvg classes="w-10 ml-2" />

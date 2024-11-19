@@ -40,7 +40,3 @@
         }
     });
 </script>
-{{--Success--}}
-{{--Error--}}
-{{--Info--}}
-{{--Warning--}}

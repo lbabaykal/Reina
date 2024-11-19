@@ -1,6 +1,6 @@
 <script>
 export default {
-    name: "PaginationComponent",
+    name: "Pagination",
     props: {
         dataPagination: {
             links: [],
