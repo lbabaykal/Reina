@@ -1,11 +1,11 @@
 <script>
-import CardLoadingComponent from "@/Components/CardLoading.vue";
-import CardAnimeComponent from "@/Components/CardAnime.vue";
-import CardDoramaComponent from "@/Components/CardDorama.vue";
+import CardLoading from "@/Components/CardLoading.vue";
+import CardAnime from "@/Components/CardAnime.vue";
+import CardDorama from "@/Components/CardDorama.vue";
 
 export default {
     name: "MainPage",
-    components: {CardDoramaComponent, CardAnimeComponent, CardLoadingComponent},
+    components: {CardDorama, CardAnime, CardLoading},
     data() {
         return {
             dataAnimes: [],
@@ -22,7 +22,7 @@ export default {
                     this.dataDoramas = response.data['doramas'];
                 })
                 .catch( error => {
-                    // console.log(error.response) // TODO Уведомление не получилось загрузить данные
+                    // TODO Уведомление не получилось загрузить данные
                 })
                 .finally(() => {
                     this.dataLoading = true;
@@ -32,8 +32,7 @@ export default {
     created() {
         this.getMainPageData()
     }
-}
-</script>
+}</script>
 
 <template>
     <div>
@@ -49,7 +48,7 @@ export default {
             </div>
 
             <div class="w-full px-2.5 grid gap-3 place-items-center grid-flow-row grid-cols-8">
-                <CardAnimeComponent v-if="dataLoading"
+                <CardAnime v-if="dataLoading"
                                     v-for="dataAnime in dataAnimes"
                                     :id="dataAnime.id"
                                     :slug="dataAnime.slug"
@@ -60,7 +59,7 @@ export default {
                                     :episodes_total="dataAnime.episodes_total"
                 />
 
-                <CardLoadingComponent v-else v-for="n in 16" :key="n" />
+                <CardLoading v-else v-for="n in 16" :key="n" />
             </div>
 
             <div class="py-2 select-none flex flex-row items-center justify-center">
@@ -74,7 +73,7 @@ export default {
             </div>
 
             <div class="w-full px-2.5 grid gap-3 place-items-center grid-flow-row grid-cols-8">
-                <CardDoramaComponent v-if="dataLoading"
+                <CardDorama v-if="dataLoading"
                                      v-for="dataDorama in dataDoramas"
                                      :id="dataDorama.id"
                                      :slug="dataDorama.slug"
@@ -85,7 +84,7 @@ export default {
                                      :episodes_total="dataDorama.episodes_total"
                 />
 
-                <CardLoadingComponent v-else v-for="n in 16" :key="n" />
+                <CardLoading v-else v-for="n in 16" :key="n" />
             </div>
         </section>
     </div>

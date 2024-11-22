@@ -24,7 +24,7 @@ export default {
     },
     methods: {
         getUser() {
-            axios.get('api/auth/user')
+            axios.get('api/user-data')
                 .then(response => {
                     if (response.data.authenticated === true) {
                         this.dataUser.id = response.data.user.id;

@@ -56,7 +56,7 @@ export default {
         <div id="menuAuth"
              @click="toggleUserMenu"
              class="group flex cursor-pointer select-none flex-row transition-all duration-300 h-[40px] rounded-full
-             bg-black/60 hover:bg-black hover:shadow-red-600 hover:shadow-md"
+             bg-black/60 shadow shadow-red-600 hover:bg-black hover:shadow-red-600 hover:shadow-md"
         >
             <div class="relative flex flex-col justify-center text-nowrap text-center">
                 <div class="truncate max-w-80 px-6 text-lg">
@@ -71,7 +71,8 @@ export default {
         </div>
 
         <div v-show="isDropdownUserMenu"
-             class="absolute right-14 top-[60px] w-72 select-none rounded bg-gray-900 shadow-[0_5px_10px_0_rgba(0,0,0,0.7)]"
+             class="absolute right-14 top-[60px] w-72 select-none rounded overflow-hidden bg-gray-900
+                    shadow-[0_5px_10px_0_rgba(0,0,0,0.7)]"
         >
             <div class="flex items-center border-b-2 border-b-blue-600">
                 <img :src="`${dataUser.avatar}`"
@@ -95,14 +96,6 @@ export default {
                         Admin_Panel
                     </span>
                 </RouterLink>
-<!--                <a href="https://admin.reina.online"-->
-<!--                   class="group flex flex-row items-center px-4 hover:bg-gray-100"-->
-<!--                >-->
-<!--                    <AdminPanelSvg classes="m-1.5 h-8 w-8 group-hover:stroke-fuchsia-700"/>-->
-<!--                    <span class="ml-2 group-hover:text-black">-->
-<!--                        Admin_Panel-->
-<!--                    </span>-->
-<!--                </a>-->
                 <a href="#"
                    class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
@@ -111,14 +104,14 @@ export default {
                         Профиль
                     </span>
                 </a>
-                <a href="{{ route('user.subscription.index') }}"
-                   class="group flex flex-row items-center px-4 hover:bg-gray-100"
+                <router-link :to="{name: 'subscription'}"
+                             class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
                     <SubscribeSvg classes="m-1.5 w-8 h-8 group-hover:drop-shadow-[0_0_6px_rgba(255,0,0,1)]"/>
                     <span class="ml-2 group-hover:text-black">
                         Подписка
                     </span>
-                </a>
+                </router-link>
                 <a href="{{ route('user.folders.index') }}"
                    class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
@@ -135,7 +128,7 @@ export default {
                         Настройки
                     </span>
                 </a>
-                <router-link :to="{name: 'auth.logout'}"
+                <router-link :to="{name: 'logout'}"
                              class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
                     <LogoutSvg classes="m-1.5 h-8 w-8 group-hover:stroke-black"/>

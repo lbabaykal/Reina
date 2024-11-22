@@ -14,8 +14,12 @@ const router = createRouter({
                     name: 'main',
                 },
                 {
-                    path: '/search', component: () => import('./Pages/SearchPage.vue'),
+                    path: 'search', component: () => import('./Pages/SearchPage.vue'),
                     name: 'search'
+                },
+                {
+                    path: '/subscription', component: () => import('./Pages/MainPage.vue'),
+                    name: 'subscription'
                 },
             ],
         },
@@ -51,13 +55,9 @@ const router = createRouter({
                 },
             ],
         },
-        {
-            path: '/subscription', component: () => import('./Pages/MainPage.vue'),
-            name: 'subscription'
-        },
         //AUTH
         {
-            path: '/auth',
+            path: '/',
             component: () => import('./Layouts/AuthLayout.vue'),
             meta: {
                 // middleware: [auth],
@@ -65,33 +65,42 @@ const router = createRouter({
             children: [
                 {
                     path: 'login', component: () => import('./Pages/Auth/LoginPage.vue'),
-                    name: 'auth.login',
+                    name: 'login',
                     meta: {
-                    //     middleware: [auth],
                     },
                 },
                 {
                     path: 'register', component: () => import('./Pages/Auth/RegisterPage.vue'),
-                    name: 'auth.register',
+                    name: 'register',
                     meta: {
-                    //     middleware: [auth],
+                    },
+                },
+                {
+                    path: 'verify-email', component: () => import('./Pages/Auth/VerifyEmail.vue'),
+                    name: 'verification.notice',
+                    meta: {
                     },
                 },
                 {
                     path: 'forgot-password', component: () => import('./Pages/Auth/ForgotPasswordPage.vue'),
-                    name: 'auth.password.request',
+                    name: 'password.request',
                     meta: {
-                    //     middleware: [auth],
                     },
                 },
                 {
-                    path: '/logout',
-                    name: 'auth.logout',
+                    path: 'reset-password/:token', component: () => import('./Pages/Auth/ResetPasswordPage.vue'),
+                    name: 'password.reset',
+                    props: true,
+                    meta: {
+                    },
+                },
+                {
+                    path: 'logout',
+                    name: 'logout',
                     beforeEnter: (to, from, next) => {
                         useAuthStore().logout();
                     },
                     meta: {
-                    //     middleware: [auth],
                     },
                 },
             ],

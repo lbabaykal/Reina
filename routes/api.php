@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::domain(env('APP_URL'))->group(function () {
-    require __DIR__.'/auth.php';
-
-    Route::get('/auth/user', function () {
+    Route::get('/user-data', function () {
         $authCheck = auth()->check();
 
         if ($authCheck) {

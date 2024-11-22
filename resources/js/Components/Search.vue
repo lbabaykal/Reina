@@ -1,6 +1,6 @@
 <script>
 export default {
-name: "SearchComponent"
+name: "Search"
 }
 </script>
 

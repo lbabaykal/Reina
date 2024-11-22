@@ -24,7 +24,6 @@ export default {
                 <img :src="poster"
                      :alt="title"
                      class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110"
-                     loading="lazy"
                 />
 
                 <div class="absolute px-2 top-1 right-1 bg-red-500/80 rounded">★ {{ rating }}</div>

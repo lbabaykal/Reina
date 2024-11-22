@@ -1,9 +1,10 @@
 <script>
-import LoginMenuComponent from "@/Components/Login/LoginMenu.vue";
+import LoginMenu from "@/Components/Login/LoginMenu.vue";
 import LogoSvg from "@/Components/Svg/LogoSvg.vue";
+
 export default {
     name: "Header",
-    components: {LoginMenuComponent, LogoSvg},
+    components: {LoginMenu, LogoSvg},
     data() {
         return {
             isScrolledHeader: false
@@ -43,7 +44,7 @@ export default {
                     Reina
                     <LogoSvg classes="w-10 ml-2" />
                 </RouterLink>
-                <LoginMenuComponent :isScrolledHeader/>
+                <LoginMenu :isScrolledHeader/>
             </nav>
         </header>
     </div>

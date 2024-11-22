@@ -4,7 +4,7 @@ import LogoSvg from "../Svg/LogoSvg.vue";
 
 export default {
     name: "AuthWindow" ,
-    components: {LogoSvg, AuthHeaderComponent: AuthHeader}
+    components: {LogoSvg, AuthHeader: AuthHeader}
 }
 </script>
 
@@ -17,7 +17,7 @@ export default {
             <LogoSvg classes="w-16 h-16 ml-4"/>
         </router-link>
         <section class="w-[480px] flex items-center shadow-2xl rounded-2xl flex-col overflow-hidden bg-white backdrop:blur-sm select-none">
-            <AuthHeaderComponent />
+            <AuthHeader />
 
             <slot></slot>
 

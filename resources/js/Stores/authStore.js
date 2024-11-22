@@ -17,7 +17,7 @@ export const useAuthStore = defineStore("auth", {
             this.authAuthenticated = false;
         },
         logout() {
-            axios.post('/api/logout');
+            axios.post('/logout');
             this.destroyUser();
             router.push({name: 'main'});
         },
@@ -29,9 +29,6 @@ export const useAuthStore = defineStore("auth", {
         user(state) {
             return state.authUser;
         },
-    },
-    mutations: {
-
     },
     persist: true,
 })

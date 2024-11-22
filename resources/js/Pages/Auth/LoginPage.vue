@@ -1,16 +1,17 @@
 <script>
 
-import AuthWindow from "../../Components/Auth/AuthWindow.vue";
+import AuthWindow from "../../Components/Login/AuthWindow.vue";
 import GoogleLogoSvg from "../../Components/Svg/Auth/GoogleLogoSvg.vue";
 import VkLogoSvg from "../../Components/Svg/Auth/VkLogoSvg.vue";
 import YandexLogoSvg from "../../Components/Svg/Auth/YandexLogoSvg.vue";
 import {useAuthStore} from "../../Stores/authStore.js";
 import axios from "axios";
 import router from "../../router.js";
+import AuthLayout from "../../Layouts/AuthLayout.vue";
 
 export default {
     name: "LoginPage",
-    components: {YandexLogoSvg, VkLogoSvg, GoogleLogoSvg, AuthWindowComponent: AuthWindow},
+    components: {AuthLayout, YandexLogoSvg, VkLogoSvg, GoogleLogoSvg, AuthWindow: AuthWindow},
     data() {
         return {
             email: null,
@@ -23,7 +24,10 @@ export default {
         login() {
             axios.get("/sanctum/csrf-cookie")
                 .then(() => {
-                    axios.post('/api/login', {email: this.email, password: this.password})
+                    axios.post('/login', {
+                        email: this.email,
+                        password: this.password
+                    })
                         .then(response => {
                             router.push({name: "main"});
                         })
@@ -31,11 +35,11 @@ export default {
                             if (error.response.status === 422) {
                                 this.errors = error.response.data.errors;
                             }
-                            //TODO Уведомление что ошибка авторизации
+                            //TODO Уведомление что ошибка
                         });
                 })
                 .catch(error => {
-                    //TODO Уведомление что ошибка авторизации
+                    //TODO Уведомление что ошибка
                 });
         },
     },
@@ -43,7 +47,7 @@ export default {
 </script>
 
 <template>
-    <AuthWindowComponent>
+    <AuthWindow>
         <div class="w-full text-center py-8 font-bold text-2xl text-rose-500">
             Авторизация
         </div>
@@ -54,12 +58,12 @@ export default {
                 name="email"
                 type="email"
                 v-model="email"
-                placeholder="Email"
+                placeholder="Почта"
                 required
             />
 
             <span v-if="errors.email"
-                  class="w-80% pt-1 text-red-500 text-center"
+                  class="w-90% pt-0.5 text-red-500 text-center"
             >
                 {{ errors.email[0] }}
             </span>
@@ -74,13 +78,13 @@ export default {
             />
 
             <span v-if="errors.password"
-                  class="w-80% pt-1 text-red-500 text-center"
+                  class="90% pt-0.5 text-red-500 text-center"
             >
                 {{ errors.password[0] }}
             </span>
 
             <button @click.prevent="login"
-                    class="w-48 py-1 my-5 font-bold text-lg text-white bg-rose-700 hover:bg-rose-600 rounded-md"
+                    class="px-10 py-1 my-5 font-bold text-lg text-white bg-rose-700 hover:bg-rose-600 rounded-md"
             >
                 Войти
             </button>
@@ -96,7 +100,6 @@ export default {
                 <VkLogoSvg classes="w-10 h-10 mx-4"/>
                 <YandexLogoSvg classes="w-10 h-10 mx-4"/>
             </div>
-
         </div>
-    </AuthWindowComponent>
+    </AuthWindow>
 </template>

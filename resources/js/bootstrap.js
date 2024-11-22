@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from "./Stores/authStore.js";
-import router from "@/router.js";
+import router from './router.js'
 
 
 window.axios = axios;
@@ -23,7 +23,7 @@ axios.interceptors.response.use((response) => {
 }, (error) => {
     if (error.response.status === 401 || error.response.status === 419) {
         useAuthStore().destroyUser();
-        router.push({name: 'auth.login'});
+        router.push({name: 'login'});
     }
 
     return Promise.reject(error)

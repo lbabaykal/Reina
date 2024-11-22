@@ -9,9 +9,9 @@ export default {
 
 <template>
     <div>
-        <router-link :to="{ name: 'auth.login' }"
+        <router-link :to="{ name: 'login' }"
                      class="group flex select-none flex-row transition-all duration-300 h-[40px] rounded-full bg-black/60
-                     hover:bg-black hover:shadow-blue-600 hover:shadow-md"
+                     shadow shadow-blue-600 hover:bg-black hover:shadow-blue-600 hover:shadow-md"
         >
             <div class="flex flex-col justify-center text-nowrap text-center">
                 <div class="font-bold text-lg px-6">

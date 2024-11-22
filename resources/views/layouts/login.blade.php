@@ -7,7 +7,7 @@
         </svg>
     </a>
 
-    <a href="{{ route('user.subscription.index') }}" class="mr-6 flex items-center justify-center hover:text-red-500 duration-200 drop-shadow-[0_0_6px_rgba(0,0,0,0.5)] hover:drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]">
+    <a href="{{ route('subscription.index') }}" class="mr-6 flex items-center justify-center hover:text-red-500 duration-200 drop-shadow-[0_0_6px_rgba(0,0,0,0.5)] hover:drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]">
         <svg class="w-9 h-9" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
             <g>
                 <g>
@@ -273,7 +273,7 @@
                         {{ __('Профиль') }}
                     </span>
                 </a>
-                <a href="{{ route('user.subscription.index') }}"
+                <a href="{{ route('subscription.index') }}"
                    class="group flex flex-row items-center px-4 hover:bg-gray-100">
                     <svg class="m-1.5 w-8 h-8 group-hover:drop-shadow-[0_0_6px_rgba(255,0,0,1)]" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                         <g>

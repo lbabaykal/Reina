@@ -18,7 +18,8 @@ Route::domain(env('APP_URL'))->get('/{page?}', function() {
     return view('app');
 })->where('page', '.*')->name('index');
 
-require __DIR__.'/admin.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';
 
 //============================================
 Route::domain(env('APP_URL'))->group(function () {
@@ -26,6 +27,12 @@ Route::domain(env('APP_URL'))->group(function () {
 
     // ====SEARCH====
     Route::get('/search', SearchController::class)->name('search');
+    // ====SUBSCRIPTION====
+    Route::prefix('subscription')->name('subscription.')->group(function () {
+        Route::get('/', function () {
+            return 'Описание subscription';
+        })->name('index');
+    });
 
 // ====ANIME====
     Route::prefix('anime')->name('anime.')->group(function () {
@@ -43,64 +50,60 @@ Route::domain(env('APP_URL'))->group(function () {
     });
 
 // ====DORAMA====
-    Route::prefix('dorama')->name('dorama.')->group(function () {
-        Route::get('/{dorama:slug}', [DoramaController::class, 'show'])->name('show');
-        Route::get('/{dorama:slug}/watch', [DoramaController::class, 'watch'])->name('watch');
-        Route::get('/', [DoramaController::class, 'index'])->name('index');
+    Route::prefix('dorama')
+        ->name('dorama.')
+        ->group(function () {
+            Route::get('/{dorama:slug}', [DoramaController::class, 'show'])->name('show');
+            Route::get('/{dorama:slug}/watch', [DoramaController::class, 'watch'])->name('watch');
+            Route::get('/', [DoramaController::class, 'index'])->name('index');
 
-        Route::middleware('auth')->group(function () {
-            Route::patch('/{dorama:slug}/rating', [RatingController::class, 'addToDorama'])->name('rating.add');
-            Route::delete('/{dorama:slug}/rating', [RatingController::class, 'removeToDorama'])->name('rating.remove');
-            Route::patch('/{dorama:slug}/favorite', [FavoriteController::class, 'addToDorama'])->name('favorite.add');
-            Route::delete('/{dorama:slug}/favorite', [FavoriteController::class, 'removeToDorama'])->name('favorite.remove');
-        });
-    });
-
-    Route::middleware('auth')->prefix('user')->name('user.')->group(function () {
-        // ====FOLDERS====
-        Route::prefix('folders')->name('folders.')->group(function () {
-            Route::get('/', FolderController::class)->name('index');
-
-            Route::prefix('animes')->name('animes.')->group(function () {
-                Route::get('/', [AnimeFolderController::class, 'index'])->name('index');
-                Route::get('/{folder}', [AnimeFolderController::class, 'show'])->name('show');
-                Route::get('/create', [AnimeFolderController::class, 'create'])->name('create');
-                Route::post('/', [AnimeFolderController::class, 'store'])->name('store');
-                Route::get('/{folder}/edit', [AnimeFolderController::class, 'edit'])->name('edit');
-                Route::patch('/{folder}', [AnimeFolderController::class, 'update'])->name('update');
-                Route::delete('/{folder}', [AnimeFolderController::class, 'destroy'])->name('destroy');
-            });
-
-            Route::prefix('doramas')->name('doramas.')->group(function () {
-                Route::get('/', [DoramaFolderController::class, 'index'])->name('index');
-                Route::get('/{folder}', [DoramaFolderController::class, 'show'])->name('show');
-                Route::get('/create', [DoramaFolderController::class, 'create'])->name('create');
-                Route::post('/', [DoramaFolderController::class, 'store'])->name('store');
-                Route::get('/{folder}/edit', [DoramaFolderController::class, 'edit'])->name('edit');
-                Route::patch('/{folder}', [DoramaFolderController::class, 'update'])->name('update');
-                Route::delete('/{folder}', [DoramaFolderController::class, 'destroy'])->name('destroy');
+            Route::middleware('auth')->group(function () {
+                Route::patch('/{dorama:slug}/rating', [RatingController::class, 'addToDorama'])->name('rating.add');
+                Route::delete('/{dorama:slug}/rating', [RatingController::class, 'removeToDorama'])->name('rating.remove');
+                Route::patch('/{dorama:slug}/favorite', [FavoriteController::class, 'addToDorama'])->name('favorite.add');
+                Route::delete('/{dorama:slug}/favorite', [FavoriteController::class, 'removeToDorama'])->name('favorite.remove');
             });
         });
 
-        // ====SUBSCRIPTION====
-        Route::prefix('subscription')->name('subscription.')->group(function () {
-            Route::get('/', function () {
-                return 'Описание subscription';
-            })->name('index');
+    Route::middleware('auth')
+        ->prefix('user')
+        ->name('user.')
+        ->group(function () {
+            // ====FOLDERS====
+            Route::prefix('folders')->name('folders.')->group(function () {
+                Route::get('/', FolderController::class)->name('index');
+
+                Route::prefix('animes')->name('animes.')->group(function () {
+                    Route::get('/', [AnimeFolderController::class, 'index'])->name('index');
+                    Route::get('/{folder}', [AnimeFolderController::class, 'show'])->name('show');
+                    Route::get('/create', [AnimeFolderController::class, 'create'])->name('create');
+                    Route::post('/', [AnimeFolderController::class, 'store'])->name('store');
+                    Route::get('/{folder}/edit', [AnimeFolderController::class, 'edit'])->name('edit');
+                    Route::patch('/{folder}', [AnimeFolderController::class, 'update'])->name('update');
+                    Route::delete('/{folder}', [AnimeFolderController::class, 'destroy'])->name('destroy');
+                });
+
+                Route::prefix('doramas')->name('doramas.')->group(function () {
+                    Route::get('/', [DoramaFolderController::class, 'index'])->name('index');
+                    Route::get('/{folder}', [DoramaFolderController::class, 'show'])->name('show');
+                    Route::get('/create', [DoramaFolderController::class, 'create'])->name('create');
+                    Route::post('/', [DoramaFolderController::class, 'store'])->name('store');
+                    Route::get('/{folder}/edit', [DoramaFolderController::class, 'edit'])->name('edit');
+                    Route::patch('/{folder}', [DoramaFolderController::class, 'update'])->name('update');
+                    Route::delete('/{folder}', [DoramaFolderController::class, 'destroy'])->name('destroy');
+                });
+            });
+
+            // Profile
+            Route::middleware(['auth', 'verified'])
+                ->prefix('profile')
+                ->name('profile.')
+                ->group(function () {
+                    Route::get('/', [ProfileController::class, 'edit'])->name('index');
+                    Route::patch('/', [ProfileController::class, 'update'])->name('update');
+                    Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+                });
         });
-
-        // Profile
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->middleware(['auth', 'verified'])->name('dashboard');
-
-        Route::middleware('auth')->group(function () {
-            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        });
-
-    });
 });
 
 
