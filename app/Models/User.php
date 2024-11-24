@@ -88,7 +88,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->avatar
             ? Storage::disk('s3_images')->url($this->avatar)
-            : Storage::disk('s3_images')->url('no_avatar.png');
+            : Storage::disk('s3_images')->url('no_avatar.svg');
     }
 
 }

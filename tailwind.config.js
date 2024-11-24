@@ -45,7 +45,7 @@ export default {
                 ...defaultTheme.colors
             },
             fontFamily: {
-                main: ['Open Sans', 'Raleway'],
+                openSans: ['Open Sans', 'Raleway'],
             },
             spacing: {
                 HD: '1280px',

@@ -88,7 +88,7 @@ export default {
             />
 
             <span v-if="errorsVerify"
-                  class="90% pt-0.5 text-red-500 text-center"
+                  class="90% pt-1 text-red-500 text-center"
             >
                 Неверный Код
             </span>

@@ -6,10 +6,11 @@ import router from "../../router.js";
 import GoogleLogoSvg from "../../Components/Svg/Auth/GoogleLogoSvg.vue";
 import YandexLogoSvg from "../../Components/Svg/Auth/YandexLogoSvg.vue";
 import VkLogoSvg from "../../Components/Svg/Auth/VkLogoSvg.vue";
+import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
 
 export default {
     name: "RegisterPage",
-    components: {VkLogoSvg, YandexLogoSvg, GoogleLogoSvg, AuthWindowComponent: AuthWindow},
+    components: {LoadingSvg, VkLogoSvg, YandexLogoSvg, GoogleLogoSvg, AuthWindowComponent: AuthWindow},
     data() {
         return {
             name: null,
@@ -18,10 +19,12 @@ export default {
             password_confirmation: null,
             errors: {},
             authStore: useAuthStore(),
+            loading: false
         }
     },
     methods: {
         register() {
+            this.loading = true;
             axios.get("/sanctum/csrf-cookie")
                 .then(() => {
                     axios.post('/register', {
@@ -43,6 +46,9 @@ export default {
                 })
                 .catch(error => {
                     //TODO Уведомление что ошибка
+                })
+                .finally(() => {
+                    this.loading = false;
                 });
         },
     },
@@ -51,9 +57,11 @@ export default {
 
 <template>
     <AuthWindowComponent>
-        <div class="w-full text-center py-8 font-bold text-2xl text-blue-500">
+        <div v-if="!loading" class="w-full text-center py-8 font-bold text-2xl text-blue-500">
             Регистрации
         </div>
+
+        <loadingSvg v-if="loading" class="w-16 py-4 fill-blue-500"/>
 
         <div class="flex flex-col items-center text-black">
             <input
@@ -66,7 +74,7 @@ export default {
             />
 
             <span v-if="errors.name"
-                  class="w-90% pt-0.5 text-red-500 text-center"
+                  class="w-90% pt-1 text-red-500 text-center"
             >
                 {{ errors.name[0] }}
             </span>
@@ -81,7 +89,7 @@ export default {
             />
 
             <span v-if="errors.email"
-                  class="w-90% pt-0.5 text-red-500 text-center"
+                  class="w-90% pt-1 text-red-500 text-center"
             >
                 {{ errors.email[0] }}
             </span>
@@ -105,7 +113,7 @@ export default {
             />
 
             <span v-if="errors.password"
-                  class="w-90% pt-0.5 text-red-500 text-center"
+                  class="w-90% pt-1 text-red-500 text-center"
             >
                 {{ errors.password[0] }}
             </span>

@@ -9,24 +9,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
-class AuthenticatedSessionController extends Controller
+class LoginController extends Controller
 {
-    public function store(LoginRequest $request): Response
+    public function __invoke(LoginRequest $request): Response
     {
         $request->authenticate();
 
         $request->session()->regenerate();
-
-        return response()->noContent();
-    }
-
-    public function destroy(Request $request): Response
-    {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
 
         return response()->noContent();
     }

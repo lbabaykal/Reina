@@ -5,10 +5,11 @@ import YandexLogoSvg from "../../Components/Svg/Auth/YandexLogoSvg.vue";
 import VkLogoSvg from "../../Components/Svg/Auth/VkLogoSvg.vue";
 import axios from "axios";
 import router from "../../router.js";
+import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
 
 export default {
     name: "ResetPasswordPage",
-    components: {VkLogoSvg, YandexLogoSvg, AuthWindow, GoogleLogoSvg},
+    components: {LoadingSvg, VkLogoSvg, YandexLogoSvg, AuthWindow, GoogleLogoSvg},
     props: {
         token: String,
     },
@@ -17,11 +18,13 @@ export default {
             email: null,
             password: null,
             password_confirmation: null,
-            errors: {}
+            errors: {},
+            loading: false,
         }
     },
     methods: {
         resetPassword() {
+            this.loading = true;
             axios.post('/reset-password', {
                 token: this.token,
                 email: this.email,
@@ -37,6 +40,9 @@ export default {
                     this.errors = error.response.data.errors;
                 }
                 //TODO Уведомление что ошибка
+            })
+            .finally(() => {
+                this.loading = false;
             });
         },
     },
@@ -48,9 +54,11 @@ export default {
 
 <template>
     <AuthWindow>
-        <div class="w-full text-center py-8 font-bold text-2xl text-violet-500">
+        <div v-if="!loading" class="w-full text-center py-8 font-bold text-2xl text-violet-500">
             Сброс пароля
         </div>
+
+        <loadingSvg v-if="loading" class="w-16 py-4 fill-violet-500"/>
 
         <div class="flex flex-col items-center text-black">
             <input
@@ -63,7 +71,7 @@ export default {
             />
 
             <span v-if="errors.email"
-                  class="w-90% pt-0.5 text-red-500 text-center"
+                  class="w-90% pt-1 text-red-500 text-center"
             >
                 {{ errors.email[0] }}
             </span>
@@ -87,7 +95,7 @@ export default {
             />
 
             <span v-if="errors.password"
-                  class="w-90% pt-0.5 text-red-500 text-center"
+                  class="w-90% pt-1 text-red-500 text-center"
             >
                 {{ errors.password[0] }}
             </span>

@@ -19,21 +19,21 @@ class UserSeeder extends Seeder
             'name' => 'BaBaYKA',
             'email' => 'mei.babayka@gmail.com',
             'email_verified_at' => Carbon::now(),
-            'password' => Hash::make('q1w2e3r4t5y6'),
+            'password' => Hash::make('q1w2e3r4'),
         ]);
 
         User::query()->create([
             'name' => 'Misaki',
             'email' => 'misaki.babayka@gmail.com',
             'email_verified_at' => Carbon::now(),
-            'password' => Hash::make('q1w2e3r4t5y6'),
+            'password' => Hash::make('q1w2e3r4'),
         ]);
 
         User::query()->create([
             'name' => 'Aika',
             'email' => 'aika.babayka@gmail.com',
             'email_verified_at' => Carbon::now(),
-            'password' => Hash::make('q1w2e3r4t5y6'),
+            'password' => Hash::make('q1w2e3r4'),
         ]);
 
 //        Team::query()->create([

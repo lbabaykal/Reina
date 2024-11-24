@@ -1,13 +1,11 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,10 +14,10 @@ use Illuminate\Support\Facades\Route;
 //  Guest
 Route::middleware('guest')
     ->group(function () {
-    Route::post('register', [RegisteredUserController::class, 'store']);
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
-    Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
+    Route::post('register', RegisterController::class);
+    Route::post('login', LoginController::class);
+    Route::post('forgot-password', ForgotPasswordController::class)->name('password.email');
+    Route::post('reset-password', ResetPasswordController::class)->name('password.store');
 
     //Нужен для формирования роута для отправки сообщения на почту
     Route::get('reset-password/{token}')->name('password.reset');
@@ -27,7 +25,7 @@ Route::middleware('guest')
 
 //  Auth
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    Route::post('logout', LogoutController::class)->name('logout');
 
     //Нужен для редиректа middleware
     Route::get('verify-email')->name('verification.notice');

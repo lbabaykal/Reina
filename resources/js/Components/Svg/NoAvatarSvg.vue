@@ -13,12 +13,13 @@ export default {
 <template>
     <div>
         <svg :class="classes"
+             class="fill-blue-400"
              viewBox="0 0 96 96"
              xmlns="http://www.w3.org/2000/svg"
         >
             <g>
                 <g>
-                    <circle cx="48" cy="48" fill="#69c3a3" r="47.5"></circle>
+                    <circle cx="48" cy="48" fill="" r="47.5"></circle>
                 </g>
                 <g>
                     <g>

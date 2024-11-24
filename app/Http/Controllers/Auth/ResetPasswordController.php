@@ -13,19 +13,14 @@ use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
-class NewPasswordController extends Controller
+class ResetPasswordController extends Controller
 {
-    public function create(Request $request): RedirectResponse
-    {
-        return redirect()->route('index');
-    }
-
     /**
      * Handle an incoming new password request.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function __invoke(Request $request)
     {
         $request->validate([
             'token' => ['required'],

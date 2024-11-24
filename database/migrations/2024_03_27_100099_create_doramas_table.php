@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('doramas', function (Blueprint $table) {
             $table->id();
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('poster')->nullable();
             $table->string('cover')->nullable();
             $table->string('title_org');

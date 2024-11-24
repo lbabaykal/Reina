@@ -5,19 +5,22 @@ import router from "../../router.js";
 import GoogleLogoSvg from "../../Components/Svg/Auth/GoogleLogoSvg.vue";
 import YandexLogoSvg from "../../Components/Svg/Auth/YandexLogoSvg.vue";
 import VkLogoSvg from "../../Components/Svg/Auth/VkLogoSvg.vue";
+import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
 
 export default {
     name: "ForgotPasswordPage",
-    components: {VkLogoSvg, YandexLogoSvg, GoogleLogoSvg, AuthWindow: AuthWindow},
+    components: {LoadingSvg, VkLogoSvg, YandexLogoSvg, GoogleLogoSvg, AuthWindow: AuthWindow},
     data() {
         return {
             email: null,
             response: null,
             errors: {},
+            loading: false
         }
     },
     methods: {
         forgotPassword() {
+            this.loading = true;
             this.errors = {};
             this.response = null;
 
@@ -35,6 +38,9 @@ export default {
                     this.errors = error.response.data.errors;
                 }
                 //TODO Уведомление что ошибка авторизации
+            })
+            .finally(() => {
+                this.loading = false;
             });
         },
     },
@@ -43,9 +49,11 @@ export default {
 
 <template>
     <AuthWindow>
-        <div class="w-full text-center py-8 font-bold text-2xl text-green-500">
+        <div v-if="!loading" class="w-full text-center py-8 font-bold text-2xl text-green-500">
             Восстановление пароля
         </div>
+
+        <loadingSvg v-if="loading" class="w-16 py-4 fill-green-500"/>
 
         <div class="flex flex-col items-center text-black">
             <input
@@ -58,13 +66,13 @@ export default {
             />
 
             <span v-if="errors.email"
-                  class="w-90% pt-0.5 text-red-500 text-center"
+                  class="w-90% pt-1 text-red-500 text-center"
             >
                 {{ errors.email[0] }}
             </span>
 
             <span v-if="response"
-                  class="w-90% pt-0.5 text-green-500 text-center"
+                  class="w-90% pt-1 text-green-500 text-center"
             >
                 {{ response }}
             </span>

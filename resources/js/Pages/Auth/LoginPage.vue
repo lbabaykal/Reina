@@ -8,20 +8,23 @@ import {useAuthStore} from "../../Stores/authStore.js";
 import axios from "axios";
 import router from "../../router.js";
 import AuthLayout from "../../Layouts/AuthLayout.vue";
+import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
 
 export default {
     name: "LoginPage",
-    components: {AuthLayout, YandexLogoSvg, VkLogoSvg, GoogleLogoSvg, AuthWindow: AuthWindow},
+    components: {LoadingSvg, AuthLayout, YandexLogoSvg, VkLogoSvg, GoogleLogoSvg, AuthWindow: AuthWindow},
     data() {
         return {
             email: null,
             password: null,
             errors: {},
             authStore: useAuthStore(),
+            loading: false,
         }
     },
     methods: {
         login() {
+            this.loading = true;
             axios.get("/sanctum/csrf-cookie")
                 .then(() => {
                     axios.post('/login', {
@@ -39,7 +42,11 @@ export default {
                         });
                 })
                 .catch(error => {
+
                     //TODO Уведомление что ошибка
+                })
+                .finally(() => {
+                    this.loading = false;
                 });
         },
     },
@@ -48,9 +55,11 @@ export default {
 
 <template>
     <AuthWindow>
-        <div class="w-full text-center py-8 font-bold text-2xl text-rose-500">
+        <div v-if="!loading" class="w-full text-center py-8 font-bold text-2xl text-rose-500">
             Авторизация
         </div>
+
+        <loadingSvg v-if="loading" class="w-16 py-4 fill-rose-500"/>
 
         <div class="flex flex-col items-center text-black">
             <input
@@ -63,7 +72,7 @@ export default {
             />
 
             <span v-if="errors.email"
-                  class="w-90% pt-0.5 text-red-500 text-center"
+                  class="w-90% pt-1 text-red-500 text-center"
             >
                 {{ errors.email[0] }}
             </span>
@@ -78,7 +87,7 @@ export default {
             />
 
             <span v-if="errors.password"
-                  class="90% pt-0.5 text-red-500 text-center"
+                  class="90% pt-1 text-red-500 text-center"
             >
                 {{ errors.password[0] }}
             </span>

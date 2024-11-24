@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {useAuthStore} from "./Stores/authStore.js";
+import middlewarePipeline from "../Middleware/middlewarePipeline.js";
+import auth from "../Middleware/auth.js";
+import guest from "../Middleware/guest.js";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -21,6 +24,10 @@ const router = createRouter({
                     path: '/subscription', component: () => import('./Pages/MainPage.vue'),
                     name: 'subscription'
                 },
+                {
+                    path: '/:pathMatch(.*)*', component: () => import('./Pages/NotFoundPage.vue'),
+                    name: '404',
+                }
             ],
         },
         //  Anime
@@ -60,19 +67,21 @@ const router = createRouter({
             path: '/',
             component: () => import('./Layouts/AuthLayout.vue'),
             meta: {
-                // middleware: [auth],
+                middleware: [auth],
             },
             children: [
                 {
                     path: 'login', component: () => import('./Pages/Auth/LoginPage.vue'),
                     name: 'login',
                     meta: {
+                        middleware: [guest],
                     },
                 },
                 {
                     path: 'register', component: () => import('./Pages/Auth/RegisterPage.vue'),
                     name: 'register',
                     meta: {
+                        middleware: [guest],
                     },
                 },
                 {
@@ -85,6 +94,7 @@ const router = createRouter({
                     path: 'forgot-password', component: () => import('./Pages/Auth/ForgotPasswordPage.vue'),
                     name: 'password.request',
                     meta: {
+                        middleware: [guest],
                     },
                 },
                 {
@@ -92,6 +102,7 @@ const router = createRouter({
                     name: 'password.reset',
                     props: true,
                     meta: {
+                        middleware: [guest],
                     },
                 },
                 {
@@ -101,6 +112,7 @@ const router = createRouter({
                         useAuthStore().logout();
                     },
                     meta: {
+                        middleware: [auth],
                     },
                 },
             ],
@@ -108,11 +120,21 @@ const router = createRouter({
         {   path: '/admin', component: () => { window.location.href = 'https://admin.reina.online' },
             name: 'admin'
         },
-        // {   path: '/:pathMatch(.*)*', component: () => import('./Pages/MainPage.vue'),
-        //     name: '404',
-        //     redirect: "/"
-        // }
     ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+    if (!to.meta.middleware) {
+        return next();
+    }
+
+    const middleware = to.meta.middleware;
+    const context = { to, from, next };
+
+    return middleware[0]({
+        ...context,
+        next: middlewarePipeline(context, middleware, 1),
+    });
+});
 
 export default router
