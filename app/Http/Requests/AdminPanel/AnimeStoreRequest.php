@@ -36,7 +36,8 @@ class AnimeStoreRequest extends FormRequest
             'studios' => ['nullable', 'array'],
             'studios.*' => ['nullable', 'integer', 'exists:studios,id'],
 
-            'country' => ['required', 'integer', 'exists:countries,id'],
+            'countries' => ['nullable', 'array'],
+            'countries.*' => ['nullable', 'integer', 'exists:countries,id'],
 
             'age_rating' => ['required', Rule::in(\App\Enums\AgeRatingEnum::cases())],
 

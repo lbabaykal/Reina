@@ -6,7 +6,7 @@ export default {
         slug: String,
         poster: String,
         title: String,
-        rating: String,
+        rating: [Number, String],
         episodes_released: Number,
         episodes_total: Number,
     }
@@ -26,10 +26,10 @@ export default {
                      class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110"
                 />
 
-                <div class="absolute px-2 top-1 right-1 bg-red-500/80 rounded">★ {{ rating }}</div>
+                <div class="absolute px-2 py-1 top-1 right-1 bg-red-500/80 rounded">★ {{ rating }}</div>
 
                 <div v-if="episodes_total !== 1"
-                     class="absolute bottom-2 left-2 px-1.5 py-0.5 bg-violet-600/70 transition-all duration-500 group-hover:opacity-0 group-hover:invisible"
+                     class="absolute bottom-2 left-2 px-2 py-1.5 bg-violet-600/80 transition-all duration-500 group-hover:opacity-0 group-hover:invisible"
                 >
                     EPS: {{ episodes_released + ' / ' + episodes_total }}
                 </div>

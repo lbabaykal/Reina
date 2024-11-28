@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
+use App\Http\Requests\AdminPanel\DoramaUpdateRequest;
 use App\Models\Dorama;
-use App\Services\Image\ImageService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,53 +16,59 @@ class DoramaServices
     {
         $dorama = new Dorama();
 
-        $PosterImageService = new ImageService();
-        $dorama->poster = $PosterImageService
+        $dorama->poster = imageService()
             ->setFileField('poster')
-            ->setStorage('dorama_posters')
+            ->setStorage('s3_doramas')
             ->save();
 
-        $CoverImageService = new ImageService();
-        $dorama->cover = $CoverImageService
+        $dorama->cover = imageService()
             ->setFileField('cover')
-            ->setStorage('dorama_covers')
+            ->setStorage('s3_doramas')
             ->save();
 
-        $dorama->title_org = $request->input('title_org');
-        $dorama->title_ru = $request->input('title_ru');
-        $dorama->title_en = $request->input('title_en');
+        $dorama->slug = str()->slug($request->safe()->input('title_ru'));
+        $dorama->title_org = $request->safe()->input('title_org');
+        $dorama->title_ru = $request->safe()->input('title_ru');
+        $dorama->title_en = $request->safe()->input('title_en');
 
-        $dorama->type_id = $request->input('type');
-        $dorama->country_id = $request->input('country');
+        $dorama->type_id = $request->safe()->input('type');
+
+        $dorama->country_id = null;
+        $countries = $request->safe()->input('countries') ?? null;
 
         $dorama->genre_id = null;
-        $genres = $request->input('genres') ?? null;
+        $genres = $request->safe()->input('genres') ?? null;
 
         $dorama->studio_id = null;
-        $studios = $request->input('studios') ?? null;
+        $studios = $request->safe()->input('studios') ?? null;
 
-        $dorama->age_rating = $request->input('age_rating');
+        $dorama->age_rating = $request->safe()->input('age_rating');
         $dorama->episodes_released = 0;
-        $dorama->episodes_total = $request->input('episodes_total');
-        $dorama->duration = $request->input('duration');
-        $dorama->release = $request->date('release');
-        $dorama->description = $request->input('description');
-        $dorama->status = $request->input('status');
+        $dorama->episodes_total = $request->safe()->input('episodes_total');
+        $dorama->duration = $request->safe()->input('duration');
+        $dorama->release = $request->safe()->date('release');
+        $dorama->description = $request->safe()->input('description');
+        $dorama->status = $request->safe()->input('status');
 
         $dorama->rating = 0;
         $dorama->count_assessments = 0;
 
-        $dorama->is_comment = $request->boolean('is_comment');
-        $dorama->is_rating = $request->boolean('is_rating');
+        $dorama->is_comment = $request->safe()->boolean('is_comment');
+        $dorama->is_rating = $request->safe()->boolean('is_rating');
 
         try {
-            DB::transaction(function () use ($dorama, $genres, $studios){
-                $dorama->update();
+            DB::transaction(function () use ($dorama, $countries, $genres, $studios){
+                $dorama->save();
 
+                $dorama->countries()->attach($countries);
                 $dorama->genres()->attach($genres);
                 $dorama->studios()->attach($studios);
             });
-            return redirect()->route('admin.dorama.index')->with('message', "Дорама {$dorama->title_ru} добавлена.");
+
+            $dorama->generateSlug();
+            $dorama->saveQuietly();
+
+            return redirect()->route('admin.doramas.index')->with('message', "Дорама {$dorama->title_ru} добавлена.");
         } catch (\Exception $e) {
 
             if (! is_null($dorama->poster)) {
@@ -73,64 +79,65 @@ class DoramaServices
                 Storage::disk('dorama_covers')->delete($dorama->cover);
             }
 
-            return redirect()->back()->with('message', "Ошибка выполнения транзакции.");
+            return redirect()->back()->with('message', "Ошибка выполнения транзакции." . $e->getMessage());
         }
     }
 
-    public function update(Request $request, Model $dorama): RedirectResponse
+    public function update(DoramaUpdateRequest $request, Model $dorama): RedirectResponse
     {
         if (request()->has('poster')) {
-            $PosterImageService = new ImageService();
-            $dorama->poster = $PosterImageService
+            $dorama->poster = imageService()
                 ->setFileField('poster')
-                ->setStorage('dorama_posters')
-                ->save();
+                ->setStorage('s3_doramas')
+                ->save() ?? $dorama->poster;
         }
 
         if (request()->has('cover')) {
-            $CoverImageService = new ImageService();
-            $dorama->cover = $CoverImageService
+            $dorama->cover = imageService()
                 ->setFileField('cover')
-                ->setStorage('dorama_covers')
-                ->save();
+                ->setStorage('s3_doramas')
+                ->save() ?? $dorama->cover;
         }
 
-        $dorama->title_org = $request->input('title_org');
-        $dorama->title_ru = $request->input('title_ru');
-        $dorama->title_en = $request->input('title_en');
+        $dorama->title_org = $request->safe()->input('title_org');
+        $dorama->title_ru = $request->safe()->input('title_ru');
+        $dorama->title_en = $request->safe()->input('title_en');
 
-        $dorama->type_id = $request->input('type');
-        $dorama->country_id = $request->input('country');
+        $dorama->type_id = $request->safe()->input('type');
+
+        $dorama->country_id = null;
+        $countries = $request->safe()->input('countries') ?? null;
 
         $dorama->genre_id = null;
-        $genres = $request->input('genres') ?? null;
+        $genres = $request->safe()->input('genres') ?? null;
 
         $dorama->studio_id = null;
-        $studios = $request->input('studios') ?? null;
+        $studios = $request->safe()->input('studios') ?? null;
 
-        $dorama->age_rating = $request->input('age_rating');
-        $dorama->episodes_total = $request->input('episodes_total');
-        $dorama->duration = $request->input('duration');
-        $dorama->release = $request->input('release');
-        $dorama->description = $request->input('description');
-        $dorama->status = $request->input('status');
+        $dorama->age_rating = $request->safe()->input('age_rating');
+        $dorama->episodes_total = $request->safe()->input('episodes_total');
+        $dorama->duration = $request->safe()->input('duration');
+        $dorama->release = $request->safe()->input('release');
+        $dorama->description = $request->safe()->input('description');
+        $dorama->status = $request->safe()->input('status');
 
         $dorama->rating = 0;
         $dorama->count_assessments = 0;
 
-        $dorama->is_comment = $request->boolean('is_comment');
-        $dorama->is_rating = $request->boolean('is_rating');
+        $dorama->is_comment = $request->safe()->boolean('is_comment');
+        $dorama->is_rating = $request->safe()->boolean('is_rating');
 
         try {
-            DB::transaction(function () use ($dorama, $genres, $studios){
+            DB::transaction(function () use ($dorama, $countries, $genres, $studios){
                 $dorama->update();
 
+                $dorama->countries()->sync($countries);
                 $dorama->genres()->sync($genres);
                 $dorama->studios()->sync($studios);
             });
-            return redirect()->route('admin.dorama.index')->with('message', "Дорама {$dorama->title_ru} обновлена.");
+            return redirect()->route('admin.doramas.index')->with('message', "Дорама {$dorama->title_ru} обновлена.");
         } catch (\Exception $e) {
-            return redirect()->back()->with('message', "Ошибка выполнения транзакции.");
+            return redirect()->back()->with('message', "Ошибка выполнения транзакции." . $e);
         }
     }
 

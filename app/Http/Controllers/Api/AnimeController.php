@@ -4,16 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Filters\Fields\CountryFilter;
-use App\Http\Filters\Fields\GenreFilter;
+use App\Http\Filters\Fields\CountriesFilter;
+use App\Http\Filters\Fields\GenresFilter;
 use App\Http\Filters\Fields\SortingFilter;
-use App\Http\Filters\Fields\StudioFilter;
+use App\Http\Filters\Fields\StudiosFilter;
 use App\Http\Filters\Fields\TitleFilter;
-use App\Http\Filters\Fields\TypeFilter;
+use App\Http\Filters\Fields\TypesFilter;
 use App\Http\Filters\Fields\YearFromFilter;
 use App\Http\Filters\Fields\YearToFilter;
 use App\Http\Requests\FavoriteAnimesRequest;
 use App\Http\Requests\RatingRequest;
+use App\Http\Requests\SearchRequest;
 use App\Http\Resources\AnimesIndexResource;
 use App\Http\Resources\MainAnimesResource;
 use App\Http\Resources\MainDoramasResource;
@@ -28,30 +29,41 @@ use App\Reina;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Pipeline;
 use Illuminate\View\View;
 use function Amp\Dns\query;
 
 class AnimeController extends Controller
 {
-    public function index()
+    public function index(SearchRequest $request)
     {
+
         request()->merge(['sorting' => request()->input('sorting', 1)]);
 
         $query = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total']);
 
+//        DB::enableQueryLog();
+
         $animes = Pipeline::send($query)
             ->through([
                 TitleFilter::class,
-                TypeFilter::class,
-                GenreFilter::class,
-                CountryFilter::class,
-                StudioFilter::class,
+                TypesFilter::class,
+                GenresFilter::class,
+                CountriesFilter::class,
+                StudiosFilter::class,
                 YearFromFilter::class,
                 YearToFilter::class,
                 SortingFilter::class,
             ])
-            ->thenReturn();
+            ->thenReturn()
+//            ->toSql()
+//            ->get()
+        ;
+
+
+//        dd(DB::getQueryLog());
+//        dd($animes);
 
         return AnimesIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', request()->input('page', 1)));
     }

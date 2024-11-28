@@ -52,9 +52,6 @@
                             Тип
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Страна
-                        </th>
-                        <th scope="col" class="px-6 py-3">
                             Рейтинг
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -76,9 +73,6 @@
                             </th>
                             <td class="px-6 py-4">
                                 {{ $anime->type->title_ru }} - {{ $anime->updated_at }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $anime->country->title_ru }}
                             </td>
                             <td class="px-6 py-4">
                                 {{ $anime->rating }}

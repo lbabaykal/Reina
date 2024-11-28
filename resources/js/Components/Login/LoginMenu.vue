@@ -37,6 +37,8 @@ export default {
                             name: response.data.user.name,
                         };
                         this.authStore.storeUser(authData);
+                    } else {
+                        this.authStore.destroyUser();
                     }
                 })
                 .catch(error => {

@@ -15,8 +15,6 @@ use App\Models\Type;
 use App\Reina;
 use App\Services\AnimeServices;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class AnimeAdminController extends Controller
@@ -25,9 +23,8 @@ class AnimeAdminController extends Controller
     {
         $animes = Anime::query()
             ->withoutGlobalScopes()
-            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'episodes_released', 'episodes_total', 'updated_at'])
+            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'episodes_released', 'episodes_total', 'updated_at'])
             ->with('type')
-            ->with('country')
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
             ->withQueryString();
@@ -105,9 +102,8 @@ class AnimeAdminController extends Controller
     {
         $animes = Anime::query()
             ->withoutGlobalScopes()
-            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
+            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'status'])
             ->with('type')
-            ->with('country')
             ->where('status', StatusEnum::DRAFT)
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
@@ -120,9 +116,8 @@ class AnimeAdminController extends Controller
     {
         $animes = Anime::query()
             ->withoutGlobalScopes()
-            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
+            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'status'])
             ->with('type')
-            ->with('country')
             ->where('status', StatusEnum::PUBLISHED)
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
@@ -135,9 +130,8 @@ class AnimeAdminController extends Controller
     {
         $animes = Anime::query()
             ->withoutGlobalScopes()
-            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
+            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'status'])
             ->with('type')
-            ->with('country')
             ->where('status', StatusEnum::ARCHIVE)
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
@@ -151,9 +145,8 @@ class AnimeAdminController extends Controller
         $animes = Anime::query()
             ->onlyTrashed()
             ->withoutGlobalScopes()
-            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
+            ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'status'])
             ->with('type')
-            ->with('country')
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
             ->withQueryString();

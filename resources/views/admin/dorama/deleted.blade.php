@@ -11,7 +11,7 @@
                             - <span class="text-lime-500">{{ $message }}</span>
                         @endif
                         <p class="mt-1 text-base text-blue-500 dark:text-gray-400 w-full text-center">
-                            <a href="{{ route('admin.dorama.index') }}"
+                            <a href="{{ route('admin.doramas.index') }}"
                                class="mx-10"
                             >
                                 Все

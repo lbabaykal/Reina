@@ -32,7 +32,9 @@ class AnimeServices
         $anime->title_en = $request->safe()->input('title_en');
 
         $anime->type_id = $request->safe()->input('type');
-        $anime->country_id = $request->safe()->input('country');
+
+        $anime->country_id = null;
+        $countries = $request->safe()->input('countries') ?? null;
 
         $anime->genre_id = null;
         $genres = $request->safe()->input('genres') ?? null;
@@ -55,9 +57,10 @@ class AnimeServices
         $anime->is_rating = $request->safe()->boolean('is_rating');
 
         try {
-            DB::transaction(function () use ($anime, $genres, $studios){
+            DB::transaction(function () use ($anime, $countries, $genres, $studios){
                 $anime->save();
 
+                $anime->countries()->attach($countries);
                 $anime->genres()->attach($genres);
                 $anime->studios()->attach($studios);
             });
@@ -102,7 +105,9 @@ class AnimeServices
         $anime->title_en = $request->safe()->input('title_en');
 
         $anime->type_id = $request->safe()->input('type');
-        $anime->country_id = $request->safe()->input('country');
+
+        $anime->country_id = null;
+        $countries = $request->safe()->input('countries') ?? null;
 
         $anime->genre_id = null;
         $genres = $request->safe()->input('genres') ?? null;
@@ -124,9 +129,10 @@ class AnimeServices
         $anime->is_rating = $request->safe()->boolean('is_rating');
 
         try {
-            DB::transaction(function () use ($anime, $genres, $studios){
+            DB::transaction(function () use ($anime, $countries, $genres, $studios){
                 $anime->update();
 
+                $anime->countries()->sync($countries);
                 $anime->genres()->sync($genres);
                 $anime->studios()->sync($studios);
             });

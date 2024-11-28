@@ -23,7 +23,7 @@ export default {
 
 <template>
     <div>
-        <div v-if="dataPagination.last_page > 1" class="flex flex-col items-center my-8 select-none">
+        <div v-if="dataPagination.last_page > 1" class="flex flex-col items-center py-8 select-none">
             <div class="flex text-white">
                 <a v-if="dataPagination.current_page !== 1"
                    @click.prevent="changePage(dataPagination.current_page - 1)"

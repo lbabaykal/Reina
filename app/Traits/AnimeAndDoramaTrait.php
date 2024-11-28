@@ -31,11 +31,6 @@ trait AnimeAndDoramaTrait
         return $this->belongsTo(Type::class);
     }
 
-    public function country(): BelongsTo
-    {
-        return $this->belongsTo(Country::class);
-    }
-
     public function studios(): BelongsToMany
     {
         return $this->belongsToMany(Studio::class);

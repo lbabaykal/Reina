@@ -2,7 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Country;
+use App\Models\Genre;
+use App\Models\Studio;
+use App\Models\Type;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SearchRequest extends FormRequest
 {
@@ -18,30 +23,46 @@ class SearchRequest extends FormRequest
      */
     public function rules(): array
     {
-            return [
-                'title' => ['nullable', 'string', 'max:255'],
-                'strict_genre' => ['nullable', 'in:on'],
-                'strict_studio' => ['nullable', 'in:on'],
+        $types = cache()->remember('types', 14400, function () {
+            return Type::query()->pluck('slug')->toArray();
+        });
 
-                'type' => ['nullable'],
-                'type.*' => ['nullable', 'integer'],
+        $genres = cache()->remember('genres', 14400, function () {
+            return Genre::query()->pluck('slug')->toArray();
+        });
 
-                'genre' => ['nullable', 'array'],
-                'genre.*' => ['nullable', 'integer'],
+        $studios = cache()->remember('studios', 14400, function () {
+            return Studio::query()->pluck('slug')->toArray();
+        });
 
-                'studio' => ['nullable', 'array'],
-                'studio.*' => ['nullable', 'integer'],
+        $countries = cache()->remember('countries', 14400, function () {
+            return Country::query()->pluck('slug')->toArray();
+        });
 
-                'country' => ['nullable', 'array'],
-                'country.*' => ['nullable', 'integer'],
+        return [
+            'title' => ['nullable', 'string', 'max:255'],
+            'strict_genre' => ['nullable', 'in:1,0,true,false'],
+            'strict_studio' => ['nullable', 'in:1,0,true,false'],
 
-                'year_from' => ['nullable', 'integer'],
-                'year_to' => ['nullable', 'integer'],
+            'types' => ['nullable', 'array'],
+            'types.*' => ['nullable', 'string', Rule::in($types)],
 
-                'sorting' => ['nullable', 'integer'],
+            'genres' => ['nullable', 'array'],
+            'genres.*' => ['nullable', 'string', Rule::in($genres)],
 
-                'page' => ['nullable', 'integer'],
-            ];
+            'studios' => ['nullable', 'array'],
+            'studios.*' => ['nullable', 'string', Rule::in($studios)],
+
+            'countries' => ['nullable', 'array'],
+            'countries.*' => ['nullable', 'string', Rule::in($countries)],
+
+            'year_from' => ['nullable', 'integer'],
+            'year_to' => ['nullable', 'integer'],
+
+            'sorting' => ['nullable', 'integer'],
+
+            'page' => ['nullable', 'integer'],
+        ];
     }
 
 }

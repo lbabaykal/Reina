@@ -14,7 +14,7 @@ export default {
         handleScroll() {
             const header = document.getElementById('header');
 
-            if (window.scrollY > 60) {
+            if (window.scrollY > 10) {
                 header.classList.add('header-change');
                 this.isScrolledHeader = true;
             } else {

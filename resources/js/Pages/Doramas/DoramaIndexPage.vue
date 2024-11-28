@@ -1,12 +1,12 @@
 <script>
-import CardLoadingComponent from "@/Components/CardLoading.vue";
-import PaginationComponent from "@/Components/Pagination.vue";
-import SearchComponent from "@/Components/Search.vue";
-import CardDoramaComponent from "@/Components/CardDorama.vue";
+import CardLoading from "@/Components/CardLoading.vue";
+import Pagination from "@/Components/Pagination.vue";
+import Search from "@/Components/Search.vue";
+import CardDorama from "@/Components/CardDorama.vue";
 
 export default {
     name: "DoramaIndexPage",
-    components: {CardDoramaComponent, SearchComponent, PaginationComponent, CardLoadingComponent},
+    components: {CardDorama, Search, Pagination, CardLoading},
     data() {
         return {
             dataDoramas: [],
@@ -52,10 +52,10 @@ export default {
 <template>
     <section class="margin-content">
 
-        <SearchComponent/>
+        <Search/>
 
         <div class="w-full mt-2 px-2.5 grid gap-3 place-items-center grid-flow-row grid-cols-8">
-            <CardDoramaComponent v-if="dataLoading"
+            <CardDorama v-if="dataLoading"
                                 v-for="dataDorama in dataDoramas"
                                 :id="dataDorama.id"
                                 :slug="dataDorama.slug"
@@ -66,13 +66,13 @@ export default {
                                 :episodes_total="dataDorama.episodes_total"
             />
 
-            <CardLoadingComponent v-else
+            <CardLoading v-else
                                   v-for="n in 24"
                                   :key="n"
             />
         </div>
 
-        <PaginationComponent v-if="dataDoramas"
+        <Pagination v-if="dataDoramas"
                              :dataPagination="dataPagination"
                              @change-page="onPageChange"
         />

@@ -126,18 +126,35 @@
                             </div>
                         </div>
                         <div>
-                            <label for="country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Выберите страну  @error('country') {{ $message }} @enderror
-                            </label>
-                            <select id="country"
-                                    name="country"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            <div class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Выберите страну  @error('countries') {{ $message }} @enderror
+                            </div>
+                            <button id="dropdownCheckboxButton"
+                                    data-dropdown-toggle="dropdownCountries"
+                                    class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                    type="button"
                             >
-                                <option selected>Пусто</option>
-                                @foreach($countries as $country)
-                                    <option value="{{ $country->id }}" @selected($country->id == old('country'))>{{ $country->title_ru }}</option>
-                                @endforeach
-                            </select>
+                                Страны
+                            </button>
+                            <div id="dropdownCountries" class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
+                                <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownCheckboxButton">
+                                    @foreach($countries as $country)
+                                        <li>
+                                            <div class="flex items-center">
+                                                <input id="checkbox-item-{{ $country->id }}"
+                                                       type="checkbox"
+                                                       value="{{ $country->id }}"
+                                                       name="countries[]"
+                                                       @checked(old('countries') && in_array($country->id, old('countries')))
+                                                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                <label for="checkbox-item-{{ $country->id }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    {{ $country->title_ru }}
+                                                </label>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
                         <div>
                             <label for="age_rating" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignIdFor(Type::class)->constrained();
             $table->foreignIdFor(Genre::class)->nullable()->constrained();
             $table->foreignIdFor(Studio::class)->nullable()->constrained();
-            $table->foreignIdFor(Country::class)->constrained();
+            $table->foreignIdFor(Country::class)->nullable()->constrained();
             $table->enum('age_rating', ['0+', '6+', '12+', '16+', '18+'])->default('18+');
             $table->unsignedInteger('episodes_released');
             $table->unsignedInteger('episodes_total');

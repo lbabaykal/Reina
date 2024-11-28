@@ -11,34 +11,34 @@
                             - <span class="text-lime-500">{{ $message }}</span>
                         @endif
                         <p class="mt-1 text-base text-blue-500 dark:text-gray-400 w-full text-center">
-                            <a href="{{ route('admin.dorama.index') }}"
+                            <a href="{{ route('admin.doramas.index') }}"
                                class="mx-10"
                             >
                                 Все
                             </a>
-                            <a href="{{ route('admin.dorama.published') }}"
+                            <a href="{{ route('admin.doramas.published') }}"
                                class="mx-10"
                             >
                                 Опубликованные
                             </a>
-                            <a href="{{ route('admin.dorama.draft') }}"
+                            <a href="{{ route('admin.doramas.draft') }}"
                                class="my-10"
                             >
                                 Черновики
                             </a>
-                            <a href="{{ route('admin.dorama.archive') }}"
+                            <a href="{{ route('admin.doramas.archive') }}"
                                class="mx-10"
                             >
                                 В архиве
                             </a>
-                            <a href="{{ route('admin.dorama.deleted') }}"
+                            <a href="{{ route('admin.doramas.deleted') }}"
                                class="mx-10"
                             >
                                 Удаленные
                             </a>
                         </p>
                         <p class="mt-1 text-base text-red-500 dark:text-gray-400">
-                            <a href="{{ route('admin.dorama.create') }}">
+                            <a href="{{ route('admin.doramas.create') }}">
                                 Добавить дораму
                             </a>
                         </p>
@@ -50,9 +50,6 @@
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Тип
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Страна
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Рейтинг
@@ -78,23 +75,20 @@
                                 {{ $dorama->type->title_ru }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ $dorama->country->title_ru }}
-                            </td>
-                            <td class="px-6 py-4">
                                 {{ $dorama->rating }}
                             </td>
                             <td class="px-6 py-4">
                                 {{ $dorama->status }}
                             </td>
                             <td class="px-6 py-4">
-                                <a href="{{ route('admin.dorama.episodes.index', $dorama) }}"
+                                <a href="{{ route('admin.doramas.episodes.index', $dorama->slug) }}"
                                    class="hover:text-love"
                                 >
                                     {{ $dorama->episodes_released }}/{{ $dorama->episodes_total }} эпизодов
                                 </a>
                             </td>
                             <td class="px-6 py-4">
-                                <a href="{{ route('admin.dorama.edit', $dorama) }}"
+                                <a href="{{ route('admin.doramas.edit', $dorama->slug) }}"
                                    class="hover:text-love"
                                 >
                                     Реадактировать

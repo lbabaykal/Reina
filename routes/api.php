@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AnimeController;
 use App\Http\Controllers\Api\DoramaController;
 use App\Http\Controllers\Api\MainController;
+use App\Http\Controllers\Api\SearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,8 @@ Route::domain(env('APP_URL'))->group(function () {
     });
 
     Route::get('/main', MainController::class)->name('main');
+    Route::get('/search-data', SearchController::class);
+
 
     Route::prefix('animes')->name('animes.')->group(function () {
         Route::get('/', [AnimeController::class, 'index'])->name('index');

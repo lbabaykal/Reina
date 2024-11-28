@@ -15,19 +15,16 @@ use App\Models\Type;
 use App\Reina;
 use App\Services\DoramaServices;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class DoramaAdminController extends Controller
 {
-
     public function index(): View
     {
         $doramas = Dorama::query()
             ->withoutGlobalScopes()
-            ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'episodes_released', 'episodes_total'])
+            ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'episodes_released', 'episodes_total'])
             ->with('type')
-            ->with('country')
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
             ->withQueryString();
@@ -58,12 +55,11 @@ class DoramaAdminController extends Controller
         return $doramaServices->store($request);
     }
 
-    public function edit($doramaSlug): View
+    public function edit($slug): View
     {
         $dorama = Dorama::query()
             ->withoutGlobalScopes()
-            ->where('slug', $doramaSlug)
-            ->firstOrFail();
+            ->findOrFail(getIdFromSlug($slug));
 
         $types = Type::all();
         $genres = Genre::all();
@@ -82,13 +78,11 @@ class DoramaAdminController extends Controller
             ->with('statuses', $statuses);
     }
 
-    public function update(Request $request, $doramaSlug, DoramaServices $doramaServices): RedirectResponse
+    public function update(DoramaUpdateRequest $request, $slug, DoramaServices $doramaServices): RedirectResponse
     {
         $dorama = Dorama::query()
             ->withoutGlobalScopes()
-            ->where('slug', $doramaSlug)
-            ->firstOrFail();
-        $request->validate((new DoramaUpdateRequest())->rules($dorama->id), (new DoramaUpdateRequest())->messages());
+            ->findOrFail(getIdFromSlug($slug));
 
         return $doramaServices->update($request, $dorama);
     }
@@ -110,7 +104,6 @@ class DoramaAdminController extends Controller
             ->withoutGlobalScopes()
             ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
             ->with('type')
-            ->with('country')
             ->where('status', StatusEnum::DRAFT)
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
@@ -125,7 +118,6 @@ class DoramaAdminController extends Controller
             ->withoutGlobalScopes()
             ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
             ->with('type')
-            ->with('country')
             ->where('status', StatusEnum::PUBLISHED)
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
@@ -140,7 +132,6 @@ class DoramaAdminController extends Controller
             ->withoutGlobalScopes()
             ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
             ->with('type')
-            ->with('country')
             ->where('status', StatusEnum::ARCHIVE)
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
@@ -156,7 +147,6 @@ class DoramaAdminController extends Controller
             ->withoutGlobalScopes()
             ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
             ->with('type')
-            ->with('country')
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
             ->withQueryString();

@@ -5,7 +5,7 @@ namespace App\Http\Filters\Fields;
 use App\Http\Filters\AbstractFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class CountryFilter extends AbstractFilter
+class CountriesFilter extends AbstractFilter
 {
     public function applyFilter(Builder $builder): void
     {
@@ -22,8 +22,8 @@ class CountryFilter extends AbstractFilter
 //            });
 //        }
 
-        $builder->whereHas('country', function (Builder $query) {
-            $query->whereIn('country_id', request()->collect('country'));
+        $builder->whereHas('countries', function (Builder $query) {
+            $query->whereIn('slug', request()->collect('countries'));
         });
     }
 }

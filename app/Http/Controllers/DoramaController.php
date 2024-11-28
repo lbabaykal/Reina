@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\StatusEnum;
-use App\Http\Filters\Fields\CountryFilter;
-use App\Http\Filters\Fields\GenreFilter;
+use App\Http\Filters\Fields\CountriesFilter;
+use App\Http\Filters\Fields\GenresFilter;
 use App\Http\Filters\Fields\SortingFilter;
-use App\Http\Filters\Fields\StudioFilter;
+use App\Http\Filters\Fields\StudiosFilter;
 use App\Http\Filters\Fields\TitleFilter;
-use App\Http\Filters\Fields\TypeFilter;
+use App\Http\Filters\Fields\TypesFilter;
 use App\Http\Filters\Fields\YearFromFilter;
 use App\Http\Filters\Fields\YearToFilter;
 use App\Http\Requests\FavoriteDoramasRequest;
@@ -39,10 +39,10 @@ class DoramaController extends Controller
         )
             ->through([
                 TitleFilter::class,
-                TypeFilter::class,
-                GenreFilter::class,
-                CountryFilter::class,
-                StudioFilter::class,
+                TypesFilter::class,
+                GenresFilter::class,
+                CountriesFilter::class,
+                StudiosFilter::class,
                 YearFromFilter::class,
                 YearToFilter::class,
                 SortingFilter::class,

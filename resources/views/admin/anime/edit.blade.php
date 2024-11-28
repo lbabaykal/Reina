@@ -136,6 +136,39 @@
                             </div>
                         </div>
                         <div>
+                            <div class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Выберите страну  @error('countries') {{ $message }} @enderror
+                            </div>
+                            <button id="dropdownCheckboxButton"
+                                    data-dropdown-toggle="dropdownСountries"
+                                    class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                    type="button"
+                            >
+                                Страна
+                            </button>
+                            <div id="dropdownСountries" class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
+                                <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownCheckboxButton">
+                                    @foreach($countries as $country)
+                                        <li>
+                                            <div class="flex items-center">
+                                                <input id="checkbox-item-{{ $country->id }}"
+                                                       type="checkbox"
+                                                       value="{{ $country->id }}"
+                                                       name="countries[]"
+                                                       @if(old('countries') ? in_array($country->id, old('countries')) : $anime->countries->contains($country->id))
+                                                           @checked(true)
+                                                       @endif
+                                                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                <label for="checkbox-item-{{ $country->id }}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    {{ $country->title_ru }}
+                                                </label>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
                             <label for="country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Выберите страну  @error('country') {{ $message }} @enderror
                             </label>

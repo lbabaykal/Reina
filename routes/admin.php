@@ -35,13 +35,18 @@ Route::domain('admin.'.env('APP_URL'))
             });
         });
 
-        Route::resource('/doramas', DoramaAdminController::class)->except(['show', 'destroy']);
         Route::prefix('doramas')->name('doramas.')->group(function () {
+            Route::get('/', [DoramaAdminController::class, 'index'])->name('index');
+            Route::get('/create', [DoramaAdminController::class, 'create'])->name('create');
+            Route::post('/', [DoramaAdminController::class, 'store'])->name('store');
+            Route::get('/{slug}/edit', [DoramaAdminController::class, 'edit'])->name('edit');
+            Route::patch('/{slug}', [DoramaAdminController::class, 'update'])->name('update');
+
             Route::get('/draft', [DoramaAdminController::class, 'draft'])->name('draft');
             Route::get('/published', [DoramaAdminController::class, 'published'])->name('published');
             Route::get('/archive', [DoramaAdminController::class, 'archive'])->name('archive');
             Route::get('/deleted', [DoramaAdminController::class, 'deleted'])->name('deleted');
-            Route::get('/{doramas:slug}/restore', [DoramaAdminController::class, 'restore'])->name('restore');
+            Route::get('/{slug}/restore', [DoramaAdminController::class, 'restore'])->name('restore');
 
             Route::prefix('{dorama}')->group(function () {
                 Route::resource('episodes', DoramaEpisodesAdminController::class)->except(['show']);

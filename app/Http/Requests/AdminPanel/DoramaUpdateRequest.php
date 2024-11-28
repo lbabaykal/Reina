@@ -22,7 +22,7 @@ class DoramaUpdateRequest extends FormRequest
         ]);
     }
 
-    public function rules(int $id): array
+    public function rules(): array
     {
         return [
             'id' => ['required', 'integer', 'exists:doramas,id'],
@@ -41,11 +41,11 @@ class DoramaUpdateRequest extends FormRequest
             'studios' => ['nullable', 'array'],
             'studios.*' => ['nullable', 'integer', 'exists:studios,id'],
 
-            'country' => ['required', 'integer', 'exists:countries,id'],
+            'countries' => ['nullable', 'array'],
+            'countries.*' => ['nullable', 'integer', 'exists:countries,id'],
 
             'age_rating' => ['required', Rule::in(\App\Enums\AgeRatingEnum::cases())],
 
-            'episodes_released' => ['required', 'integer', 'lte:episodes_total'],
             'episodes_total' => ['required', 'integer'],
             'duration' => ['required', 'integer'],
             'release' => ['required', 'date', 'after:1980-01-01|', 'before:2100-01-01'],
