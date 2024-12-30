@@ -11,17 +11,34 @@ export default {
         return {
             dataDoramas: [],
             dataLoading: false,
-            dataPagination: Object,
+            dataPagination: {
+                links: [],
+                current_page: Number,
+                from: Number,
+                last_page: Number,
+                per_page: Number,
+                to: Number,
+                total: Number,
+            },
+            selectedDataSearch: {
+                page: 1,
+                title: null,
+                types: [],
+                genres: [],
+                studios: [],
+                countries: [],
+                strict_genre: false,
+                strict_studio: false,
+                year_from: null,
+                year_to: null,
+                sorting: null,
+            },
         }
     },
     methods: {
-        getDoramasData(page = 1) {
+        async getDoramasData() {
             this.dataLoading = false;
-            axios.get('api/doramas',{
-                params: {
-                    page: page
-                }
-            })
+            await axios.get('api/doramas',{ params: this.selectedDataSearch })
                 .then( response => {
                     this.dataDoramas = response.data.data;
                     this.dataPagination = response.data.meta;
@@ -33,26 +50,56 @@ export default {
                     this.dataLoading = true;
                 });
         },
-        onPageChange(page) {
-            this.$router.push({ query: { page: page } });
+        updateSelectFilters(filters) {
+            this.selectedDataSearch = { ...this.selectedDataSearch, ...filters.selectedDataSearch };
+            this.selectedDataSearch.page = 1;
+            this.routerPush();
         },
+        pageChange(page) {
+            this.selectedDataSearch.page = page;
+            this.routerPush();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        loadFiltersFromRoute() {
+            const query = this.$route.query;
+
+            this.selectedDataSearch = {
+                page: Number(query.page) || 1,
+                types: Array.isArray(query.types) ? query.types : [query.types],
+                genres: Array.isArray(query.genres) ? query.genres : [query.genres],
+                studios: Array.isArray(query.studios) ? query.studios : [query.studios],
+                countries: Array.isArray(query.countries) ? query.countries : [query.countries],
+                title: query.title || '',
+                strict_genre: query.strict_genre === 'true',
+                strict_studio: query.strict_studio === 'true',
+                year_from: query.year_from ? Number(query.year_from) : null,
+                year_to: query.year_to ? Number(query.year_to) : null,
+                sorting: query.sorting || '',
+            };
+        },
+        routerPush() {
+            this.$router.push({ query: { ...this.selectedDataSearch } });
+        }
     },
-    created() {
-        const page = this.$route.query.page || 1;
-        this.getDoramasData(page);
+    mounted() {
+        this.loadFiltersFromRoute();
+        this.getDoramasData();
     },
-    beforeRouteUpdate(to, from, next) {
-        const newPage = to.query.page || 1;
-        this.getDoramasData(newPage);
-        next();
+    watch: {
+        '$route.query': function() {
+            this.loadFiltersFromRoute();
+            this.getDoramasData();
+        }
     },
 }
 </script>
 
 <template>
-    <section class="margin-content">
+    <section id="TopPage" class="mt-15">
 
-        <Search/>
+        <Search @updateSelectFilters="updateSelectFilters"
+                :selectedDataSearch="selectedDataSearch"
+        />
 
         <div class="w-full mt-2 px-2.5 grid gap-3 place-items-center grid-flow-row grid-cols-8">
             <CardDorama v-if="dataLoading"
@@ -73,9 +120,8 @@ export default {
         </div>
 
         <Pagination v-if="dataDoramas"
-                             :dataPagination="dataPagination"
-                             @change-page="onPageChange"
+                    :dataPagination="dataPagination"
+                    @pageChange="pageChange"
         />
-<!--        :getDoramasData="getDoramasData"-->
     </section>
 </template>

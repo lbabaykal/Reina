@@ -10,14 +10,17 @@ class SortingFilter extends AbstractFilter
     public function applyFilter(Builder $builder): void
     {
         switch (request()->input('sorting')) {
-            case 1:
+            case 'date_updated':
                 $builder->orderByDesc('updated_at');
                 break;
-            case 2:
+            case 'rating':
                 $builder->orderByDesc('rating');
                 break;
-            case 3:
-                $builder->orderByDesc('release');
+            case 'premiere_asc':
+                $builder->orderBy('release', 'ASC');
+                break;
+            case 'premiere_desc':
+                $builder->orderBy('release', 'DESC');
                 break;
             default:
                 $builder->orderByDesc('updated_at');

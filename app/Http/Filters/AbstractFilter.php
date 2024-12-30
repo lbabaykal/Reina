@@ -11,9 +11,9 @@ abstract class AbstractFilter implements FilterInterface
 
     public function handle(Builder $builder, \Closure $next)
     {
-        $request = request()->validate((new SearchRequest())->rules());
 
-        if (isset($request[$this->getName()])) {
+//        if (isset($request[$this->getName()])) {
+        if (array_key_exists($this->getName(), request()->toArray())) {
             $this->applyFilter($builder);
         }
         return $next($builder);

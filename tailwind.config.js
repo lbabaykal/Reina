@@ -13,24 +13,20 @@ export default {
 
     theme: {
         screens: {
-            HD: '1280px',
-            FullHD: '1920px',
+            '4K': '2160px',
             '2K': '2560px',
+            'FHD': '1920px',
+            'HD': '1280px',
             ...defaultTheme.screens
         },
         extend: {
             keyframes: {
-                gradient: {
-                    '0%': { backgroundPosition: '200% 50%' },
-                    '100%': { backgroundPosition: '0% 50%' },
-                },
                 shine: {
                     '0%': { backgroundPosition: '300% 50%' },
                     '100%': { backgroundPosition: '0% 0%' },
                 },
             },
             animation: {
-                gradient: 'gradient 2s linear infinite',
                 shine: 'shine 4s linear infinite',
             },
             colors: {
@@ -48,9 +44,14 @@ export default {
                 openSans: ['Open Sans', 'Raleway'],
             },
             spacing: {
-                HD: '1280px',
-                FullHD: '1920px',
+                '15': '3.75rem', /* 60px */
+                '112': '28rem', /* 448pxpx */
+                '128': '32rem', /* 512px */
+                '144': '36rem', /* 576pxpx */
+                '4K': '2160px',
                 '2K': '2560px',
+                'FHD': '1920px',
+                'HD': '1280px',
                 '100%': '100%',
                 '95%': '95%',
                 '90%': '90%',

@@ -11,11 +11,10 @@ export default {
             to: Number,
             total: Number,
         },
-        getAnimesData: Function
     },
     methods: {
         changePage(page) {
-            this.$emit("change-page", page);
+            this.$emit("pageChange", page);
         },
     },
 }

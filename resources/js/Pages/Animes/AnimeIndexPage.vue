@@ -11,94 +11,95 @@ export default {
         return {
             dataAnimes: [],
             dataLoading: false,
-            dataPagination: Object,
-            searchText: null,
-            selectTypes: [],
-            selectGenres: [],
-            selectStudios: [],
-            selectCountries: [],
-            strict_genre: '',
-            strict_studio: '',
-            year_from: null,
-            year_to: null,
-            selectSorting: null,
+            dataPagination: {
+                links: [],
+                current_page: Number,
+                from: Number,
+                last_page: Number,
+                per_page: Number,
+                to: Number,
+                total: Number,
+            },
+            selectedDataSearch: {
+                page: 1,
+                title: null,
+                types: [],
+                genres: [],
+                studios: [],
+                countries: [],
+                strict_genre: false,
+                strict_studio: false,
+                year_from: null,
+                year_to: null,
+                sorting: null,
+            },
         }
     },
     methods: {
-        async getAnimesData(page = 1) {
+        async getAnimesData() {
             this.dataLoading = false;
-            await axios.get('api/animes', {
-                params: {
-                    page: page,
-                    types: this.selectTypes,
-                    genres: this.selectGenres,
-                    studios: this.selectStudios,
-                    countries: this.selectCountries,
-                    title: this.searchText,
-                    strict_genre: this.strict_genre,
-                    strict_studio: this.strict_studio,
-                    year_from: this.year_from,
-                    year_to: this.year_to,
-                    sorting: this.selectSorting,
-                }
+            await axios.get('api/animes',  { params: this.selectedDataSearch })
+            .then(response => {
+                this.dataAnimes = response.data.data;
+                this.dataPagination = response.data.meta;
             })
-                .then(response => {
-                    this.dataAnimes = response.data.data;
-                    this.dataPagination = response.data.meta;
-                })
-                .catch(error => {
-                    console.log(error.response)
-                })
-                .finally(() => {
-                    this.dataLoading = true;
-                });
-        },
-        onPageChange(page) {
-            this.$router.push({query: {
-                    page: page,
-                    types: this.selectTypes,
-                    genres: this.selectGenres,
-                    studios: this.selectStudios,
-                    countries: this.selectCountries,
-                    title: this.searchText,
-                    strict_genre: this.strict_genre,
-                    strict_studio: this.strict_studio,
-                    year_from: this.year_from,
-                    year_to: this.year_to,
-                    sorting: this.selectSorting,
-                }
+            .catch(error => {
+                console.log(error.response)
+            })
+            .finally(() => {
+                this.dataLoading = true;
             });
         },
         updateSelectFilters(filters) {
-            this.searchText = filters.searchText;
-            this.selectTypes = filters.types;
-            this.selectGenres = filters.genres;
-            this.selectStudios = filters.studios;
-            this.selectCountries = filters.countries;
-            this.strict_genre = filters.strict_genre;
-            this.strict_studio = filters.strict_studio;
-            this.year_from = filters.year_from;
-            this.year_to = filters.year_to;
-            this.selectSorting = filters.sorting;
-            this.getAnimesData();
+            this.selectedDataSearch = { ...this.selectedDataSearch, ...filters.selectedDataSearch };
+            this.selectedDataSearch.page = 1;
+            this.routerPush();
         },
+        pageChange(page) {
+            this.selectedDataSearch.page = page;
+            this.routerPush();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        loadFiltersFromRoute() {
+            const query = this.$route.query;
+
+            this.selectedDataSearch = {
+                page: Number(query.page) || 1,
+                types: Array.isArray(query.types) ? query.types : [query.types],
+                genres: Array.isArray(query.genres) ? query.genres : [query.genres],
+                studios: Array.isArray(query.studios) ? query.studios : [query.studios],
+                countries: Array.isArray(query.countries) ? query.countries : [query.countries],
+                title: query.title || '',
+                strict_genre: query.strict_genre === 'true',
+                strict_studio: query.strict_studio === 'true',
+                year_from: query.year_from ? Number(query.year_from) : null,
+                year_to: query.year_to ? Number(query.year_to) : null,
+                sorting: query.sorting || '',
+            };
+        },
+        routerPush() {
+            this.$router.push({ query: { ...this.selectedDataSearch } });
+        }
     },
-    created() {
-        // const page = this.$route.query.page || 1;
+    mounted() {
+        this.loadFiltersFromRoute();
         this.getAnimesData();
     },
-    beforeRouteUpdate(to, from, next) {
-        const newPage = to.query.page || 1;
-        this.getAnimesData(newPage);
-        next();
+    watch: {
+        '$route.query': function() {
+            this.loadFiltersFromRoute();
+            this.getAnimesData();
+        }
     },
 }
 </script>
 
 <template>
-    <section class="margin-content">
+    <section id="TopPage" class="mt-15">
 
-        <Search @updateAnimesData="getAnimesData" @updateSelectFilters="updateSelectFilters"/>
+        <Search @updateSelectFilters="updateSelectFilters"
+                :selectedDataSearch="selectedDataSearch"
+        />
 
         <div class="w-full mt-2 px-2.5 grid gap-3 place-items-center grid-flow-row grid-cols-8">
             <CardAnime v-if="dataLoading"
@@ -120,7 +121,7 @@ export default {
 
         <Pagination v-if="dataAnimes"
                     :dataPagination="dataPagination"
-                    @change-page="onPageChange"
+                    @pageChange="pageChange"
         />
     </section>
 </template>

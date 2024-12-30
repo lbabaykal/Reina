@@ -10,7 +10,7 @@ export default {
 <template>
     <div>
         <router-link :to="{ name: 'login' }"
-                     class="group flex select-none flex-row transition-all duration-300 h-[40px] rounded-full bg-black/60
+                     class="group flex select-none flex-row transition-all duration-300 h-10 rounded-full bg-black/60
                      shadow shadow-blue-600 hover:bg-black hover:shadow-blue-600 hover:shadow-md"
         >
             <div class="flex flex-col justify-center text-nowrap text-center">

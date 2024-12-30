@@ -35,8 +35,8 @@ Route::domain(env('APP_URL'))->group(function () {
     });
 
 // ====ANIME====
-    Route::prefix('anime')->name('anime.')->group(function () {
-        Route::get('/{anime:slug}', [AnimeController::class, 'show'])->name('show');
+    Route::prefix('animes')->name('animes.')->group(function () {
+        Route::get('/{animes:slug}', [AnimeController::class, 'show'])->name('show');
 //        Route::get('/{anime}-{slug}', [AnimeController::class, 'show'])->name('show');
         Route::get('/{anime:slug}/watch', [AnimeController::class, 'watch'])->name('watch');
         Route::get('/', [AnimeController::class, 'index'])->name('index');

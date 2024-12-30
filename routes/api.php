@@ -28,10 +28,10 @@ Route::domain(env('APP_URL'))->group(function () {
 
 
     Route::prefix('animes')->name('animes.')->group(function () {
-        Route::get('/', [AnimeController::class, 'index'])->name('index');
+        Route::get('/', [AnimeController::class, 'index']);
 
-        Route::get('/{animes:slug}', [AnimeController::class, 'show'])->name('show');
-        Route::get('/{animes:slug}/watch', [AnimeController::class, 'watch'])->name('watch');
+        Route::get('/{animes:slug}', [AnimeController::class, 'show']);
+        Route::get('/{animes:slug}/watch', [AnimeController::class, 'watch']);
 
 //        Route::middleware('auth')->group(function () {
 //            Route::patch('/{anime:slug}/rating', [RatingController::class, 'addToAnime'])->name('rating.add');
@@ -42,9 +42,10 @@ Route::domain(env('APP_URL'))->group(function () {
     });
 
     Route::prefix('doramas')->name('doramas.')->group(function () {
-        Route::get('/', [DoramaController::class, 'index'])->name('index');
+        Route::get('/', [DoramaController::class, 'index']);
 
-        Route::get('/{slug}', [DoramaController::class, 'show'])->name('show');
+        Route::get('/{doramas:slug}', [DoramaController::class, 'show']);
+        Route::get('/{doramas:slug}/watch', [DoramaController::class, 'watch']);
     });
 });
 

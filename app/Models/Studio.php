@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Observers\StudiosObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -47,4 +48,10 @@ class Studio extends Model
         return $this->belongsToMany(Dorama::class);
     }
 
+    public function cache(): Collection
+    {
+        return cache()->remember($this->getTable(), 14400, function () {
+            return self::query()->orderBy('id')->get();
+        });
+    }
 }

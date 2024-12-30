@@ -38,12 +38,7 @@ class AnimeController extends Controller
 {
     public function index(SearchRequest $request)
     {
-
-        request()->merge(['sorting' => request()->input('sorting', 1)]);
-
         $query = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total']);
-
-//        DB::enableQueryLog();
 
         $animes = Pipeline::send($query)
             ->through([
@@ -56,14 +51,7 @@ class AnimeController extends Controller
                 YearToFilter::class,
                 SortingFilter::class,
             ])
-            ->thenReturn()
-//            ->toSql()
-//            ->get()
-        ;
-
-
-//        dd(DB::getQueryLog());
-//        dd($animes);
+            ->thenReturn();
 
         return AnimesIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', request()->input('page', 1)));
     }
@@ -74,7 +62,7 @@ class AnimeController extends Controller
             return Anime::query()
                 ->where('slug', $slug)
                 ->with('type')
-                ->with('country')
+                ->with('countries')
                 ->with('studios')
                 ->with('genres')
                 ->firstOrFail();

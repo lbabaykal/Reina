@@ -18,10 +18,16 @@ class SearchController extends Controller
     public function __invoke(): JsonResponse
     {
         return response()->json([
-            'types' => TypesResource::collection(Type::all()),
-            'genres' => GenresResource::collection(Genre::all()),
-            'studios' => StudiosResource::collection(Studio::all()),
-            'countries' => CountriesResource::collection(Country::all()),
+            'types' => TypesResource::collection((new Type)->cache()),
+            'genres' => GenresResource::collection((new Genre)->cache()),
+            'studios' => StudiosResource::collection((new Studio)->cache()),
+            'countries' => CountriesResource::collection((new Country)->cache()),
+            'sorting' => [
+                ['id'=> 1, 'title' => 'По дате обновления', 'slug' => 'date_updated'],
+                ['id'=> 2, 'title' => 'По рейтингу', 'slug' => 'rating'],
+                ['id'=> 3, 'title' => 'По дате выхода ▲', 'slug' => 'premiere_asc'],
+                ['id'=> 4, 'title' => 'По дате выхода ▼', 'slug' => 'premiere_desc'],
+            ],
         ]);
     }
 }

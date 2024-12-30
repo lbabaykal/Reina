@@ -12,6 +12,7 @@ use App\Http\Filters\Fields\TitleFilter;
 use App\Http\Filters\Fields\TypesFilter;
 use App\Http\Filters\Fields\YearFromFilter;
 use App\Http\Filters\Fields\YearToFilter;
+use App\Http\Requests\SearchRequest;
 use App\Http\Resources\DoramasIndexResource;
 use App\Models\Dorama;
 use App\Models\FolderDorama;
@@ -21,13 +22,10 @@ use Illuminate\View\View;
 
 class DoramaController extends Controller
 {
-    public function index()
+    public function index(SearchRequest $request)
     {
-        request()->merge(['sorting' => request()->input('sorting', 1)]);
-
         $query = Dorama::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total']);
-
-        $doramas = Pipeline::send($query)
+        $animes = Pipeline::send($query)
             ->through([
                 TitleFilter::class,
                 TypesFilter::class,
@@ -40,7 +38,7 @@ class DoramaController extends Controller
             ])
             ->thenReturn();
 
-        return DoramasIndexResource::collection($doramas->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', request()->input('page', 1)));
+        return DoramasIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', request()->input('page', 1)));
     }
 
     public function show($slug): View

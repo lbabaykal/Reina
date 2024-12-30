@@ -1,3 +1,5 @@
+/*@import url('fonts.css');*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,10 +16,6 @@
 }
 ::-webkit-scrollbar-thumb {
     background: #ff0073;
-}
-
-.margin-content {
-    @apply mt-[60px];
 }
 
 .header-change {

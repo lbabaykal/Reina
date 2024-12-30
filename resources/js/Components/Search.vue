@@ -3,113 +3,129 @@ import SearchSvg from "./Svg/SearchSvg.vue";
 import FilterSvg from "./Svg/FilterSvg.vue";
 import DownArrowSvg from "./Svg/DownArrowSvg.vue";
 import QuestionMarkSvg from "./Svg/QuestionMarkSvg.vue";
+import SortingSvg from "./Svg/SortingSvg.vue";
 
 export default {
     name: "Search",
-    components: {QuestionMarkSvg, DownArrowSvg, FilterSvg, SearchSvg},
-    props: {},
+    components: {SortingSvg, QuestionMarkSvg, DownArrowSvg, FilterSvg, SearchSvg},
+    props: {
+        selectedDataSearch: {
+            title: String,
+            types: Array,
+            genres: Array,
+            studios: Array,
+            countries: Array,
+            strict_genre: Boolean,
+            strict_studio: Boolean,
+            year_from: Number,
+            year_to: Number,
+            sorting: String,
+        },
+    },
     data() {
         return {
-            searchText: null,
-            dataTypes: [],
-            dataGenres: [],
-            dataStudios: [],
-            dataCountries: [],
-            selectTypes: [],
-            selectGenres: [],
-            selectStudios: [],
-            selectCountries: [],
-            strict_genre: null,
-            strict_studio: null,
-            year_from: null,
-            year_to: null,
-            selectSorting: null,
+            dataSearch: {
+                types: [],
+                genres: [],
+                studios: [],
+                countries: [],
+                sorting: [],
+            },
             dataLoading: false,
             isFiltersMenu: false,
+            isSorting: false,
         }
     },
     methods: {
         toggleFiltersMenu() {
             this.isFiltersMenu = !this.isFiltersMenu;
         },
+        toggleSorting() {
+            this.isSorting = !this.isSorting;
+        },
         getSearchData() {
             axios.get('api/search-data')
                 .then(response => {
-                    console.log(response);
                     if (response.data.types &&
                         response.data.genres &&
                         response.data.studios &&
-                        response.data.countries
+                        response.data.countries &&
+                        response.data.sorting
                     ) {
-                        this.dataTypes = response.data.types;
-                        this.dataGenres = response.data.genres;
-                        this.dataStudios = response.data.studios;
-                        this.dataCountries = response.data.countries;
+                        this.dataSearch = {
+                            types: response.data.types,
+                            genres: response.data.genres,
+                            studios: response.data.studios,
+                            countries: response.data.countries,
+                            sorting: response.data.sorting,
+                        }
                     }
                 })
                 .catch(error => {
                     console.log(error.response) // TODO ошибка загрузки данных для поиска
                 });
         },
-        updateData() {
-            this.$emit('updateAnimesData');
-        },
         updateDataFilters() {
-            console.log(this.searchText);
             this.$emit('updateSelectFilters', {
-                searchText: this.searchText,
-                types: this.selectTypes,
-                genres: this.selectGenres,
-                studios: this.selectStudios,
-                countries: this.selectCountries,
-                strict_genre: this.strict_genre,
-                strict_studio: this.strict_studio,
-                year_from: this.year_from,
-                year_to: this.year_to,
-                sorting: this.selectSorting,
+                selectedDataSearch: this.selectedDataSearch
             });
         },
     },
-    created() {
+    mounted() {
         this.getSearchData();
     },
 }
 </script>
 
 <template>
-    <div>
         <div class="w-full">
             <nav class="flex flex-row justify-between px-4 py-2.5">
 
-                <!--                <button-->
-                <!--                    class="flex items-center justify-between w-[200] py-2 px-3 font-medium text-white bg-blackSimple border-b border-love hover:bg-blackActive"-->
-                <!--                >-->
-                <!--                    {{ Сортировка }}-->
-                <!--                    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"-->
-                <!--                         viewBox="0 0 10 6">-->
-                <!--                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
-                <!--                              d="m1 1 4 4 4-4"/>-->
-                <!--                    </svg>-->
-                <!--                </button>-->
+                <div class="relative">
+                    <button @click="toggleSorting"
+                            class="flex items-center justify-between w-56 py-2 px-3 font-medium text-white bg-blackSimple border-b border-love hover:bg-blackActive"
+                            type="button"
+                    >
+                        <DownArrowSvg class="w-4 h-4"/>
+                        <span class="px-6">
+                            Сортировка
+                        </span>
+                        <SortingSvg class="w-6 h-6"/>
+                    </button>
 
-
-                <select name="sorting"
-                        class="flex items-center justify-between w-[240] py-2 px-3 font-medium text-white bg-blackSimple border-b border-love hover:bg-blackActive"
-                >
-                    <option value="1">По дате добавления</option>
-                    <option value="2">По рейтингу</option>
-                    <option value="3">По премьере</option>
-                </select>
+                    <div v-show="isSorting"
+                         class="absolute z-20 bg-blackSimple text-white w-60 mt-2 overflow-hidden select-none rounded shadow-[0_5px_10px_0_rgba(0,0,0,0.7)]"
+                    >
+                        <div class="flex items-center ps-2 hover:bg-blackActive"
+                             v-for="dataSorting in dataSearch.sorting" :key="dataSorting.id"
+                        >
+                            <input :id="dataSorting.slug"
+                                   type="radio"
+                                   name="sorting"
+                                   :value="dataSorting.slug"
+                                   v-model="this.selectedDataSearch.sorting"
+                                   @click="toggleSorting"
+                                   @change="updateDataFilters"
+                                   class="w-4 h-4 p-2 mx-1 text-love bg-gray-500 border-gray-500 ring-0 focus:ring-0"
+                            >
+                            <label :for="dataSorting.slug"
+                                   class="w-full py-2.5 ms-2 rounded truncate"
+                            >
+                                {{ dataSorting.title }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="flex items-center justify-between">
                     <input type="search"
                            name="title"
                            placeholder="Поиск по ключевым словам..."
-                           v-model="searchText"
-                           class="w-[600px] bg-blackSimple text-white border-x-0 border-t-0 duration-200 transition text-center rounded-s-md focus:ring-0 focus:border-b-love hover:bg-blackActive focus:bg-blackActive"
+                           v-model="selectedDataSearch.title"
+                           class="w-144 bg-blackSimple text-white border-x-0 border-t-0 duration-200 transition text-center rounded-s-md focus:ring-0 focus:border-b-love hover:bg-blackActive focus:bg-blackActive"
                     />
 
-                    <button @click="updateData"
+                    <button @click="updateDataFilters"
                             class="px-5 h-full text-love hover:text-white border border-love hover:bg-love rounded-e-md"
                     >
                         <SearchSvg class="h-7 w-7"/>
@@ -117,19 +133,19 @@ export default {
                 </div>
 
                 <button @click="toggleFiltersMenu"
-                        class="flex items-center justify-between w-[200] py-2 px-3 font-medium text-white bg-blackSimple border-b border-love hover:bg-blackActive"
+                        class="flex items-center justify-between w-56 py-2 px-3 font-medium text-white bg-blackSimple border-b border-love hover:bg-blackActive"
                         type="button"
                 >
                     <FilterSvg class="w-6 h-6"/>
                     <span class="px-6">
                         Фильтры
                     </span>
-                    <DownArrowSvg class="w-3 h-3 ms-1"/>
+                    <DownArrowSvg class="w-4 h-4"/>
                 </button>
             </nav>
 
             <div v-show="isFiltersMenu"
-                 class="bg-blackSimple border-blackActive shadow-sm border-y"
+                 class="bg-blackSimple border-blackActive border-y"
             >
                 <div class="flex flex-row justify-center">
                     <div class="bg-blackSimple text-white w-60 overflow-hidden select-none mx-5">
@@ -137,13 +153,13 @@ export default {
                             Тип
                         </div>
                         <ul class="min-h-20 max-h-64 px-2 overflow-y-auto">
-                            <li v-for="dataType in dataTypes" :key="dataType.id">
+                            <li v-for="dataType in dataSearch.types" :key="dataType.id">
                                 <div class="flex items-center ps-2 rounded hover:bg-blackActive">
                                     <input :id="`types_${dataType.slug}`"
                                            type="checkbox"
                                            name="types[]"
                                            :value="`${dataType.slug}`"
-                                           v-model="this.selectTypes"
+                                           v-model="this.selectedDataSearch.types"
                                            class="w-4 h-4 p-2 mx-1 text-love bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
                                            @change="updateDataFilters"
                                     >
@@ -164,7 +180,7 @@ export default {
                                 <input type="checkbox"
                                        name="strict_genre"
                                        class="sr-only peer"
-                                       v-model="strict_genre"
+                                       v-model="selectedDataSearch.strict_genre"
                                        @change="updateDataFilters"
                                 >
                                 <span
@@ -182,13 +198,13 @@ export default {
                         </div>
 
                         <ul class="min-h-20 max-h-64 px-2 overflow-y-auto">
-                            <li v-for="dataGenre in dataGenres" :key="dataGenre.id">
+                            <li v-for="dataGenre in dataSearch.genres" :key="dataGenre.id">
                                 <div class="flex items-center ps-2 rounded hover:bg-blackActive">
                                     <input :id="`genres_${dataGenre.slug}`"
                                            type="checkbox"
                                            name="genres[]"
                                            :value="`${dataGenre.slug}`"
-                                           v-model="this.selectGenres"
+                                           v-model="this.selectedDataSearch.genres"
                                            @change="updateDataFilters"
                                            class="w-4 h-4 p-2 mx-1 text-love bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
                                     >
@@ -209,7 +225,7 @@ export default {
                                 <input type="checkbox"
                                        name="strict_studio"
                                        class="sr-only peer"
-                                       v-model="strict_studio"
+                                       v-model="selectedDataSearch.strict_studio"
                                        @change="updateDataFilters"
                                 >
                                 <span
@@ -227,13 +243,13 @@ export default {
                         </div>
 
                         <ul class="min-h-20 max-h-64 px-2 overflow-y-auto">
-                            <li v-for="dataStudio in dataStudios" :key="dataStudio.id">
+                            <li v-for="dataStudio in dataSearch.studios" :key="dataStudio.id">
                                 <div class="flex items-center ps-2 rounded hover:bg-blackActive">
                                     <input :id="`studios_${dataStudio.slug}`"
                                            type="checkbox"
                                            name="studios[]"
                                            :value="`${dataStudio.slug}`"
-                                           v-model="this.selectGenres"
+                                           v-model="this.selectedDataSearch.studios"
                                            @change="updateDataFilters"
                                            class="w-4 h-4 p-2 mx-1 text-love bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
                                     >
@@ -252,13 +268,13 @@ export default {
                             Страна
                         </div>
                         <ul class="min-h-20 max-h-64 px-2 overflow-y-auto">
-                            <li v-for="dataCountry in dataCountries" :key="dataCountry.id">
+                            <li v-for="dataCountry in dataSearch.countries" :key="dataCountry.id">
                                 <div class="flex items-center ps-2 rounded hover:bg-blackActive">
                                     <input :id="`studios_${dataCountry.slug}`"
                                            type="checkbox"
                                            name="countries[]"
                                            :value="`${dataCountry.slug}`"
-                                           v-model="this.selectCountries"
+                                           v-model="this.selectedDataSearch.countries"
                                            @change="updateDataFilters"
                                            class="w-4 h-4 p-2 mx-1 text-love bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
                                     >
@@ -284,11 +300,12 @@ export default {
                                 </div>
                                 <input id="year_fromInput"
                                        name="year_from"
-                                       v-model="year_from"
+                                       v-model="selectedDataSearch.year_from"
                                        type="number"
                                        min="1970"
                                        max="2030"
                                        placeholder="Введите год"
+                                       @change="updateDataFilters"
                                        class="py-1.5 w-full text-center text-white bg-blackActive rounded-e-md border-none focus:ring-love"
                                 >
                             </div>
@@ -296,7 +313,7 @@ export default {
                                 <label for="year_fromRange" class="sr-only"></label>
                                 <input id="year_fromRange"
                                        type="range"
-                                       v-model="year_from"
+                                       v-model="selectedDataSearch.year_from"
                                        min="1970"
                                        max="2030"
                                        @change="updateDataFilters"
@@ -314,11 +331,12 @@ export default {
                                 </div>
                                 <input id="year_toInput"
                                        name="year_to"
-                                       v-model="year_to"
+                                       v-model="selectedDataSearch.year_to"
                                        type="number"
                                        min="1970"
                                        max="2030"
                                        placeholder="Введите год"
+                                       @change="updateDataFilters"
                                        class="py-1.5 w-full text-center text-white bg-blackActive rounded-e-md border-none focus:ring-love"
                                 >
                             </div>
@@ -326,7 +344,7 @@ export default {
                                 <label for="year_toRange" class="sr-only"></label>
                                 <input id="year_toRange"
                                        type="range"
-                                       v-model="year_to"
+                                       v-model="selectedDataSearch.year_to"
                                        min="1970"
                                        max="2030"
                                        @change="updateDataFilters"
@@ -337,12 +355,7 @@ export default {
                             </div>
                         </div>
                     </div>
-
-
-
-
                 </div>
             </div>
         </div>
-    </div>
 </template>

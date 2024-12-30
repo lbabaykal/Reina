@@ -8,7 +8,7 @@ export default {
 </script>
 
 <template>
-    <div class="flex select-none flex-row transition-all duration-300 h-[40px] rounded-full bg-black/60 hover:bg-white/25">
+    <div class="flex select-none flex-row transition-all duration-300 h-10 rounded-full bg-black/60 hover:bg-white/25">
         <div class="flex flex-col justify-center text-nowrap text-center">
             <div class="font-bold text-lg px-16">
                 Loading...

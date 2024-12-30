@@ -23,46 +23,41 @@ class SearchRequest extends FormRequest
      */
     public function rules(): array
     {
-        $types = cache()->remember('types', 14400, function () {
-            return Type::query()->pluck('slug')->toArray();
-        });
-
-        $genres = cache()->remember('genres', 14400, function () {
-            return Genre::query()->pluck('slug')->toArray();
-        });
-
-        $studios = cache()->remember('studios', 14400, function () {
-            return Studio::query()->pluck('slug')->toArray();
-        });
-
-        $countries = cache()->remember('countries', 14400, function () {
-            return Country::query()->pluck('slug')->toArray();
-        });
-
         return [
             'title' => ['nullable', 'string', 'max:255'],
             'strict_genre' => ['nullable', 'in:1,0,true,false'],
             'strict_studio' => ['nullable', 'in:1,0,true,false'],
 
             'types' => ['nullable', 'array'],
-            'types.*' => ['nullable', 'string', Rule::in($types)],
+            'types.*' => ['nullable', 'string', Rule::in((new Type)->cache()->pluck('slug')->toArray())],
 
             'genres' => ['nullable', 'array'],
-            'genres.*' => ['nullable', 'string', Rule::in($genres)],
+            'genres.*' => ['nullable', 'string', Rule::in((new Genre)->cache()->pluck('slug')->toArray())],
 
             'studios' => ['nullable', 'array'],
-            'studios.*' => ['nullable', 'string', Rule::in($studios)],
+            'studios.*' => ['nullable', 'string', Rule::in((new Studio)->cache()->pluck('slug')->toArray())],
 
             'countries' => ['nullable', 'array'],
-            'countries.*' => ['nullable', 'string', Rule::in($countries)],
+            'countries.*' => ['nullable', 'string', Rule::in((new Country)->cache()->pluck('slug')->toArray())],
 
             'year_from' => ['nullable', 'integer'],
             'year_to' => ['nullable', 'integer'],
 
-            'sorting' => ['nullable', 'integer'],
+            'sorting' => ['nullable', 'string', 'in:date_updated,rating,premiere_asc,premiere_desc'],
 
             'page' => ['nullable', 'integer'],
         ];
+    }
+
+    public function prepareForValidation(): void
+    {
+//        if (!$this->filled('sorting')) {
+//            $this->merge(['sorting' => 'date_added']);
+//        }
+
+        if (!$this->filled('page')) {
+            $this->merge(['page' => 1]);
+        }
     }
 
 }

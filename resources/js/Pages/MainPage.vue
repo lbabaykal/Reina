@@ -36,7 +36,7 @@ export default {
 
 <template>
     <div>
-        <section class="margin-content">
+        <section class="mt-15">
             <div class="py-2 select-none flex flex-row items-center justify-center">
                 <router-link :to="{ name: 'animes.index' }"
                              class="font-bold group flex flex-row items-center justify-center"
@@ -47,7 +47,7 @@ export default {
                 </router-link>
             </div>
 
-            <div class="w-full px-2.5 grid gap-3 place-items-center grid-flow-row grid-cols-8">
+            <div class="w-full px-2.5 grid gap-3 grid-cols-8 place-items-center grid-flow-row ">
                 <CardAnime v-if="dataLoading"
                                     v-for="dataAnime in dataAnimes"
                                     :id="dataAnime.id"
@@ -72,7 +72,7 @@ export default {
                 </router-link>
             </div>
 
-            <div class="w-full px-2.5 grid gap-3 place-items-center grid-flow-row grid-cols-8">
+            <div class="w-full px-2.5 grid gap-3 grid-cols-8 place-items-center grid-flow-row">
                 <CardDorama v-if="dataLoading"
                                      v-for="dataDorama in dataDoramas"
                                      :id="dataDorama.id"

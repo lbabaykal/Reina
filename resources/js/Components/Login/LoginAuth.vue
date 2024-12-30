@@ -55,7 +55,7 @@ export default {
     <div>
         <div id="menuAuth"
              @click="toggleUserMenu"
-             class="group flex cursor-pointer select-none flex-row transition-all duration-300 h-[40px] rounded-full
+             class="group flex cursor-pointer select-none flex-row transition-all duration-300 h-10 rounded-full
              bg-black/60 shadow shadow-red-600 hover:bg-black hover:shadow-red-600 hover:shadow-md"
         >
             <div class="relative flex flex-col justify-center text-nowrap text-center">
