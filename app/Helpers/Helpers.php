@@ -7,12 +7,3 @@ if (! function_exists('getIdFromSlug')) {
         return $matches[0] ?? null;
     }
 }
-
-if (! function_exists('imageService')) {
-
-    function imageService(): \App\Services\Image\ImageService
-    {
-        return new \App\Services\Image\ImageService();
-    }
-}
-

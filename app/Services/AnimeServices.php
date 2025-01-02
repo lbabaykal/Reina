@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Http\Requests\AdminPanel\AnimeUpdateRequest;
 use App\Models\Anime;
+use App\Services\Image\CoverService;
+use App\Services\Image\PosterService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,15 +18,8 @@ class AnimeServices
     {
         $anime = new Anime();
 
-        $anime->poster = imageService()
-            ->setFileField('poster')
-            ->setStorage('s3_animes')
-            ->save();
-
-        $anime->cover = imageService()
-            ->setFileField('cover')
-            ->setStorage('s3_animes')
-            ->save();
+        $anime->poster = (new PosterService())->setStorage('s3_animes')->save();
+        $anime->cover = (new CoverService())->setStorage('s3_animes')->save();
 
         $anime->slug = str()->slug($request->safe()->input('title_ru'));
         $anime->title_org = $request->safe()->input('title_org');
@@ -85,19 +80,12 @@ class AnimeServices
 
     public function update(AnimeUpdateRequest $request, Model $anime): RedirectResponse
     {
-
         if (request()->has('poster')) {
-            $anime->poster = imageService()
-                ->setFileField('poster')
-                ->setStorage('s3_animes')
-                ->save() ?? $anime->poster;
+            $anime->poster = (new PosterService())->setStorage('s3_animes')->save() ?? $anime->poster;
         }
 
         if (request()->has('cover')) {
-            $anime->cover = imageService()
-                ->setFileField('cover')
-                ->setStorage('s3_animes')
-                ->save() ?? $anime->cover;
+            $anime->cover = (new CoverService())->setStorage('s3_animes')->save() ?? $anime->cover;
         }
 
         $anime->title_org = $request->safe()->input('title_org');

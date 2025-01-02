@@ -122,6 +122,7 @@ export default {
                            name="title"
                            placeholder="Поиск по ключевым словам..."
                            v-model="selectedDataSearch.title"
+                           @keydown.enter="updateDataFilters"
                            class="w-144 bg-blackSimple text-white border-x-0 border-t-0 duration-200 transition text-center rounded-s-md focus:ring-0 focus:border-b-love hover:bg-blackActive focus:bg-blackActive"
                     />
 

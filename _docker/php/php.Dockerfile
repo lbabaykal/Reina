@@ -1,4 +1,4 @@
-FROM php:fpm
+FROM php:fpm-bullseye
 
 RUN apt-get update && apt-get install -y \
     apt-utils \
@@ -6,12 +6,13 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libwebp-dev \
+    libavif-dev \
     libzip-dev \
     zip unzip \
     git && \
     docker-php-ext-install bcmath && \
     docker-php-ext-install pdo_pgsql && \
-    docker-php-ext-configure gd --with-jpeg --with-webp && \
+    docker-php-ext-configure gd --with-jpeg --with-webp --with-avif && \
     docker-php-ext-install gd && \
     pecl install redis && docker-php-ext-enable redis && \
     docker-php-ext-install zip && \

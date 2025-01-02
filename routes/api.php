@@ -24,7 +24,8 @@ Route::domain(env('APP_URL'))->group(function () {
     });
 
     Route::get('/main', MainController::class)->name('main');
-    Route::get('/search-data', SearchController::class);
+    Route::get('/search', [SearchController::class, 'index']);
+    Route::get('/search-data', [SearchController::class, 'searchData']);
 
 
     Route::prefix('animes')->name('animes.')->group(function () {

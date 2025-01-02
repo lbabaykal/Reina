@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Http\Requests\AdminPanel\DoramaUpdateRequest;
 use App\Models\Dorama;
+use App\Services\Image\CoverService;
+use App\Services\Image\PosterService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,15 +18,8 @@ class DoramaServices
     {
         $dorama = new Dorama();
 
-        $dorama->poster = imageService()
-            ->setFileField('poster')
-            ->setStorage('s3_doramas')
-            ->save();
-
-        $dorama->cover = imageService()
-            ->setFileField('cover')
-            ->setStorage('s3_doramas')
-            ->save();
+        $dorama->poster = (new PosterService())->setStorage('s3_doramas')->save();
+        $dorama->cover = (new CoverService())->setStorage('s3_doramas')->save();
 
         $dorama->slug = str()->slug($request->safe()->input('title_ru'));
         $dorama->title_org = $request->safe()->input('title_org');
@@ -86,17 +81,11 @@ class DoramaServices
     public function update(DoramaUpdateRequest $request, Model $dorama): RedirectResponse
     {
         if (request()->has('poster')) {
-            $dorama->poster = imageService()
-                ->setFileField('poster')
-                ->setStorage('s3_doramas')
-                ->save() ?? $dorama->poster;
+            $dorama->poster = (new PosterService())->setStorage('s3_doramas')->save() ?? $dorama->poster;
         }
 
         if (request()->has('cover')) {
-            $dorama->cover = imageService()
-                ->setFileField('cover')
-                ->setStorage('s3_doramas')
-                ->save() ?? $dorama->cover;
+            $dorama->cover = (new CoverService())->setStorage('s3_doramas')->save() ?? $dorama->cover;
         }
 
         $dorama->title_org = $request->safe()->input('title_org');

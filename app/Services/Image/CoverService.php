@@ -5,12 +5,13 @@ namespace App\Services\Image;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 
-class ImageService extends AbstractImage
+class CoverService extends AbstractImage
 {
     private $image;
 
     public function __construct()
     {
+        $this->setFileField('cover');
         $this->setFormat('webp');
         $this->setStorage('images');
     }
@@ -25,9 +26,6 @@ class ImageService extends AbstractImage
         }
 
         switch ($this->format) {
-            case 'source':
-                $this->image = request()->file($this->fileField);
-                break;
             case 'webp':
                 $this->image = ImageManager::gd()
                     ->read(request()->file($this->fileField))
