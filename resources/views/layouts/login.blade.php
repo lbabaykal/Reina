@@ -224,7 +224,7 @@
         </div>
 
         <div id="MenuDropdown"
-             class="hidden absolute right-14 top-[60] w-72 select-none rounded bg-gray-900 shadow-[0_5px_10px_0_rgba(0,0,0,0.7)]"
+             class="hidden absolute right-14 top-[60] w-72 select-none rounded bg-gray-900 shadow-modals"
         >
             <div class="flex items-center border-b-2 border-b-blue-600">
                 <div class="m-3 h-16 w-16 rounded-full bg-cover bg-center"

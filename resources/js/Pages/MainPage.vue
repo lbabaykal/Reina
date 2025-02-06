@@ -8,20 +8,20 @@ export default {
     components: {CardDorama, CardAnime, CardLoading},
     data() {
         return {
-            dataAnimes: [],
-            dataDoramas: [],
+            dataAnimes: [Array, Object],
+            dataDoramas: [Array, Object],
             dataLoading: false,
         }
     },
     methods: {
-        getMainPageData() {
+        getMainData() {
             this.dataLoading = false;
-            axios.get('api/main')
-                .then( response => {
-                    this.dataAnimes = response.data['animes'];
-                    this.dataDoramas = response.data['doramas'];
+            axios.get('/api/main')
+                .then(response => {
+                    this.dataAnimes = response.data.animes;
+                    this.dataDoramas = response.data.doramas;
                 })
-                .catch( error => {
+                .catch(error => {
                     // TODO Уведомление не получилось загрузить данные
                 })
                 .finally(() => {
@@ -30,9 +30,10 @@ export default {
         }
     },
     mounted() {
-        this.getMainPageData()
+        this.getMainData()
     }
-}</script>
+}
+</script>
 
 <template>
     <div>
@@ -49,17 +50,17 @@ export default {
 
             <div class="w-full px-2.5 grid gap-3 grid-cols-8 place-items-center grid-flow-row ">
                 <CardAnime v-if="dataLoading"
-                                    v-for="dataAnime in dataAnimes"
-                                    :id="dataAnime.id"
-                                    :slug="dataAnime.slug"
-                                    :poster="dataAnime.poster"
-                                    :title="dataAnime.title"
-                                    :rating="dataAnime.rating"
-                                    :episodes_released="dataAnime.episodes_released"
-                                    :episodes_total="dataAnime.episodes_total"
+                           v-for="dataAnime in dataAnimes"
+                           :id="dataAnime.id"
+                           :slug="dataAnime.slug"
+                           :poster="dataAnime.poster"
+                           :title="dataAnime.title"
+                           :rating="dataAnime.rating"
+                           :episodes_released="dataAnime.episodes_released"
+                           :episodes_total="dataAnime.episodes_total"
                 />
 
-                <CardLoading v-else v-for="n in 16" :key="n" />
+                <CardLoading v-else v-for="n in 16" :key="n"/>
             </div>
 
             <div class="py-2 select-none flex flex-row items-center justify-center">
@@ -74,17 +75,17 @@ export default {
 
             <div class="w-full px-2.5 grid gap-3 grid-cols-8 place-items-center grid-flow-row">
                 <CardDorama v-if="dataLoading"
-                                     v-for="dataDorama in dataDoramas"
-                                     :id="dataDorama.id"
-                                     :slug="dataDorama.slug"
-                                     :poster="dataDorama.poster"
-                                     :title="dataDorama.title"
-                                     :rating="dataDorama.rating"
-                                     :episodes_released="dataDorama.episodes_released"
-                                     :episodes_total="dataDorama.episodes_total"
+                            v-for="dataDorama in dataDoramas"
+                            :id="dataDorama.id"
+                            :slug="dataDorama.slug"
+                            :poster="dataDorama.poster"
+                            :title="dataDorama.title"
+                            :rating="dataDorama.rating"
+                            :episodes_released="dataDorama.episodes_released"
+                            :episodes_total="dataDorama.episodes_total"
                 />
 
-                <CardLoading v-else v-for="n in 16" :key="n" />
+                <CardLoading v-else v-for="n in 16" :key="n"/>
             </div>
         </section>
     </div>

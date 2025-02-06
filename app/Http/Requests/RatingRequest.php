@@ -9,7 +9,7 @@ class RatingRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->check();
+        return true;
     }
 
     /**
@@ -20,7 +20,7 @@ class RatingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'assessment' => ['required', 'numeric', 'between:0,10'],
+            'assessment' => ['required', 'numeric', 'between:1,10'],
         ];
     }
 

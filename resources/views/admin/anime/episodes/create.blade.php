@@ -11,13 +11,13 @@
                     @endif
 
                     <p class="mt-1 text-base">
-                        <a href="{{ route('admin.anime.episodes.index', $anime) }}" class="text-red-500 hover:text-blue-500 mr-2">
+                        <a href="{{ route('admin.animes.episodes.index', $anime) }}" class="text-red-500 hover:text-blue-500 mr-2">
                             Назад к эпизодам
                         </a>
                     </p>
                 </div>
 
-                <form action="{{ route('admin.anime.episodes.store', $anime) }}" method="POST">
+                <form action="{{ route('admin.animes.episodes.store', $anime) }}" method="POST">
                     @csrf
                     <div class="grid gap-6 mb-6 md:grid-cols-3">
                         <div>

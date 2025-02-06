@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class DoramaServices
+class DoramaAdminServices
 {
     public function store(Request $request): RedirectResponse
     {

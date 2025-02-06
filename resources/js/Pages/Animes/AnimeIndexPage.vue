@@ -38,7 +38,7 @@ export default {
     methods: {
         async getAnimesData() {
             this.dataLoading = false;
-            await axios.get('api/animes',  { params: this.selectedDataSearch })
+            await axios.get('/api/animes',  { params: this.selectedDataSearch })
             .then(response => {
                 this.dataAnimes = response.data.data;
                 this.dataPagination = response.data.meta;

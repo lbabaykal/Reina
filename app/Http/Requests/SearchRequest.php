@@ -29,16 +29,16 @@ class SearchRequest extends FormRequest
             'strict_studio' => ['nullable', 'in:1,0,true,false'],
 
             'types' => ['nullable', 'array'],
-            'types.*' => ['nullable', 'string', Rule::in((new Type)->cache()->pluck('slug')->toArray())],
+            'types.*' => ['nullable', 'string', Rule::in(new Type()->cache()->pluck('slug')->toArray())],
 
             'genres' => ['nullable', 'array'],
-            'genres.*' => ['nullable', 'string', Rule::in((new Genre)->cache()->pluck('slug')->toArray())],
+            'genres.*' => ['nullable', 'string', Rule::in(new Genre()->cache()->pluck('slug')->toArray())],
 
             'studios' => ['nullable', 'array'],
-            'studios.*' => ['nullable', 'string', Rule::in((new Studio)->cache()->pluck('slug')->toArray())],
+            'studios.*' => ['nullable', 'string', Rule::in(new Studio()->cache()->pluck('slug')->toArray())],
 
             'countries' => ['nullable', 'array'],
-            'countries.*' => ['nullable', 'string', Rule::in((new Country)->cache()->pluck('slug')->toArray())],
+            'countries.*' => ['nullable', 'string', Rule::in(new Country()->cache()->pluck('slug')->toArray())],
 
             'year_from' => ['nullable', 'integer'],
             'year_to' => ['nullable', 'integer'],

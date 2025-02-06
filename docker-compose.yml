@@ -75,6 +75,7 @@ services:
     tty: true
     networks:
       - laravel
+# docker-compose exec node npm install
 # docker-compose exec node npm run dev
 
   composer:
@@ -88,9 +89,12 @@ services:
       - laravel
 # docker-compose run composer install
 
+# docker run --rm --dns=1.1.1.1 --dns=8.8.8.8 --net=host cloudflare/cloudflared:latest tunnel --url http://localhost:80
+
 volumes:
   postgres_data:
   redis_data:
 
 networks:
   laravel:
+    driver: bridge

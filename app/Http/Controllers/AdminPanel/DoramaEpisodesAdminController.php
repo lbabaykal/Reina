@@ -41,7 +41,7 @@ class DoramaEpisodesAdminController extends Controller
         $episode = $dorama->doramaEpisodes()->create($request->validated());
 
         return redirect()
-            ->route('admin.dorama.episodes.index', $dorama)
+            ->route('admin.doramas.episodes.index', $dorama)
             ->with('message', "Эпизод {$episode->title_ru} добавлен.");
     }
 
@@ -60,7 +60,7 @@ class DoramaEpisodesAdminController extends Controller
         $episode->update($request->validated());
 
         return redirect()
-            ->route('admin.dorama.episodes.index', $dorama)
+            ->route('admin.doramas.episodes.index', $dorama)
             ->with('message', "Эпизод {$episode->title_ru} обновлен.");
     }
 
@@ -69,7 +69,7 @@ class DoramaEpisodesAdminController extends Controller
         $episode->delete();
 
         return redirect()
-            ->route('admin.dorama.episodes.index', $dorama)
+            ->route('admin.doramas.episodes.index', $dorama)
             ->with('message', "Эпизод {$episode->title_ru} удалён.");
     }
 }

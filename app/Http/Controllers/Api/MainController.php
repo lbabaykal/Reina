@@ -14,7 +14,7 @@ class MainController extends Controller
 {
     public function __invoke(): Response
     {
-        $animes = cache()->store('redis_animes')->remember('main_animes', 14400, function () {
+        $animes = cache()->store('redis_animes')->flexible('main_animes', [1200,1800], function () {
             return Anime::query()
                 ->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])
                 ->limit(Reina::COUNT_ARTICLES_MAIN)
@@ -22,7 +22,7 @@ class MainController extends Controller
                 ->get();
         });
 
-        $doramas = cache()->store('redis_doramas')->remember('main_doramas', 14400, function () {
+        $doramas = cache()->store('redis_doramas')->flexible('main_doramas', [1200,1800], function () {
             return Dorama::query()
                 ->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])
                 ->limit(Reina::COUNT_ARTICLES_MAIN)

@@ -33,6 +33,10 @@ class AnimeObserver
             $this->forgetCacheMainAnime();
         }
 
+        if ($anime->isDirty('slug')) {
+            cache()->store('redis_animes')->forget('anime:' . $anime->getOriginal('slug'));
+            cache()->store('redis_animes')->forget('anime_watch:' . $anime->getOriginal('slug'));
+        }
     }
 
     public function updated(Anime $anime): void
@@ -102,7 +106,7 @@ class AnimeObserver
 
     public function forgetCacheAnime(Anime $anime): void
     {
-        cache()->store('redis_animes')->forget('anime:' . $anime->id);
-        cache()->store('redis_animes')->forget('anime_watch:' . $anime->id);
+        cache()->store('redis_animes')->forget('anime:' . $anime->slug);
+        cache()->store('redis_animes')->forget('anime_watch:' . $anime->slug);
     }
 }

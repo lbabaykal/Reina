@@ -13,7 +13,8 @@ use App\Http\Filters\Fields\TypesFilter;
 use App\Http\Filters\Fields\YearFromFilter;
 use App\Http\Filters\Fields\YearToFilter;
 use App\Http\Requests\SearchRequest;
-use App\Http\Resources\DoramasIndexResource;
+use App\Http\Resources\Doramas\DoramasIndexResource;
+use App\Http\Resources\Doramas\DoramasShowResource;
 use App\Models\Dorama;
 use App\Models\FolderDorama;
 use App\Reina;
@@ -41,25 +42,23 @@ class DoramaController extends Controller
         return DoramasIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', request()->input('page', 1)));
     }
 
-    public function show($slug): View
+    public function show($slug)
     {
-        $dorama = cache()->store('redis_doramas')->remember('dorama:'.$slug, 600, function () use ($slug) {
+        $dorama = cache()->store('redis_doramas')->flexible('dorama:'.$slug, [1200,1800], function () use ($slug) {
             return Dorama::query()
-                ->where('slug', $slug)
-                ->with('type')
-                ->with('country')
-                ->with('studios')
-                ->with('genres')
+//              ->select([])
+                ->where('id', getIdFromSlug($slug))
+                ->with(['type', 'countries', 'studios', 'genres'])
                 ->firstOrFail();
         });
 
         $ratingUser = $dorama->ratings()
             ->where('user_id', auth()->id())
-            ->value('assessment');
+            ->value('assessment') ?? 0;
 
         $favoriteUser = $dorama->favorites()
             ->where('user_id', auth()->id())
-            ->value('folder_dorama_id');
+            ->value('folder_dorama_id') ?? 0;
 
         $foldersUser = FolderDorama::query()
             ->where('user_id', auth()->id())
@@ -67,11 +66,14 @@ class DoramaController extends Controller
             ->orderBy('id')
             ->get();
 
-        return view('layouts.dorama.show')
-            ->with('dorama', $dorama)
-            ->with('favoriteUser', $favoriteUser)
-            ->with('ratingUser', $ratingUser)
-            ->with('foldersUser', $foldersUser);
+        return response([
+            'dataDorama' => DoramasShowResource::make($dorama),
+            'dataUserForDorama' => [
+                'rating' => $ratingUser,
+                'favoriteId' => $favoriteUser,
+                'folders' => $foldersUser,
+            ],
+        ]);
     }
 
     public function watch($slug): View

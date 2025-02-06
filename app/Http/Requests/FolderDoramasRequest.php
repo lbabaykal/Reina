@@ -21,11 +21,11 @@ class FolderDoramasRequest extends FormRequest
     {
         if ($this->isMethod('POST')) {
             return [
-                'title' => ['required', 'string', 'min:2', 'max:255'],
+                'title' => ['required', 'string', 'min:2', 'max:32'],
             ];
         } elseif ($this->isMethod('PATCH')) {
             return [
-                'title' => ['required', 'string', 'min:2', 'max:255'],
+                'title' => ['required', 'string', 'min:2', 'max:32'],
             ];
         }
     }

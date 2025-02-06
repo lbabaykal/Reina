@@ -32,7 +32,7 @@ export default {
     methods: {
         async getSearchData() {
             this.dataLoading = false;
-            await axios.get('api/search',  { params: this.selectedDataSearch })
+            await axios.get('/api/search',  { params: this.selectedDataSearch })
                 .then(response => {
                     this.dataAnimes = response.data.dataAnimes;
                     this.dataDoramas = response.data.dataDoramas;

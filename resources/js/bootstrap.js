@@ -21,9 +21,14 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use((response) => {
     return response
 }, (error) => {
-    if (error.response.status === 401 || error.response.status === 419) {
+    // if (error.response.status === 401 || error.response.status === 419) {
+    if (error.response.status === 419) {
         useAuthStore().destroyUser();
         router.push({name: 'login'});
+    }
+
+    if (error.response.status === 404) {
+        router.push({name: '404'});
     }
 
     return Promise.reject(error)

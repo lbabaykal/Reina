@@ -17,7 +17,7 @@ class MainAnimesResource extends JsonResource
         return [
             'id' => $this->id,
             'slug' => $this->slug,
-            'poster' => $this->posterUrl, //
+            'poster' => $this->posterUrl,
             'title' => $this->title_ru,
             'rating' => $this->rating,
             'episodes_released' => $this->episodes_released,

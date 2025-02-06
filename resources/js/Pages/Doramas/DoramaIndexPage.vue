@@ -38,7 +38,7 @@ export default {
     methods: {
         async getDoramasData() {
             this.dataLoading = false;
-            await axios.get('api/doramas',{ params: this.selectedDataSearch })
+            await axios.get('/api/doramas',{ params: this.selectedDataSearch })
                 .then( response => {
                     this.dataDoramas = response.data.data;
                     this.dataPagination = response.data.meta;

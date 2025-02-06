@@ -13,7 +13,7 @@ use App\Models\Genre;
 use App\Models\Studio;
 use App\Models\Type;
 use App\Reina;
-use App\Services\DoramaServices;
+use App\Services\DoramaAdminServices;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -50,7 +50,7 @@ class DoramaAdminController extends Controller
             ->with('statuses', $statuses);
     }
 
-    public function store(DoramaStoreRequest $request, DoramaServices $doramaServices): RedirectResponse
+    public function store(DoramaStoreRequest $request, DoramaAdminServices $doramaServices): RedirectResponse
     {
         return $doramaServices->store($request);
     }
@@ -78,7 +78,7 @@ class DoramaAdminController extends Controller
             ->with('statuses', $statuses);
     }
 
-    public function update(DoramaUpdateRequest $request, $slug, DoramaServices $doramaServices): RedirectResponse
+    public function update(DoramaUpdateRequest $request, $slug, DoramaAdminServices $doramaServices): RedirectResponse
     {
         $dorama = Dorama::query()
             ->withoutGlobalScopes()

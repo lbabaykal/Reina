@@ -13,7 +13,7 @@ use App\Models\Genre;
 use App\Models\Studio;
 use App\Models\Type;
 use App\Reina;
-use App\Services\AnimeServices;
+use App\Services\AnimeAdminServices;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -50,7 +50,7 @@ class AnimeAdminController extends Controller
             ->with('statuses', $statuses);
     }
 
-    public function store(AnimeStoreRequest $request, AnimeServices $animeServices): RedirectResponse
+    public function store(AnimeStoreRequest $request, AnimeAdminServices $animeServices): RedirectResponse
     {
         return $animeServices->store($request);
     }
@@ -78,7 +78,7 @@ class AnimeAdminController extends Controller
             ->with('statuses', $statuses);
     }
 
-    public function update(AnimeUpdateRequest $request, $slug, AnimeServices $animeServices): RedirectResponse
+    public function update(AnimeUpdateRequest $request, $slug, AnimeAdminServices $animeServices): RedirectResponse
     {
         $anime = Anime::query()
             ->withoutGlobalScopes()

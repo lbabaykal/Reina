@@ -55,7 +55,7 @@ export default {
     <div>
         <div id="menuAuth"
              @click="toggleUserMenu"
-             class="group flex cursor-pointer select-none flex-row transition-all duration-300 h-10 rounded-full
+             class="group flex  cursor-pointer select-none flex-row transition-all duration-300 h-10 rounded-full
              bg-black/60 shadow shadow-red-600 hover:bg-black hover:shadow-red-600 hover:shadow-md"
         >
             <div class="relative flex flex-col justify-center text-nowrap text-center">
@@ -64,20 +64,20 @@ export default {
                     <span class="text-red-500 font-bold">{{ dataUser.name }}</span>
                 </div>
             </div>
-            <img :src="`${dataUser.avatar}`"
+            <img :src="dataUser.avatar"
                  class="h-10 w-10 rounded-full bg-cover bg-center duration-300 group-hover:drop-shadow-[0_0_16px_rgb(255,0,0)]"
-                 :alt="`${dataUser.name}`"
+                 :alt="dataUser.name"
             >
         </div>
 
         <div v-show="isDropdownUserMenu"
-             class="absolute right-14 top-[60px] w-72 select-none rounded overflow-hidden bg-gray-900
-                    shadow-[0_5px_10px_0_rgba(0,0,0,0.7)]"
+             class="absolute right-14 top-15 w-72 select-none rounded overflow-hidden bg-gray-900
+                    shadow-modals"
         >
             <div class="flex items-center border-b-2 border-b-blue-600">
-                <img :src="`${dataUser.avatar}`"
+                <img :src="dataUser.avatar"
                      class="m-3 h-16 w-16 rounded-full bg-cover bg-center"
-                     :alt="`${dataUser.name}`"
+                     :alt="dataUser.name"
                 >
                 <div class="flex-row w-[200px]">
                     <div class="truncate text-xl font-bold">{{ dataUser.name }}</div>
@@ -112,7 +112,7 @@ export default {
                         Подписка
                     </span>
                 </router-link>
-                <a href="{{ route('user.folders.index') }}"
+                <a href="#"
                    class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
                     <FavoriteSvg classes="m-1.5 h-8 w-8 fill-none stroke-red-500 group-hover:fill-red-500 group-hover:stroke-red-500"/>

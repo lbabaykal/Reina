@@ -4,10 +4,11 @@ import FilterSvg from "./Svg/FilterSvg.vue";
 import DownArrowSvg from "./Svg/DownArrowSvg.vue";
 import QuestionMarkSvg from "./Svg/QuestionMarkSvg.vue";
 import SortingSvg from "./Svg/SortingSvg.vue";
+import ToolTip from "./ToolTip.vue";
 
 export default {
     name: "Search",
-    components: {SortingSvg, QuestionMarkSvg, DownArrowSvg, FilterSvg, SearchSvg},
+    components: {ToolTip, SortingSvg, QuestionMarkSvg, DownArrowSvg, FilterSvg, SearchSvg},
     props: {
         selectedDataSearch: {
             title: String,
@@ -44,7 +45,7 @@ export default {
             this.isSorting = !this.isSorting;
         },
         getSearchData() {
-            axios.get('api/search-data')
+            axios.get('/api/search-data')
                 .then(response => {
                     if (response.data.types &&
                         response.data.genres &&
@@ -83,18 +84,18 @@ export default {
 
                 <div class="relative">
                     <button @click="toggleSorting"
-                            class="flex items-center justify-between w-56 py-2 px-3 font-medium text-white bg-blackSimple border-b border-love hover:bg-blackActive"
+                            class="flex items-center justify-between w-56 py-2 px-3 font-medium text-white bg-blackSimple border-b border-red-400 hover:bg-blackActive"
                             type="button"
                     >
-                        <DownArrowSvg class="w-4 h-4"/>
+                        <DownArrowSvg classes="w-4 h-4"/>
                         <span class="px-6">
                             Сортировка
                         </span>
-                        <SortingSvg class="w-6 h-6"/>
+                        <SortingSvg classes="w-6 h-6"/>
                     </button>
 
                     <div v-show="isSorting"
-                         class="absolute z-20 bg-blackSimple text-white w-60 mt-2 overflow-hidden select-none rounded shadow-[0_5px_10px_0_rgba(0,0,0,0.7)]"
+                         class="absolute z-20 bg-blackSimple text-white w-60 mt-2 select-none rounded shadow-modals"
                     >
                         <div class="flex items-center ps-2 hover:bg-blackActive"
                              v-for="dataSorting in dataSearch.sorting" :key="dataSorting.id"
@@ -106,7 +107,7 @@ export default {
                                    v-model="this.selectedDataSearch.sorting"
                                    @click="toggleSorting"
                                    @change="updateDataFilters"
-                                   class="w-4 h-4 p-2 mx-1 text-love bg-gray-500 border-gray-500 ring-0 focus:ring-0"
+                                   class="w-4 h-4 p-2 mx-1 text-red-400 bg-gray-500 border-gray-500 ring-0 focus:ring-0"
                             >
                             <label :for="dataSorting.slug"
                                    class="w-full py-2.5 ms-2 rounded truncate"
@@ -123,25 +124,25 @@ export default {
                            placeholder="Поиск по ключевым словам..."
                            v-model="selectedDataSearch.title"
                            @keydown.enter="updateDataFilters"
-                           class="w-144 bg-blackSimple text-white border-x-0 border-t-0 duration-200 transition text-center rounded-s-md focus:ring-0 focus:border-b-love hover:bg-blackActive focus:bg-blackActive"
+                           class="w-144 bg-blackSimple text-white border-x-0 border-t-0 duration-200 transition text-center rounded-s-md focus:ring-0 focus:border-b-red-400 hover:bg-blackActive focus:bg-blackActive"
                     />
 
                     <button @click="updateDataFilters"
-                            class="px-5 h-full text-love hover:text-white border border-love hover:bg-love rounded-e-md"
+                            class="px-5 h-full text-red-400 hover:text-white border border-red-400 hover:bg-red-400 rounded-e-md"
                     >
-                        <SearchSvg class="h-7 w-7"/>
+                        <SearchSvg classes="h-7 w-7"/>
                     </button>
                 </div>
 
                 <button @click="toggleFiltersMenu"
-                        class="flex items-center justify-between w-56 py-2 px-3 font-medium text-white bg-blackSimple border-b border-love hover:bg-blackActive"
+                        class="flex items-center justify-between w-56 py-2 px-3 font-medium text-white bg-blackSimple border-b border-red-400 hover:bg-blackActive"
                         type="button"
                 >
-                    <FilterSvg class="w-6 h-6"/>
+                    <FilterSvg classes="w-6 h-6"/>
                     <span class="px-6">
                         Фильтры
                     </span>
-                    <DownArrowSvg class="w-4 h-4"/>
+                    <DownArrowSvg classes="w-4 h-4"/>
                 </button>
             </nav>
 
@@ -149,7 +150,7 @@ export default {
                  class="bg-blackSimple border-blackActive border-y"
             >
                 <div class="flex flex-row justify-center">
-                    <div class="bg-blackSimple text-white w-60 overflow-hidden select-none mx-5">
+                    <div class="bg-blackSimple text-white w-60 select-none mx-5">
                         <div class="text-center font-bold py-2.5">
                             Тип
                         </div>
@@ -159,9 +160,9 @@ export default {
                                     <input :id="`types_${dataType.slug}`"
                                            type="checkbox"
                                            name="types[]"
-                                           :value="`${dataType.slug}`"
+                                           :value="dataType.slug"
                                            v-model="this.selectedDataSearch.types"
-                                           class="w-4 h-4 p-2 mx-1 text-love bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
+                                           class="w-4 h-4 p-2 mx-1 text-red-400 bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
                                            @change="updateDataFilters"
                                     >
                                     <label :for="`types_${dataType.slug}`"
@@ -174,7 +175,7 @@ export default {
                         </ul>
                     </div>
 
-                    <div class="bg-blackSimple text-white w-60 overflow-hidden select-none mx-5">
+                    <div class="bg-blackSimple text-white w-60 select-none mx-5">
                         <div class="font-bold flex flex-row justify-center items-center py-2.5">
                             Жанр
                             <label class="inline-flex items-center cursor-pointer ms-3">
@@ -184,18 +185,14 @@ export default {
                                        v-model="selectedDataSearch.strict_genre"
                                        @change="updateDataFilters"
                                 >
-                                <span
-                                    class="relative w-9 h-5 bg-red-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime-300"></span>
-                                <button type="button" class="ml-3">
-                                    <QuestionMarkSvg class="w-5 h-5"/>
-                                </button>
+                                <span class="relative w-9 h-5 bg-red-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime-300"></span>
                             </label>
-                        </div>
 
-                        <div
-                            class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip border border-gray-500">
-                            ВКЛ: Строгий поиск.<br>
-                            ВЫКЛ: Нестрогий поиск.
+                            <ToolTip classes="py-1.5 px-2 bg-gray-600 text-white font-normal text-sm"
+                                     message="Строгий / Нестрогий поиск"
+                            >
+                                <QuestionMarkSvg classes="w-5 h-5 ml-3 cursor-pointer"/>
+                            </ToolTip>
                         </div>
 
                         <ul class="min-h-20 max-h-64 px-2 overflow-y-auto">
@@ -204,10 +201,10 @@ export default {
                                     <input :id="`genres_${dataGenre.slug}`"
                                            type="checkbox"
                                            name="genres[]"
-                                           :value="`${dataGenre.slug}`"
+                                           :value="dataGenre.slug"
                                            v-model="this.selectedDataSearch.genres"
                                            @change="updateDataFilters"
-                                           class="w-4 h-4 p-2 mx-1 text-love bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
+                                           class="w-4 h-4 p-2 mx-1 text-red-400 bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
                                     >
                                     <label :for="`genres_${dataGenre.slug}`"
                                            class="w-full py-2.5 ms-2 rounded truncate"
@@ -219,7 +216,7 @@ export default {
                         </ul>
                     </div>
 
-                    <div class="bg-blackSimple text-white w-60 overflow-hidden select-none mx-5">
+                    <div class="bg-blackSimple text-white w-60 select-none mx-5">
                         <div class="font-bold flex flex-row justify-center items-center py-2.5">
                             Студия
                             <label class="inline-flex items-center cursor-pointer ms-3">
@@ -229,18 +226,13 @@ export default {
                                        v-model="selectedDataSearch.strict_studio"
                                        @change="updateDataFilters"
                                 >
-                                <span
-                                    class="relative w-9 h-5 bg-red-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime-300"></span>
-
-                                <button type="button" class="ml-3">
-                                    <QuestionMarkSvg class="w-5 h-5"/>
-                                </button>
+                                <span class="relative w-9 h-5 bg-red-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime-300"></span>
                             </label>
-                        </div>
-
-                        <div class="absolute z-50 invisible px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip border border-gray-500">
-                            ВКЛ: Строгий поиск.<br>
-                            ВЫКЛ: Нестрогий поиск.
+                            <ToolTip classes="py-1.5 px-2 bg-gray-600 text-white font-normal text-sm"
+                                     message="Строгий / Нестрогий поиск"
+                            >
+                                <QuestionMarkSvg classes="w-5 h-5 ml-3 cursor-pointer"/>
+                            </ToolTip>
                         </div>
 
                         <ul class="min-h-20 max-h-64 px-2 overflow-y-auto">
@@ -249,10 +241,10 @@ export default {
                                     <input :id="`studios_${dataStudio.slug}`"
                                            type="checkbox"
                                            name="studios[]"
-                                           :value="`${dataStudio.slug}`"
+                                           :value="dataStudio.slug"
                                            v-model="this.selectedDataSearch.studios"
                                            @change="updateDataFilters"
-                                           class="w-4 h-4 p-2 mx-1 text-love bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
+                                           class="w-4 h-4 p-2 mx-1 text-red-400 bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
                                     >
                                     <label :for="`studios_${dataStudio.slug}`"
                                            class="w-full py-2.5 ms-2 rounded truncate"
@@ -264,7 +256,7 @@ export default {
                         </ul>
                     </div>
 
-                    <div class="bg-blackSimple text-white w-60 overflow-hidden select-none mx-5">
+                    <div class="bg-blackSimple text-white w-60 select-none mx-5">
                         <div class="text-center font-bold py-2.5">
                             Страна
                         </div>
@@ -274,10 +266,10 @@ export default {
                                     <input :id="`studios_${dataCountry.slug}`"
                                            type="checkbox"
                                            name="countries[]"
-                                           :value="`${dataCountry.slug}`"
+                                           :value="dataCountry.slug"
                                            v-model="this.selectedDataSearch.countries"
                                            @change="updateDataFilters"
-                                           class="w-4 h-4 p-2 mx-1 text-love bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
+                                           class="w-4 h-4 p-2 mx-1 text-red-400 bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
                                     >
                                     <label :for="`studios_${dataCountry.slug}`"
                                            class="w-full py-2.5 ms-2 rounded truncate"
@@ -289,7 +281,7 @@ export default {
                         </ul>
                     </div>
 
-                    <div class="bg-blackSimple text-white w-60 overflow-hidden select-none mx-3">
+                    <div class="bg-blackSimple text-white w-60 select-none mx-3">
                         <div class="text-center font-bold py-2.5">
                             Год
                         </div>
@@ -307,7 +299,7 @@ export default {
                                        max="2030"
                                        placeholder="Введите год"
                                        @change="updateDataFilters"
-                                       class="py-1.5 w-full text-center text-white bg-blackActive rounded-e-md border-none focus:ring-love"
+                                       class="py-1.5 w-full text-center text-white bg-blackActive rounded-e-md border-none focus:ring-red-400"
                                 >
                             </div>
                             <div class="relative">
@@ -338,7 +330,7 @@ export default {
                                        max="2030"
                                        placeholder="Введите год"
                                        @change="updateDataFilters"
-                                       class="py-1.5 w-full text-center text-white bg-blackActive rounded-e-md border-none focus:ring-love"
+                                       class="py-1.5 w-full text-center text-white bg-blackActive rounded-e-md border-none focus:ring-red-400"
                                 >
                             </div>
                             <div class="relative">

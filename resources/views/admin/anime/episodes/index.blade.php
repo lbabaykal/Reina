@@ -11,10 +11,10 @@
                             - <span class="text-lime-500">{{ $message }}</span>
                         @endif
                         <p class="mt-1 text-base">
-                            <a href="{{ route('admin.anime.edit', $anime) }}" class="text-red-500 hover:text-blue-500 mr-2">
+                            <a href="{{ route('admin.animes.edit', $anime) }}" class="text-red-500 hover:text-blue-500 mr-2">
                                 Назад к редактированию
                             </a>
-                            <a href="{{ route('admin.anime.episodes.create', $anime) }}" class="text-red-500 hover:text-blue-500 mr-2">
+                            <a href="{{ route('admin.animes.episodes.create', $anime) }}" class="text-red-500 hover:text-blue-500 mr-2">
                                 Добавить эпизод
                             </a>
                         </p>
@@ -57,14 +57,14 @@
                                 {{ $episode->release_date }}
                             </td>
                             <td class="px-6 py-4">
-                                <a href="{{ route('admin.anime.episodes.edit', [$anime, $episode]) }}"
+                                <a href="{{ route('admin.animes.episodes.edit', [$anime, $episode]) }}"
                                    class="hover:text-love"
                                 >
                                     Реадактировать
                                 </a>
                             </td>
                             <td class="px-6 py-4">
-                                <form action="{{ route('admin.anime.episodes.destroy', [$anime, $episode])}}" method="POST">
+                                <form action="{{ route('admin.animes.episodes.destroy', [$anime, $episode])}}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit">Удалить</button>

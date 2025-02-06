@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('title_ru');
             $table->string('title_en');
             $table->date('release_date');
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->enum('status', ['PUBLISHED', 'DRAFT', 'ARCHIVE'])->default('DRAFT');
             $table->timestamps();
         });

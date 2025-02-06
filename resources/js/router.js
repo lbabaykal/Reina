@@ -43,6 +43,11 @@ const router = createRouter({
                     name: 'animes.show',
                     props: true
                 },
+                {
+                    path: ':slug/watch', component: () => import('./Pages/Animes/AnimeWatchPage.vue'),
+                    name: 'animes.watch',
+                    props: true
+                },
             ],
         },
         //  Dorama
@@ -57,6 +62,11 @@ const router = createRouter({
                 {
                     path: ':slug', component: () => import('./Pages/Doramas/DoramaShowPage.vue'),
                     name: 'doramas.show',
+                    props: true
+                },
+                {
+                    path: ':slug', component: () => import('./Pages/Doramas/DoramaShowPage.vue'),
+                    name: 'doramas.watch',
                     props: true
                 },
             ],
@@ -107,7 +117,7 @@ const router = createRouter({
                 {
                     path: 'logout',
                     name: 'logout',
-                    beforeEnter: (to, from, next) => {
+                    beforeEnter: () => {
                         useAuthStore().logout();
                     },
                     meta: {

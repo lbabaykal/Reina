@@ -14,6 +14,7 @@ export default defineConfig({
             host: 'reina.online',
             port: 5173,
         },
+        cors: true // Разрешает CORS
     },
     plugins: [
         laravel({

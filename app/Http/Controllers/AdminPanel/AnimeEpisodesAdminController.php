@@ -42,7 +42,7 @@ class AnimeEpisodesAdminController extends Controller
         $episode = $anime->animeEpisodes()->create($request->validated());
 
         return redirect()
-            ->route('admin.anime.episodes.index', $anime)
+            ->route('admin.animes.episodes.index', $anime)
             ->with('message', "Эпизод {$episode->title_ru} добавлен.");
     }
 
@@ -61,7 +61,7 @@ class AnimeEpisodesAdminController extends Controller
         $episode->update($request->validated());
 
         return redirect()
-            ->route('admin.anime.episodes.index', $anime)
+            ->route('admin.animes.episodes.index', $anime)
             ->with('message', "Эпизод {$episode->title_ru} обновлен.");
     }
 
@@ -70,7 +70,7 @@ class AnimeEpisodesAdminController extends Controller
         $episode->delete();
 
         return redirect()
-            ->route('admin.anime.episodes.index', $anime)
+            ->route('admin.animes.episodes.index', $anime)
             ->with('message', "Эпизод {$episode->title_ru} удалён.");
     }
 }

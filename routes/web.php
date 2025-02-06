@@ -37,16 +37,15 @@ Route::domain(env('APP_URL'))->group(function () {
 // ====ANIME====
     Route::prefix('animes')->name('animes.')->group(function () {
         Route::get('/{animes:slug}', [AnimeController::class, 'show'])->name('show');
-//        Route::get('/{anime}-{slug}', [AnimeController::class, 'show'])->name('show');
         Route::get('/{anime:slug}/watch', [AnimeController::class, 'watch'])->name('watch');
         Route::get('/', [AnimeController::class, 'index'])->name('index');
 
-        Route::middleware('auth')->group(function () {
-            Route::patch('/{anime:slug}/rating', [RatingController::class, 'addToAnime'])->name('rating.add');
-            Route::delete('/{anime:slug}/rating', [RatingController::class, 'removeToAnime'])->name('rating.remove');
-            Route::patch('/{anime:slug}/favorite', [FavoriteController::class, 'addToAnime'])->name('favorite.add');
-            Route::delete('/{anime:slug}/favorite', [FavoriteController::class, 'removeToAnime'])->name('favorite.remove');
-        });
+//        Route::middleware('auth')->group(function () {
+//            Route::patch('/{anime:slug}/rating', [RatingController::class, 'addToAnime'])->name('rating.add');
+//            Route::delete('/{anime:slug}/rating', [RatingController::class, 'removeToAnime'])->name('rating.remove');
+//            Route::patch('/{anime:slug}/favorite', [FavoriteController::class, 'addToAnime'])->name('favorite.add');
+//            Route::delete('/{anime:slug}/favorite', [FavoriteController::class, 'removeToAnime'])->name('favorite.remove');
+//        });
     });
 
 // ====DORAMA====

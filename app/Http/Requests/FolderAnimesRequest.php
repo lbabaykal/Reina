@@ -21,7 +21,7 @@ class FolderAnimesRequest extends FormRequest
     {
         if ($this->isMethod('POST')) {
             return [
-                'title' => ['required', 'string', 'min:2', 'max:255']
+                'title' => ['required', 'string', 'min:2', 'max:32']
 
 //                'title' => ['required', 'string', 'min:2', 'max:255',
 //                    Rule::unique('folder_animes')
@@ -32,7 +32,7 @@ class FolderAnimesRequest extends FormRequest
             ];
         } elseif ($this->isMethod('PATCH')) {
             return [
-                'title' => ['required', 'string', 'min:2', 'max:255']
+                'title' => ['required', 'string', 'min:2', 'max:32']
 
 //                'title' => ['required', 'string', 'min:2', 'max:255',
 //                    Rule::unique('folder_animes')

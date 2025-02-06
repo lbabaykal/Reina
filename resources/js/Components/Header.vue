@@ -35,7 +35,7 @@ export default {
 <template>
     <div>
         <header id="header"
-                class="w-full bg-transparent fixed top-0 transition-all duration-500 ease-linear z-50"
+                class="w-full bg-transparent fixed top-0 transition-all duration-300 ease-linear z-50"
         >
             <nav class="mx-auto flex items-center justify-between h-15 px-15">
                 <RouterLink :to="{ name: 'main' }"
