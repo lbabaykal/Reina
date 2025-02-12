@@ -1,6 +1,6 @@
 <script>
-import CardDorama from "../Components/CardDorama.vue";
-import CardAnime from "../Components/CardAnime.vue";
+import CardDorama from "../Components/Doramas/CardDorama.vue";
+import CardAnime from "../Components/Animes/CardAnime.vue";
 import CardLoading from "../Components/CardLoading.vue";
 import Search from "../Components/Search.vue";
 

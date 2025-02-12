@@ -5,12 +5,12 @@ import PlaySvg from "../../Components/Svg/PlaySvg.vue";
 import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
 import Description from "../../Components/Animes/Description.vue";
 import SendSvg from "../../Components/Svg/SendSvg.vue";
-import Rating from "./Modals/Rating.vue";
-import Favorite from "./Modals/Favorite.vue";
+import Rating from "../../Components/Animes/Modals/Rating.vue";
+import Favorite from "../../Components/Animes/Modals/Favorite.vue";
 import ToolTip from "../../Components/ToolTip.vue";
 
 export default {
-    name: "AnimeShowPage",
+    name: "ShowPage",
     components: {ToolTip, Favorite, Rating, SendSvg, Description, LoadingSvg, PlaySvg, FavoriteSvg, StarSvg},
     props: {
         slug: String,
@@ -119,7 +119,7 @@ export default {
                         {{ dataAnime.title_ru }}
                     </div>
 
-                    <div class="w-full flex flex-row items-center justify-center my-1 text-gray-300 text-lg divide-x divide-gray-500">
+                    <div class="w-full flex flex-row items-center justify-center my-1 text-gray-300 text-lg divide-x divide-red-500">
                         <span class="px-3 py-0.5 text-lime-400 font-bold text-2xl">{{ dataAnime.rating }}</span>
 
                         <span v-if="isEpisodes"
@@ -142,14 +142,13 @@ export default {
                         </span>
                     </div>
 
-                    <div class="w-full my-1.5 text-gray-300 flex flex-row justify-center items-center content-center">
+                    <div class="w-full my-1.5 text-gray-300 flex flex-row justify-center items-center content-center divide-x-2 divide-red-500">
                         <div v-for="(dataAnimeGenre, index) in dataAnime.genres">
                             <router-link :to="{ name: 'animes.index', query: { genres: dataAnimeGenre.slug } }"
-                                         class="underline decoration-1 underline-offset-4 hover:decoration-red-500 hover:text-red-500 tracking-wide"
+                                         class="underline decoration-1 underline-offset-4 hover:decoration-red-500 hover:text-red-500 tracking-wide mx-2"
                             >
                                 {{ dataAnimeGenre.title_ru }}
                             </router-link>
-                            <span v-if="index !== dataAnime.genres.length - 1" class="mx-1.5 text-red-500">|</span>
                         </div>
                     </div>
 

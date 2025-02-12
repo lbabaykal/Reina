@@ -1,4 +1,4 @@
-FROM redis:7.4.1
+FROM redis:7.4.2-bookworm
 
 # Копируем конфигурационный файл Redis
 COPY ./_docker/redis/redis.conf /usr/local/etc/redis/redis.conf

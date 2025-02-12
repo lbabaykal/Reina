@@ -1,16 +1,16 @@
 <script>
-import StarSvg from "../../../Components/Svg/StarSvg.vue";
-import SendSvg from "../../../Components/Svg/SendSvg.vue";
-import CloseSvg from "../../../Components/Svg/CloseSvg.vue";
-import TrashSvg from "../../../Components/Svg/TrashSvg.vue";
-import LoadingSvg from "../../../Components/Svg/LoadingSvg.vue";
+import StarSvg from "../../Svg/StarSvg.vue";
+import SendSvg from "../../Svg/SendSvg.vue";
+import CloseSvg from "../../Svg/CloseSvg.vue";
+import TrashSvg from "../../Svg/TrashSvg.vue";
+import LoadingSvg from "../../Svg/LoadingSvg.vue";
 
 export default {
     name: "Rating",
     components: {LoadingSvg, TrashSvg, CloseSvg, SendSvg, StarSvg},
     props: {
-        animeId: Number,
-        dataUserForAnime: {
+        doramaId: Number,
+        dataUserForDorama: {
             rating: Number,
             favorite: {
                 id: Number,
@@ -27,11 +27,11 @@ export default {
         }
     },
     methods: {
-        addAnimeRating() {
+        addDoramaRating() {
             this.dataLoading = true;
-            axios.post(`/api/animes/${this.animeId}/rating`, { assessment: this.assessment })
+            axios.post(`/api/doramas/${this.doramaId}/rating`, { assessment: this.assessment })
                 .then(response => {
-                    this.dataUserForAnime.rating = this.assessment;
+                    this.dataUserForDorama.rating = this.assessment;
                     this.closeRatingModal();
                 })
                 .catch(error => {
@@ -41,11 +41,11 @@ export default {
                     this.dataLoading = false;
                 });
         },
-        removeAnimeRating() {
+        removeDoramaRating() {
             this.dataLoading = true;
-            axios.delete(`/api/animes/${this.animeId}/rating`)
+            axios.delete(`/api/doramas/${this.doramaId}/rating`)
                 .then(response => {
-                    this.dataUserForAnime.rating = 0;
+                    this.dataUserForDorama.rating = 0;
                     this.assessment = 0;
                     this.closeRatingModal();
                 })
@@ -57,7 +57,7 @@ export default {
                 });
         },
         openRatingModal() {
-            this.assessment = this.dataUserForAnime.rating;
+            this.assessment = this.dataUserForDorama.rating;
             this.isRatingModalVisible = true;
         },
         closeRatingModal() {
@@ -97,7 +97,7 @@ export default {
                     <div class="w-full text-center text-lg"
                          v-if="isRating"
                     >
-                        Ваша оценка: {{ dataUserForAnime.rating }}
+                        Ваша оценка: {{ dataUserForDorama.rating }}
                     </div>
                     <div class="w-full text-center text-lg"
                          v-else
@@ -134,7 +134,7 @@ export default {
 
                 <div class="flex justify-center p-3 border-t border-gray-200 rounded-b">
                     <button type="button"
-                            @click="removeAnimeRating"
+                            @click="removeDoramaRating"
                             v-if="isRating"
                             class="bg-black text-white font-bold rounded border-b-2 border-orange-400 hover:border-orange-400 hover:bg-orange-400 hover:text-black shadow-md py-2 px-4 inline-flex items-center mx-2"
                     >
@@ -145,7 +145,7 @@ export default {
                     </button>
 
                     <button type="button"
-                            @click="addAnimeRating"
+                            @click="addDoramaRating"
                             class="bg-black text-white font-bold rounded border-b-2 border-lime-500 hover:border-lime-600 hover:bg-lime-500 hover:text-black shadow-md py-2 px-4 inline-flex items-center mx-2"
                     >
                     <span class="mr-2">

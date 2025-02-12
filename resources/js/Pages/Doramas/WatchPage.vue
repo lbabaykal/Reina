@@ -1,21 +1,21 @@
 <script>
 import ToolTip from "../../Components/ToolTip.vue";
 import StarSvg from "../../Components/Svg/StarSvg.vue";
-import Rating from "./Modals/Rating.vue";
+import Rating from "../../Components/Doramas/Modals/Rating.vue";
 import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
 import FavoriteSvg from "../../Components/Svg/FavoriteSvg.vue";
-import Favorite from "./Modals/Favorite.vue";
+import Favorite from "../../Components/Doramas/Modals/Favorite.vue";
 import DownArrowSvg from "../../Components/Svg/DownArrowSvg.vue";
 
 export default {
-    name: "AnimeWatchPage",
+    name: "WatchPage",
     components: {DownArrowSvg, Favorite, FavoriteSvg, LoadingSvg, Rating, StarSvg, ToolTip},
     props: {
         slug: String,
     },
     data() {
         return {
-            dataAnime: {
+            dataDorama: {
                 id: Number,
                 slug: String,
                 title_org: String,
@@ -41,7 +41,7 @@ export default {
                 is_comment: Boolean,
                 is_rating: Boolean,
             },
-            dataUserForAnime: {
+            dataUserForDorama: {
                 rating: Number,
                 favorite: {
                     id: Number,
@@ -57,12 +57,12 @@ export default {
         }
     },
     methods: {
-        getAnimeData() {
+        getDoramaData() {
             this.dataLoading = false;
-            axios.get(`/api/animes/${this.slug}/watch`)
+            axios.get(`/api/doramas/${this.slug}/watch`)
                 .then(response => {
-                    this.dataAnime = response.data.dataAnime;
-                    this.dataUserForAnime = response.data.dataUserForAnime;
+                    this.dataDorama = response.data.dataDorama;
+                    this.dataUserForDorama = response.data.dataUserForDorama;
                     this.dataEpisodes = response.data.dataEpisodes || [];
                 })
                 .catch(error => {
@@ -84,17 +84,17 @@ export default {
     },
     computed: {
         isEpisodes() {
-            return this.dataAnime.episodes_total !== 1;
+            return this.dataDorama.episodes_total !== 1;
         },
         isRating() {
-            return this.dataUserForAnime.rating !== 0;
+            return this.dataUserForDorama.rating !== 0;
         },
         isFavorite() {
-            return this.dataUserForAnime.favorite.id !== 0;
+            return this.dataUserForDorama.favorite.id !== 0;
         },
     },
     mounted() {
-        this.getAnimeData()
+        this.getDoramaData()
     }
 }
 </script>
@@ -105,40 +105,40 @@ export default {
             <div class="w-90% flex flex-shrink-0 items-center justify-between px-5">
                 <div class="flex flex-col">
                     <div class="max-w-100% truncate">
-                        <router-link :to="{ name: 'animes.show', params: { slug: this.slug } }"
-                                     class="text-2xl text-red-500 duration-300 transition-all"
+                        <router-link :to="{ name: 'doramas.show', params: { slug: this.slug } }"
+                                     class="text-2xl hover:text-violet-500 duration-300 transition-all"
                         >
-                            {{ dataAnime.title_ru }}
+                            {{ dataDorama.title_ru }}
                         </router-link>
                     </div>
 
                     <div class="flex items-center text-white select-none">
                         <div class="flex flex-shrink-0 font-bold">
-                             {{ dataAnime.types.title_ru }}
+                             {{ dataDorama.types.title_ru }}
                         </div>
 
                         <div class="flex flex-row px-2">
-                            <span v-for="(dataAnimeGenre, index) in dataAnime.genres">
-                                <router-link :to="{ name: 'animes.index', query: { genres: dataAnimeGenre.slug } }"
-                                             class="underline decoration-1 underline-offset-4 hover:decoration-red-500 hover:text-red-500 tracking-wide mx-1"
+                            <span v-for="(dataDoramaGenre, index) in dataDorama.genres">
+                                <router-link :to="{ name: 'doramas.index', query: { genres: dataDoramaGenre.slug } }"
+                                             class="underline decoration-1 underline-offset-4 hover:decoration-violet-500 hover:text-violet-500 tracking-wide mx-1"
                                 >
-                                    {{ dataAnimeGenre.title_ru }}
+                                    {{ dataDoramaGenre.title_ru }}
                                 </router-link>
-                                <span v-if="index !== dataAnime.genres.length - 1" class="mx-1.5 text-red-500">|</span>
+                                <span v-if="index !== dataDorama.genres.length - 1" class="mx-1.5 text-violet-500">|</span>
                             </span>
                         </div>
 
                         <div class="text-red-500 text-lg font-bold pr-2">
-                            {{ dataAnime.age_rating }}
+                            {{ dataDorama.age_rating }}
                         </div>
 
                         <div class="flex flex-row flex-shrink-0 items-end">
                             <StarSvg classes="size-5 my-auto mx-1 stroke-amber-400 fill-amber-400"/>
                             <span class="text-yellow-400 text-lg">
-                                {{ dataAnime.rating }}
+                                {{ dataDorama.rating }}
                             </span>
                             <span class="px-1 text-gray-400">
-                                / {{ dataAnime.count_assessments }}
+                                / {{ dataDorama.count_assessments }}
                             </span>
                         </div>
                     </div>
@@ -179,20 +179,20 @@ export default {
                             type="button"
                             class="flex items-center py-3.5 px-4 rounded bg-gray-700/80 hover:bg-gray-600 whitespace-nowrap"
                     >
-                        Эпизодов {{ dataAnime.episodes_released + ' / ' + dataAnime.episodes_total }}
+                        Эпизодов {{ dataDorama.episodes_released + ' / ' + dataDorama.episodes_total }}
                         <DownArrowSvg classes="size-4 ms-2.5"/>
                     </button>
                 </div>
 
                 <Rating ref="ratingRef"
-                        :animeId="dataAnime.id"
-                        :dataUserForAnime="dataUserForAnime"
+                        :doramaId="dataDorama.id"
+                        :dataUserForDorama="dataUserForDorama"
                         :isRating="isRating"
                 />
 
                 <Favorite ref="favoriteRef"
-                          :animeId="dataAnime.id"
-                          :dataUserForAnime="dataUserForAnime"
+                          :doramaId="dataDorama.id"
+                          :dataUserForDorama="dataUserForDorama"
                           :isFavorite="isFavorite"
                 />
             </div>
@@ -216,7 +216,7 @@ export default {
                     </div>
                 </div>
                 <div v-else
-                     class="w-full h-full text-red-400 text-2xl flex justify-center items-center"
+                     class="w-full h-full text-violet-400 text-2xl flex justify-center items-center"
                 >
                     Пусто
                 </div>

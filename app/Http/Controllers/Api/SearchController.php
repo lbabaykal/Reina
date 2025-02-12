@@ -31,7 +31,7 @@ class SearchController extends Controller
 {
     public function index(SearchRequest $request): JsonResponse
     {
-        $queryAnime = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])->take(8);
+        $queryAnime = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])->limit(8);
         $animesFiltered = Pipeline::send($queryAnime)
             ->through([
                 TitleFilter::class,
@@ -47,7 +47,7 @@ class SearchController extends Controller
         $dataAnimes = $animesFiltered->get();
         $animesTotalFound = $animesFiltered->count();
 
-        $queryDorama = Dorama::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])->take(8);
+        $queryDorama = Dorama::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])->limit(8);
         $doramasFiltered = Pipeline::send($queryDorama)
             ->through([
                 TitleFilter::class,

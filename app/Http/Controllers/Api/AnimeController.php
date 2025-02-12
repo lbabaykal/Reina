@@ -18,11 +18,10 @@ use App\Http\Resources\Animes\AnimesShowResource;
 use App\Http\Resources\Animes\AnimesWatchResource;
 use App\Http\Resources\Episodes\AnimeResource;
 use App\Models\Anime;
-use App\Models\FolderAnime;
 use App\Reina;
 use App\Services\AnimesServices;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Pipeline;
 
 class AnimeController extends Controller
@@ -48,7 +47,7 @@ class AnimeController extends Controller
         return AnimesIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', request()->input('page', 1)));
     }
 
-    public function show($slug, AnimesServices $animesService): Response
+    public function show($slug, AnimesServices $animesService): JsonResponse
     {
         $anime = $animesService->dataInCacheBySlug($slug);
         $ratingUser = $animesService->ratingUserFor();
@@ -56,7 +55,7 @@ class AnimeController extends Controller
         $foldersUser = $animesService->foldersUserFor();
         $userFolderFavorite = $animesService->userFolderFavorite();
 
-        return response([
+        return response()->json([
             'dataAnime' => AnimesShowResource::make($anime),
             'dataUserForAnime' => [
                 'rating' => $ratingUser,
@@ -68,7 +67,7 @@ class AnimeController extends Controller
         ]);
     }
 
-    public function watch($slug, AnimesServices $animesService): Response
+    public function watch($slug, AnimesServices $animesService): JsonResponse
     {
         $anime = $animesService->dataInCacheBySlug($slug);
         $ratingUser = $animesService->ratingUserFor();
@@ -81,7 +80,7 @@ class AnimeController extends Controller
             ->orderBy('number')
             ->get();
 
-        return response([
+        return response()->json([
             'dataAnime' => AnimesWatchResource::make($anime),
             'dataUserForAnime' => [
                 'rating' => $ratingUser,

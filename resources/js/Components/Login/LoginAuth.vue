@@ -65,18 +65,17 @@ export default {
                 </div>
             </div>
             <img :src="dataUser.avatar"
-                 class="h-10 w-10 rounded-full bg-cover bg-center duration-300 group-hover:drop-shadow-[0_0_16px_rgb(255,0,0)]"
+                 class="size-10 rounded-full bg-cover bg-center duration-300 group-hover:drop-shadow-[0_0_16px_rgb(255,0,0)]"
                  :alt="dataUser.name"
             >
         </div>
 
         <div v-show="isDropdownUserMenu"
-             class="absolute right-14 top-15 w-72 select-none rounded overflow-hidden bg-gray-900
-                    shadow-modals"
+             class="absolute right-14 top-15 w-72 select-none rounded overflow-hidden bg-blackSimple shadow-modals"
         >
             <div class="flex items-center border-b-2 border-b-blue-600">
                 <img :src="dataUser.avatar"
-                     class="m-3 h-16 w-16 rounded-full bg-cover bg-center"
+                     class="m-3 size-16 rounded-full bg-cover bg-center"
                      :alt="dataUser.name"
                 >
                 <div class="flex-row w-[200px]">
@@ -87,55 +86,57 @@ export default {
                 </div>
             </div>
 
-            <div class="flex flex-col text-lg">
+            <div @click="toggleUserMenu"
+                 class="flex flex-col text-lg"
+            >
                 <RouterLink :to="{ name: 'admin' }"
                             class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
-                    <AdminPanelSvg classes="m-1.5 h-8 w-8 group-hover:stroke-fuchsia-700"/>
+                    <AdminPanelSvg classes="m-1.5 size-8 group-hover:stroke-fuchsia-700"/>
                     <span class="ml-2 group-hover:text-black">
                         Admin_Panel
                     </span>
                 </RouterLink>
-                <a href="#"
+                <RouterLink to=""
                    class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
-                    <ProfileSvg classes="m-1.5 h-8 w-8 fill-none stroke-lime-500 group-hover:fill-lime-500 group-hover:stroke-lime-500"/>
+                    <ProfileSvg classes="m-1.5 size-8 fill-none stroke-lime-500 group-hover:fill-lime-500 group-hover:stroke-lime-500"/>
                     <span class="ml-2 group-hover:text-black">
                         Профиль
                     </span>
-                </a>
-                <router-link :to="{name: 'subscription'}"
+                </RouterLink>
+                <RouterLink :to="{name: 'subscription'}"
                              class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
-                    <SubscribeSvg classes="m-1.5 w-8 h-8 group-hover:drop-shadow-[0_0_6px_rgba(255,0,0,1)]"/>
+                    <SubscribeSvg classes="m-1.5 size-8 group-hover:drop-shadow-[0_0_6px_rgba(255,0,0,1)]"/>
                     <span class="ml-2 group-hover:text-black">
                         Подписка
                     </span>
-                </router-link>
-                <a href="#"
+                </RouterLink>
+                <RouterLink :to="{name: 'favorites.index'}"
                    class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
-                    <FavoriteSvg classes="m-1.5 h-8 w-8 fill-none stroke-red-500 group-hover:fill-red-500 group-hover:stroke-red-500"/>
+                    <FavoriteSvg classes="m-1.5 size-8 fill-none stroke-red-500 group-hover:fill-red-500 group-hover:stroke-red-500"/>
                     <span class="ml-2 group-hover:text-black">
                         Избранное
                     </span>
-                </a>
-                <a href="#"
+                </RouterLink>
+                <RouterLink to=""
                    class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
-                    <SettingsSvg classes="m-1.5 h-8 w-8 fill-none stroke-blue-600 group-hover:fill-blue-600 group-hover:stroke-blue-600"/>
+                    <SettingsSvg classes="m-1.5 size-8 fill-none stroke-blue-600 group-hover:fill-blue-600 group-hover:stroke-blue-600"/>
                     <span class="ml-2 group-hover:text-black">
                         Настройки
                     </span>
-                </a>
-                <router-link :to="{name: 'logout'}"
+                </RouterLink>
+                <RouterLink :to="{name: 'logout'}"
                              class="group flex flex-row items-center px-4 hover:bg-gray-100"
                 >
-                    <LogoutSvg classes="m-1.5 h-8 w-8 group-hover:stroke-black"/>
+                    <LogoutSvg classes="m-1.5 size-8 group-hover:stroke-black"/>
                     <span class="ml-2 group-hover:text-black">
                         Выход
                     </span>
-                </router-link>
+                </RouterLink>
             </div>
         </div>
     </div>

@@ -8,11 +8,11 @@ use App\Http\Resources\MainDoramasResource;
 use App\Models\Anime;
 use App\Models\Dorama;
 use App\Reina;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class MainController extends Controller
 {
-    public function __invoke(): Response
+    public function __invoke(): JsonResponse
     {
         $animes = cache()->store('redis_animes')->flexible('main_animes', [1200,1800], function () {
             return Anime::query()
@@ -30,7 +30,7 @@ class MainController extends Controller
                 ->get();
         });
 
-        return response([
+        return response()->json([
             'animes' => MainAnimesResource::collection($animes),
             'doramas' => MainDoramasResource::collection($doramas),
         ]);

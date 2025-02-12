@@ -5,17 +5,44 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FavoriteAnimesRequest;
 use App\Http\Requests\FavoriteDoramasRequest;
+use App\Http\Resources\Favorites\FavoriteAnimesResource;
+use App\Http\Resources\Favorites\FavoriteDoramasResource;
 use App\Models\Anime;
 use App\Models\Dorama;
 use App\Models\FolderAnime;
 use App\Models\FolderDorama;
-use Illuminate\Http\RedirectResponse;
+use App\Reina;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class FavoriteController extends Controller
 {
+    public function index(): JsonResponse
+    {
+        $this->checkAuth();
+
+        $foldersAnimes = auth()->user()
+            ->favoriteAnimes()
+            ->select(['slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'favorite_animes.updated_at'])
+            ->latest('favorite_animes.updated_at')
+            ->limit(8)
+            ->get();
+
+        $foldersDoramas = auth()->user()
+            ->favoriteDoramas()
+            ->select(['slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'favorite_doramas.updated_at'])
+            ->latest('favorite_doramas.updated_at')
+            ->limit(8)
+            ->get();
+
+        return response()->json([
+            'animes' => FavoriteAnimesResource::collection($foldersAnimes),
+            'doramas' => FavoriteDoramasResource::collection($foldersDoramas),
+        ]);
+    }
+
     /* ================ Anime ================ */
-    public function getForAnime(): Response
+    public function getForAnime(): JsonResponse
     {
         $foldersUser = FolderAnime::query()
             ->select(['id', 'title'])
@@ -24,15 +51,13 @@ class FavoriteController extends Controller
             ->orderBy('id')
             ->get();
 
-        return response([
+        return response()->json([
             'folders' => $foldersUser,
         ]);
     }
     public function addForAnime(FavoriteAnimesRequest $request, $id): Response
     {
-        if (!auth()->check()) {
-            abort(401);
-        }
+        $this->checkAuth();
 
         $anime = Anime::query()
             ->select(['id', 'slug'])
@@ -49,9 +74,7 @@ class FavoriteController extends Controller
 
     public function removeForAnime($id): Response
     {
-        if (!auth()->check()) {
-            abort(401);
-        }
+        $this->checkAuth();
 
         $anime = Anime::query()
             ->select(['id', 'slug'])
@@ -66,7 +89,7 @@ class FavoriteController extends Controller
     }
 
     /* ================ Dorama ================ */
-    public function getForDorama(): Response
+    public function getForDorama(): JsonResponse
     {
         $foldersUser = FolderDorama::query()
             ->select(['id', 'title'])
@@ -75,16 +98,14 @@ class FavoriteController extends Controller
             ->orderBy('id')
             ->get();
 
-        return response([
+        return response()->json([
             'folders' => $foldersUser,
         ]);
     }
 
-    public function addForDorama(FavoriteDoramasRequest $request, $id): RedirectResponse
+    public function addForDorama(FavoriteDoramasRequest $request, $id): Response
     {
-        if (!auth()->check()) {
-            abort(401);
-        }
+        $this->checkAuth();
 
         $dorama = Dorama::query()
             ->select(['id', 'slug'])
@@ -96,14 +117,12 @@ class FavoriteController extends Controller
             ['folder_dorama_id' => $request->validated('folder')]
         );
 
-        return redirect()->back();
+        return response()->noContent();
     }
 
-    public function removeForDorama($id): RedirectResponse
+    public function removeForDorama($id): Response
     {
-        if (!auth()->check()) {
-            abort(401);
-        }
+        $this->checkAuth();
 
         $dorama = Dorama::query()
             ->select(['id', 'slug'])
@@ -114,6 +133,13 @@ class FavoriteController extends Controller
             ->where('user_id', auth()->id())
             ->delete();
 
-        return redirect()->back();
+        return response()->noContent();
+    }
+
+    private function checkAuth(): void
+    {
+        if (!auth()->check()) {
+            abort(401);
+        }
     }
 }

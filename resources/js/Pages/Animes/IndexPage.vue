@@ -1,11 +1,12 @@
 <script>
-import CardAnime from "@/Components/CardAnime.vue";
-import CardLoading from "@/Components/CardLoading.vue";
-import Pagination from "@/Components/Pagination.vue";
-import Search from "@/Components/Search.vue";
+
+import CardAnime from "../../Components/Animes/CardAnime.vue";
+import CardLoading from "../../Components/CardLoading.vue";
+import Pagination from "../../Components/Pagination.vue";
+import Search from "../../Components/Search.vue";
 
 export default {
-    name: "AnimeIndexPage",
+    name: "IndexPage",
     components: {Search, Pagination, CardLoading, CardAnime},
     data() {
         return {

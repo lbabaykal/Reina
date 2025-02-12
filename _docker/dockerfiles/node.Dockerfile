@@ -1,10 +1,11 @@
-FROM node:22-alpine
+FROM node:lts-bookworm
 
 # Install dependencies
-RUN apk update && apk add --no-cache \
+RUN apt update && apt install -y \
     vim \
     zip \
     unzip \
-    curl
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/laravel

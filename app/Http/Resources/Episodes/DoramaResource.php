@@ -19,7 +19,7 @@ class DoramaResource extends JsonResource
         return [
             'id' => $this->id,
             'number' => $this->number,
-            'dorama_id' => $this->anime_id,
+            'dorama_id' => $this->dorama_id,
             'title_org' => $this->title_org,
             'title_ru' => $this->title_ru,
             'title_en' => $this-> title_en,

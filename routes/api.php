@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\AnimeController;
+use App\Http\Controllers\Api\Animes\FolderAnimesController;
 use App\Http\Controllers\Api\DoramaController;
+use App\Http\Controllers\Api\Doramas\FolderDoramasController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\MainController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\SearchController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::domain(env('APP_URL'))->group(function () {
@@ -61,5 +62,24 @@ Route::domain(env('APP_URL'))->group(function () {
         Route::post('/{id}/favorite', [FavoriteController::class, 'addForDorama']);
         Route::delete('/{id}/favorite', [FavoriteController::class, 'removeForDorama']);
     });
+
+    Route::prefix('favorites')->name('favorites.')->group(function () {
+        Route::get('/', [FavoriteController::class, 'index']);
+        Route::get('/{id}', [FavoriteController::class, 'show']);
+    });
+
+    // Folders
+    Route::prefix('folders')->group(function () {
+        // Animes
+        Route::prefix('animes')->group(function () {
+            Route::get('/', [FolderAnimesController::class, 'index']);
+            Route::get('/show', [FolderAnimesController::class, 'show']);
+        });
+        // Doramas
+        Route::prefix('doramas')->group(function () {
+            Route::get('/', [FolderDoramasController::class, 'index']);
+            Route::get('/show', [FolderDoramasController::class, 'show']);
+        });
+    })->middleware(['auth']);
 });
 

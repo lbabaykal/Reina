@@ -3,8 +3,8 @@
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\DoramaController;
 use App\Http\Controllers\FavoriteController;
-use App\Http\Controllers\Folder\AnimeFolderController;
-use App\Http\Controllers\Folder\DoramaFolderController;
+use App\Http\Controllers\Folder\FolderAnimesController;
+use App\Http\Controllers\Folder\FolderDoramasController;
 use App\Http\Controllers\Folder\FolderController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ProfileController;
@@ -73,23 +73,23 @@ Route::domain(env('APP_URL'))->group(function () {
                 Route::get('/', FolderController::class)->name('index');
 
                 Route::prefix('animes')->name('animes.')->group(function () {
-                    Route::get('/', [AnimeFolderController::class, 'index'])->name('index');
-                    Route::get('/{folder}', [AnimeFolderController::class, 'show'])->name('show');
-                    Route::get('/create', [AnimeFolderController::class, 'create'])->name('create');
-                    Route::post('/', [AnimeFolderController::class, 'store'])->name('store');
-                    Route::get('/{folder}/edit', [AnimeFolderController::class, 'edit'])->name('edit');
-                    Route::patch('/{folder}', [AnimeFolderController::class, 'update'])->name('update');
-                    Route::delete('/{folder}', [AnimeFolderController::class, 'destroy'])->name('destroy');
+                    Route::get('/', [FolderAnimesController::class, 'index'])->name('index');
+                    Route::get('/{folder}', [FolderAnimesController::class, 'show'])->name('show');
+                    Route::get('/create', [FolderAnimesController::class, 'create'])->name('create');
+                    Route::post('/', [FolderAnimesController::class, 'store'])->name('store');
+                    Route::get('/{folder}/edit', [FolderAnimesController::class, 'edit'])->name('edit');
+                    Route::patch('/{folder}', [FolderAnimesController::class, 'update'])->name('update');
+                    Route::delete('/{folder}', [FolderAnimesController::class, 'destroy'])->name('destroy');
                 });
 
                 Route::prefix('doramas')->name('doramas.')->group(function () {
-                    Route::get('/', [DoramaFolderController::class, 'index'])->name('index');
-                    Route::get('/{folder}', [DoramaFolderController::class, 'show'])->name('show');
-                    Route::get('/create', [DoramaFolderController::class, 'create'])->name('create');
-                    Route::post('/', [DoramaFolderController::class, 'store'])->name('store');
-                    Route::get('/{folder}/edit', [DoramaFolderController::class, 'edit'])->name('edit');
-                    Route::patch('/{folder}', [DoramaFolderController::class, 'update'])->name('update');
-                    Route::delete('/{folder}', [DoramaFolderController::class, 'destroy'])->name('destroy');
+                    Route::get('/', [FolderDoramasController::class, 'index'])->name('index');
+                    Route::get('/{folder}', [FolderDoramasController::class, 'show'])->name('show');
+                    Route::get('/create', [FolderDoramasController::class, 'create'])->name('create');
+                    Route::post('/', [FolderDoramasController::class, 'store'])->name('store');
+                    Route::get('/{folder}/edit', [FolderDoramasController::class, 'edit'])->name('edit');
+                    Route::patch('/{folder}', [FolderDoramasController::class, 'update'])->name('update');
+                    Route::delete('/{folder}', [FolderDoramasController::class, 'destroy'])->name('destroy');
                 });
             });
 

@@ -3,7 +3,7 @@ name: reina
 services:
   nginx:
     container_name: nginx
-    image: "nginx:stable-alpine"
+    image: "nginx:bookworm"
     ports:
       - "80:80"
       - "443:443"
@@ -35,7 +35,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:latest
+    image: postgres:bookworm
     ports:
       - "5432:5432"
     environment:

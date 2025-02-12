@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FolderDorama extends Model
 {
@@ -20,7 +21,7 @@ class FolderDorama extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function favoritesDoramasUser()
+    public function favoritesDoramasUser(): HasMany
     {
         return $this->hasMany(FavoriteDorama::class)->where('user_id', auth()->id());
     }

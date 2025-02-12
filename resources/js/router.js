@@ -35,16 +35,16 @@ const router = createRouter({
             component: () => import('./Layouts/MainLayout.vue'),
             children: [
                 {
-                    path: '', component: () => import('./Pages/Animes/AnimeIndexPage.vue'),
+                    path: '', component: () => import('./Pages/Animes/IndexPage.vue'),
                     name: 'animes.index',
                 },
                 {
-                    path: ':slug', component: () => import('./Pages/Animes/AnimeShowPage.vue'),
+                    path: ':slug', component: () => import('./Pages/Animes/ShowPage.vue'),
                     name: 'animes.show',
                     props: true
                 },
                 {
-                    path: ':slug/watch', component: () => import('./Pages/Animes/AnimeWatchPage.vue'),
+                    path: ':slug/watch', component: () => import('./Pages/Animes/WatchPage.vue'),
                     name: 'animes.watch',
                     props: true
                 },
@@ -56,18 +56,48 @@ const router = createRouter({
             component: () => import('./Layouts/MainLayout.vue'),
             children: [
                 {
-                    path: '', component: () => import('./Pages/Doramas/DoramaIndexPage.vue'),
+                    path: '', component: () => import('./Pages/Doramas/IndexPage.vue'),
                     name: 'doramas.index',
                 },
                 {
-                    path: ':slug', component: () => import('./Pages/Doramas/DoramaShowPage.vue'),
+                    path: ':slug', component: () => import('./Pages/Doramas/ShowPage.vue'),
                     name: 'doramas.show',
                     props: true
                 },
                 {
-                    path: ':slug', component: () => import('./Pages/Doramas/DoramaShowPage.vue'),
+                    path: ':slug', component: () => import('./Pages/Doramas/WatchPage.vue'),
                     name: 'doramas.watch',
                     props: true
+                },
+            ],
+        },
+        //  Account
+        {
+            path: '/account',
+            component: () => import('./Layouts/MainLayout.vue'),
+            meta: {
+                middleware: [auth],
+            },
+            children: [
+                {
+                    path: 'favorites',
+                    children: [
+                        {
+                            path: '',
+                            component: () => import('./Pages/Favorites/IndexPage.vue'),
+                            name: 'favorites.index',
+                        },
+                        {
+                            path: 'animes',
+                            component: () => import('./Pages/Favorites/AnimesPage.vue'),
+                            name: 'favorites.animes.index',
+                        },
+                        {
+                            path: 'doramas',
+                            component: () => import('./Pages/Favorites/DoramasPage.vue'),
+                            name: 'favorites.doramas.index',
+                        },
+                    ],
                 },
             ],
         },

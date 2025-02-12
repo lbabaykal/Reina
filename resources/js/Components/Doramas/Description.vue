@@ -2,7 +2,31 @@
 export default {
     name: "Description",
     props: {
-        dataDorama: [Array, Object],
+        dataDorama: {
+            id: Number,
+            slug: String,
+            poster: String,
+            cover: String,
+            title_org: String,
+            title_ru: String,
+            title_en: String,
+            types: [Array, Object],
+            genres: [Array, Object],
+            studios: [Array, Object],
+            countries: [Array, Object],
+            age_rating: String,
+            episodes_released: Number,
+            episodes_total: Number,
+            duration: String,
+            release: String,
+            year: Number,
+            description: Text,
+            rating: Number,
+            count_assessments: Number,
+            is_comment: Boolean,
+            is_rating: Boolean,
+        },
+        isEpisodes: Boolean,
     },
     data() {
         return {
@@ -97,16 +121,12 @@ export default {
                                     >
                                         {{ dataDoramaGenre.title_ru }}
                                     </router-link>
-                                    <span v-if="index !== dataDorama.genres.length - 1"
-                                          class="text-violet-500 text-xs"
-                                    >
-                                        &#9679;
-                                    </span>
+                                    <span v-if="index !== dataDorama.genres.length - 1" class="mx-1.5 text-violet-500">|</span>
                                 </span>
                             </dd>
                         </div>
 
-                        <div class="flex flex-col py-2" v-if="dataDorama.genres.length > 0">
+                        <div class="flex flex-col py-2" v-if="dataDorama.studios.length > 0">
                             <dt class="text-gray-400 text-xl">Студия</dt>
                             <dd>
                                 <span v-for="(dataDoramaStudio, index) in dataDorama.studios">

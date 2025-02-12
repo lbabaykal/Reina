@@ -127,7 +127,7 @@ export default {
                             </dd>
                         </div>
 
-                        <div class="flex flex-col py-2" v-if="dataAnime.genres.length > 0">
+                        <div class="flex flex-col py-2" v-if="dataAnime.studios.length > 0">
                             <dt class="text-gray-400 text-xl">Студия</dt>
                             <dd>
                                 <span v-for="(dataAnimeStudio, index) in dataAnime.studios">

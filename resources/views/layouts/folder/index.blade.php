@@ -47,8 +47,6 @@
                 {{ __('Пусто') }}
             </div>
         @endif
-
-
     </section>
 @endsection
 

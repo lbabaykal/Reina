@@ -1,16 +1,16 @@
 <script>
-import TrashSvg from "../../../Components/Svg/TrashSvg.vue";
-import CloseSvg from "../../../Components/Svg/CloseSvg.vue";
-import SendSvg from "../../../Components/Svg/SendSvg.vue";
-import LoadingSvg from "../../../Components/Svg/LoadingSvg.vue";
-import StarSvg from "../../../Components/Svg/StarSvg.vue";
+import TrashSvg from "../../Svg/TrashSvg.vue";
+import CloseSvg from "../../Svg/CloseSvg.vue";
+import SendSvg from "../../Svg/SendSvg.vue";
+import LoadingSvg from "../../Svg/LoadingSvg.vue";
+import StarSvg from "../../Svg/StarSvg.vue";
 
 export default {
     name: "Favorite",
     components: {StarSvg, LoadingSvg, SendSvg, CloseSvg, TrashSvg},
     props: {
-        animeId: Number,
-        dataUserForAnime: {
+        doramaId: Number,
+        dataUserForDorama: {
             rating: Number,
             favorite: {
                 id: Number,
@@ -31,9 +31,9 @@ export default {
         }
     },
     methods: {
-        getAnimeFavorite() {
+        getDoramaFavorite() {
             this.dataLoading = true;
-            axios.post('/api/animes/favorite')
+            axios.post('/api/doramas/favorite')
                 .then(response => {
                     this.dataUserFolders = response.data.folders;
                 })
@@ -44,11 +44,11 @@ export default {
                     this.dataLoading = false;
                 });
         },
-        addAnimeFavorite() {
+        addDoramaFavorite() {
             this.dataLoading = true;
-            axios.post(`/api/animes/${this.animeId}/favorite`, { folder: this.folder })
+            axios.post(`/api/doramas/${this.doramaId}/favorite`, { folder: this.folder })
                 .then(response => {
-                    this.dataUserForAnime.favorite.id = this.folder;
+                    this.dataUserForDorama.favorite.id = this.folder;
                     this.closeFavoriteModal();
                 })
                 .catch(error => {
@@ -58,11 +58,11 @@ export default {
                     this.dataLoading = false;
                 });
         },
-        removeAnimeFavorite() {
+        removeDoramaFavorite() {
             this.dataLoading = true;
-            axios.delete(`/api/animes/${this.animeId}/favorite`)
+            axios.delete(`/api/doramas/${this.doramaId}/favorite`)
                 .then(response => {
-                    this.dataUserForAnime.favorite.id = 0;
+                    this.dataUserForDorama.favorite.id = 0;
                     this.closeFavoriteModal();
                 })
                 .catch(error => {
@@ -73,8 +73,8 @@ export default {
                 });
         },
         openFavoriteModal() {
-            this.getAnimeFavorite();
-            this.folder = this.dataUserForAnime.favorite.id;
+            this.getDoramaFavorite();
+            this.folder = this.dataUserForDorama.favorite.id;
             this.isFavoriteModalVisible = true;
         },
         closeFavoriteModal() {
@@ -147,7 +147,7 @@ export default {
 
                     <div class="flex justify-center p-3 border-t border-gray-200 rounded-b">
                         <button type="button"
-                                @click="removeAnimeFavorite"
+                                @click="removeDoramaFavorite"
                                 v-if="isFavorite"
                                 class="bg-black text-white font-bold rounded border-b-2 border-orange-400 hover:border-orange-400 hover:bg-orange-400 hover:text-black shadow-md py-2 px-4 inline-flex items-center mx-2"
                         >
@@ -158,7 +158,7 @@ export default {
                         </button>
 
                         <button type="button"
-                                @click="addAnimeFavorite"
+                                @click="addDoramaFavorite"
                                 class="bg-black text-white font-bold rounded border-b-2 border-lime-500 hover:border-lime-600 hover:bg-lime-500 hover:text-black shadow-md py-2 px-4 inline-flex items-center mx-2"
                         >
                     <span class="mr-2">
