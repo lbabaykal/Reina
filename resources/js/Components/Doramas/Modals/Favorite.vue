@@ -96,19 +96,19 @@ export default {
         <div v-if="isFavoriteModalVisible"
              class="overflow-y-auto overflow-x-hidden fixed top-0 left-0 z-40 flex justify-center items-center w-full h-full"
         >
-            <div class="bg-black/75 rounded select-none shadow-modals min-w-120 max-w-136">
+            <div class="bg-black/80 rounded select-none shadow-modals min-w-120 max-w-136">
                 <div class="flex items-center justify-between p-2 border-b rounded-t">
                     <div class="text-xl text-white truncate pl-8 mx-auto">
                         Избранное
                     </div>
                     <button type="button"
                             @click="closeFavoriteModal"
-                            class="hover:bg-red-400 hover:text-black fill-white hover:fill-black text-sm p-1 inline-flex justify-center items-center">
+                            class="hover:bg-red-400 hover:text-black fill-white hover:fill-black text-sm p-1 inline-flex justify-center items-center rounded">
                         <CloseSvg classes="size-6"/>
                     </button>
                 </div>
 
-                    <div class="p-2 space-y-2"
+                    <div class="p-3 space-y-2"
                          v-if="!dataLoading"
                     >
                         <div class="w-full text-center text-lg"
@@ -119,7 +119,7 @@ export default {
 
                         <div class="flex flex-col justify-center items-center text-xl">
                             <div v-for="dataFolder in dataUserFolders"
-                                class="group flex min-w-64 max-w-96 my-1 bg-black hover:bg-white text-white hover:text-black"
+                                class="group flex min-w-64 max-w-96 bg-black hover:bg-white text-white hover:text-black"
                             >
                                 <input :id="dataFolder.id"
                                        :value="dataFolder.id"
@@ -129,7 +129,7 @@ export default {
                                        class="hidden peer"
                                 />
                                 <label :for="dataFolder.id"
-                                       class="flex items-center justify-between w-full p-2 cursor-pointer peer-checked:bg-white peer-checked:text-black"
+                                       class="flex items-center justify-between w-full p-1 cursor-pointer peer-checked:bg-white peer-checked:text-black"
                                 >
                                     <span class="w-full text-center truncate">
                                         {{ dataFolder.title }}

@@ -36,13 +36,13 @@ export default {
 </script>
 
 <template>
-    <section class="mt-15">
+    <section>
         <div class="py-2 select-none flex flex-row items-center justify-center">
             <router-link :to="{ name: 'animes.index' }"
                          class="font-bold group flex flex-row items-center justify-center"
             >
                 <span class="text-red-500 text-3xl">❮</span>
-                <span class="group-hover:text-red-500 text-4xl px-3 duration-300">АНИМЕ</span>
+                <span class="group-hover:text-red-500 text-4xl px-3 duration-300 group-hover:px-5">АНИМЕ</span>
                 <span class="text-red-500 text-3xl">❯</span>
             </router-link>
         </div>
@@ -67,7 +67,7 @@ export default {
                          class="font-bold group flex flex-row items-center justify-center"
             >
                 <span class="text-violet-500 text-3xl">❮</span>
-                <span class="group-hover:text-violet-500 text-4xl px-3 duration-300">ДОРАМЫ</span>
+                <span class="group-hover:text-violet-500 text-4xl px-3 duration-300 group-hover:px-5">ДОРАМЫ</span>
                 <span class="text-violet-500 text-3xl">❯</span>
             </router-link>
         </div>

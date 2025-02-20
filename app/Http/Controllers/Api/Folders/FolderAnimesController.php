@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Api\Animes;
+namespace App\Http\Controllers\Api\Folders;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FolderAnimesRequest;
+use App\Http\Requests\Folder\FolderAnimesRequest;
 use App\Http\Resources\Animes\AnimesIndexResource;
+use App\Http\Resources\Folders\FolderResource;
 use App\Http\Resources\Folders\FoldersAnimesResource;
 use App\Models\FolderAnime;
 use App\Reina;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\View\View;
 
 class FolderAnimesController extends Controller
 {
-    public function index(): JsonResponse
+    public function allUserFolders(): JsonResponse
     {
         $folders = auth()->user()
             ->foldersAnimesWithDefault()
@@ -27,8 +27,20 @@ class FolderAnimesController extends Controller
         $totalFavorites = $folders->sum('favorites_animes_user_count');
 
         return response()->json([
-            'folders' => FoldersAnimesResource::collection($folders),
+            'allUserFolders' => FoldersAnimesResource::collection($folders),
             'totalFavorites' => $totalFavorites,
+        ]);
+    }
+
+    public function onlyUserFolders(): JsonResponse
+    {
+        $folders = auth()->user()
+            ->foldersAnimes()
+            ->orderBy('folder_animes.id')
+            ->get();
+
+        return response()->json([
+            'OnlyUserFolders' => FoldersAnimesResource::collection($folders),
         ]);
     }
 
@@ -39,6 +51,11 @@ class FolderAnimesController extends Controller
         ]);
 
         $folderId = request()->input('folder', 0);
+
+        if ( $folderId > 0 ) {
+            $folderAnime = FolderAnime::query()->findOrFail($folderId);
+            Gate::authorize('view', $folderAnime);
+        }
 
         $animes = auth()->user()
             ->favoriteAnimes()
@@ -51,90 +68,44 @@ class FolderAnimesController extends Controller
         return AnimesIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FOLDERS, ['*'], 'page', request()->input('page', 1)));
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function store(FolderAnimesRequest $request): RedirectResponse
+    public function store(FolderAnimesRequest $request): Response
     {
-        $response = Gate::inspect('create', FolderAnime::class);
-
-        if ($response->denied()) {
-            return redirect()
-                ->route('user.folders.animes.index')
-                ->with('message', $response->message());
-        }
+        Gate::authorize('create', FolderAnime::class);
 
         $folder = new FolderAnime();
         $folder->title = $request->input('title');
         $folder->user_id = auth()->id();
         $folder->save();
 
-        return redirect()->route('user.folders.animes.index')
-            ->with('message', "Папка {$folder->title} создана.");
+        return response()->noContent();
     }
 
-    public function update(FolderAnimesRequest $request, FolderAnime $folder): RedirectResponse
+    public function edit(FolderAnime $folder): JsonResponse
+    {
+        Gate::authorize('update', $folder);
+
+        return response()->json([
+            'folder' => FolderResource::make($folder),
+        ]);
+    }
+
+    public function update(FolderAnimesRequest $request, FolderAnime $folder): Response
     {
         Gate::authorize('update', $folder);
 
         $folder->title = $request->input('title');
         $folder->update();
 
-        return redirect()->route('user.folders.animes.index')
-            ->with('message', "Папка {$folder->title} изменана.");
+        return response()->noContent();
     }
 
-    public function destroy(FolderAnime $folder): RedirectResponse
+    public function destroy(FolderAnime $folder): Response
     {
         Gate::authorize('delete', $folder);
 
         $folder->delete();
 
-        return redirect()->route('user.folders.animes.index')
-            ->with('message', "Папка {$folder->title} удалена.");
+        return response()->noContent();
     }
 
 }

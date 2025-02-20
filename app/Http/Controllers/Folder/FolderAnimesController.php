@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Folder;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FolderAnimesRequest;
+use App\Http\Requests\Folder\FolderAnimesRequest;
 use App\Models\FolderAnime;
 use App\Reina;
 use Illuminate\Http\RedirectResponse;

@@ -12,6 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('title', 32);
             $table->unsignedBigInteger('user_id');
+            $table->boolean('is_private')->default(false);
+            $table->unsignedBigInteger('number');
             $table->timestamps();
         });
     }

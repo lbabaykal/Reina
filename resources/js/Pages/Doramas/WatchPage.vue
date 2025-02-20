@@ -100,7 +100,7 @@ export default {
 </script>
 
 <template>
-    <section class="mt-15" v-if="dataLoading">
+    <section v-if="dataLoading">
         <div class="w-full h-16 bg-blackSimple text-white flex items-center justify-center">
             <div class="w-90% flex flex-shrink-0 items-center justify-between px-5">
                 <div class="flex flex-col">

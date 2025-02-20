@@ -61,7 +61,9 @@ export default {
             Регистрации
         </div>
 
-        <loadingSvg v-if="loading" class="w-16 py-4 fill-blue-500"/>
+        <loadingSvg v-if="loading"
+                    classes="w-16 py-4 fill-blue-500"
+        />
 
         <div class="flex flex-col items-center text-black">
             <input

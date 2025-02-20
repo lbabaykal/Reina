@@ -1,16 +1,16 @@
 <script>
 
-import SearchSvg from "@/Components/Svg/SearchSvg.vue";
-import SubscribeSvg from "@/Components/Svg/SubscribeSvg.vue";
-import LoginGuestComponent from "@/Components/Login/LoginGuest.vue";
-import LoginAuthComponent from "@/Components/Login/LoginAuth.vue";
-import SubscribeBackgroundSvg from "@/Components/Svg/SubscribeBackgroundSvg.vue";
-import {useAuthStore} from "../../Stores/authStore.js";
+import SubscribeSvg from "../Svg/SubscribeSvg.vue";
+import SubscribeBackgroundSvg from "../Svg/SubscribeBackgroundSvg.vue";
 import LoginLoading from "./LoginLoading.vue";
+import SearchSvg from "../Svg/SearchSvg.vue";
+import LoginGuest from "./LoginGuest.vue";
+import LoginAuth from "./LoginAuth.vue";
+import {useAuthStore} from "../../Stores/authStore.js";
 
 export default {
     name: "LoginMenu",
-    components: {LoginLoading, SubscribeBackgroundSvg, LoginAuthComponent, LoginGuestComponent, SubscribeSvg, SearchSvg},
+    components: {LoginAuth, LoginGuest, LoginLoading, SubscribeBackgroundSvg, SubscribeSvg, SearchSvg},
     data() {
         return {
             dataUser: {
@@ -85,8 +85,10 @@ export default {
             </router-link>
 
             <LoginLoading v-if="isLoaderDataUser"/>
-            <LoginGuestComponent v-if="!isLoaderDataUser && !isAuthenticated"/>
-            <LoginAuthComponent v-if="!isLoaderDataUser && isAuthenticated" :dataUser="dataUser"/>
+            <LoginGuest v-if="!isLoaderDataUser && !isAuthenticated"/>
+            <LoginAuth v-if="!isLoaderDataUser && isAuthenticated"
+                       :dataUser="dataUser"
+            />
 
         </div>
     </div>

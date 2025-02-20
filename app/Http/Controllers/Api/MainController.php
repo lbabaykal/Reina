@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\CacheEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MainAnimesResource;
 use App\Http\Resources\MainDoramasResource;
@@ -14,7 +15,7 @@ class MainController extends Controller
 {
     public function __invoke(): JsonResponse
     {
-        $animes = cache()->store('redis_animes')->flexible('main_animes', [1200,1800], function () {
+        $animes = cache()->store('redis_animes')->flexible(CacheEnum::MAIN_ANIMES->value, [1200,1800], function () {
             return Anime::query()
                 ->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])
                 ->limit(Reina::COUNT_ARTICLES_MAIN)
@@ -22,7 +23,7 @@ class MainController extends Controller
                 ->get();
         });
 
-        $doramas = cache()->store('redis_doramas')->flexible('main_doramas', [1200,1800], function () {
+        $doramas = cache()->store('redis_doramas')->flexible(CacheEnum::MAIN_DORAMAS->value, [1200,1800], function () {
             return Dorama::query()
                 ->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])
                 ->limit(Reina::COUNT_ARTICLES_MAIN)

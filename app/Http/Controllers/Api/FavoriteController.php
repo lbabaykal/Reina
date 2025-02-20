@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FavoriteAnimesRequest;
-use App\Http\Requests\FavoriteDoramasRequest;
+use App\Http\Requests\Favorite\FavoriteAnimesRequest;
+use App\Http\Requests\Favorite\FavoriteDoramasRequest;
 use App\Http\Resources\Favorites\FavoriteAnimesResource;
 use App\Http\Resources\Favorites\FavoriteDoramasResource;
 use App\Models\Anime;
 use App\Models\Dorama;
 use App\Models\FolderAnime;
 use App\Models\FolderDorama;
-use App\Reina;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 

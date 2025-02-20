@@ -38,17 +38,29 @@ const router = createRouter({
                     path: '', component: () => import('./Pages/Animes/IndexPage.vue'),
                     name: 'animes.index',
                 },
-                {
+               /* {
                     path: ':slug', component: () => import('./Pages/Animes/ShowPage.vue'),
                     name: 'animes.show',
                     props: true
-                },
+                },*/
                 {
                     path: ':slug/watch', component: () => import('./Pages/Animes/WatchPage.vue'),
                     name: 'animes.watch',
                     props: true
                 },
             ],
+        },
+        {
+            path: '/animes/:slug',
+            component: () => import('./Layouts/ShowLayout.vue'),
+            children: [
+                {
+                    path: '',
+                    component: () => import('./Pages/Animes/ShowPage.vue'),
+                    name: 'animes.show',
+                    props: true
+                }
+            ]
         },
         //  Dorama
         {
@@ -59,17 +71,29 @@ const router = createRouter({
                     path: '', component: () => import('./Pages/Doramas/IndexPage.vue'),
                     name: 'doramas.index',
                 },
-                {
+/*                {
                     path: ':slug', component: () => import('./Pages/Doramas/ShowPage.vue'),
                     name: 'doramas.show',
                     props: true
-                },
+                },*/
                 {
-                    path: ':slug', component: () => import('./Pages/Doramas/WatchPage.vue'),
+                    path: ':slug/watch', component: () => import('./Pages/Doramas/WatchPage.vue'),
                     name: 'doramas.watch',
                     props: true
                 },
             ],
+        },
+        {
+            path: '/doramas/:slug',
+            component: () => import('./Layouts/ShowLayout.vue'),
+            children: [
+                {
+                    path: '',
+                    component: () => import('./Pages/Doramas/ShowPage.vue'),
+                    name: 'doramas.show',
+                    props: true
+                }
+            ]
         },
         //  Account
         {

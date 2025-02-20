@@ -2,7 +2,7 @@
 import Header from "../Components/Header.vue";
 
 export default {
-    name: "MainLayout",
+    name: "ShowLayout",
     components: {Header}
 }
 </script>
@@ -10,7 +10,5 @@ export default {
 <template>
     <Header/>
 
-    <div class="mt-14">
-        <RouterView/>
-    </div>
+    <RouterView/>
 </template>

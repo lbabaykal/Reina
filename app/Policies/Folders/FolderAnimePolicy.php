@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\Folders;
 
 use App\Models\FolderAnime;
 use App\Models\User;
@@ -16,7 +16,7 @@ class FolderAnimePolicy
 
     public function view(User $user, FolderAnime $folderAnime): Response
     {
-        return ($folderAnime->user_id == 0 || $folderAnime->user_id === $user->id)
+        return ($folderAnime->user_id === 0 || $folderAnime->user_id === $user->id)
             ? Response::allow()
             : Response::denyWithStatus(403);
     }
@@ -27,7 +27,7 @@ class FolderAnimePolicy
 
         return ($countFolders < Reina::COUNT_FOLDERS)
             ? Response::allow()
-            : Response::deny('Нельзя создавать больше ' . Reina::COUNT_FOLDERS . ' папок.');
+            : Response::deny('Нельзя создавать больше ' . Reina::COUNT_FOLDERS . ' папок.', 403);
     }
 
     public function update(User $user, FolderAnime $folderAnime): Response

@@ -96,27 +96,26 @@ export default {
 </script>
 
 <template>
-    <section id="TopPage" class="mt-15">
-
+    <section id="TopPage">
         <Search @updateSelectFilters="updateSelectFilters"
                 :selectedDataSearch="selectedDataSearch"
         />
 
         <div class="w-full mt-2 px-2.5 grid gap-3 place-items-center grid-flow-row grid-cols-8">
             <CardDorama v-if="dataLoading"
-                                v-for="dataDorama in dataDoramas"
-                                :id="dataDorama.id"
-                                :slug="dataDorama.slug"
-                                :poster="dataDorama.poster"
-                                :title="dataDorama.title"
-                                :rating="dataDorama.rating"
-                                :episodes_released="dataDorama.episodes_released"
-                                :episodes_total="dataDorama.episodes_total"
+                        v-for="dataDorama in dataDoramas"
+                        :id="dataDorama.id"
+                        :slug="dataDorama.slug"
+                        :poster="dataDorama.poster"
+                        :title="dataDorama.title"
+                        :rating="dataDorama.rating"
+                        :episodes_released="dataDorama.episodes_released"
+                        :episodes_total="dataDorama.episodes_total"
             />
 
             <CardLoading v-else
-                                  v-for="n in 24"
-                                  :key="n"
+                         v-for="n in 24"
+                         :key="n"
             />
         </div>
 

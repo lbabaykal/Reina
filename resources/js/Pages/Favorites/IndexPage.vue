@@ -1,4 +1,5 @@
 <script>
+
 import CardDorama from "../../Components/Doramas/CardDorama.vue";
 import CardLoading from "../../Components/CardLoading.vue";
 import CardAnime from "../../Components/Animes/CardAnime.vue";
@@ -36,19 +37,19 @@ export default {
 </script>
 
 <template>
-    <section class="mt-15">
+    <section>
         <div>
             <div class="w-full font-bold select-none py-2 text-center">
                 <router-link :to="{ name: 'favorites.animes.index' }"
                              class="group"
                 >
-                <span class="text-4xl group-hover:text-red-500 duration-300"
-                >
-                    АНИМЕ
-                </span>
+                    <span class="text-4xl group-hover:text-red-500 duration-300"
+                    >
+                        АНИМЕ
+                    </span>
                     <span class="text-red-500 text-2xl">
-                    Все ❯
-                </span>
+                        Все ❯
+                    </span>
                 </router-link>
             </div>
 
@@ -82,13 +83,13 @@ export default {
                 <router-link :to="{ name: 'favorites.doramas.index' }"
                              class="group"
                 >
-                <span class="text-4xl group-hover:text-violet-500 duration-300"
-                >
-                    ДОРАМЫ
-                </span>
+                    <span class="text-4xl group-hover:text-violet-500 duration-300"
+                    >
+                        ДОРАМЫ
+                    </span>
                     <span class="text-violet-500 text-2xl">
-                    Все ❯
-                </span>
+                        Все ❯
+                    </span>
                 </router-link>
             </div>
 

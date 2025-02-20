@@ -4,14 +4,12 @@ import CardLoading from "../../Components/CardLoading.vue";
 import Pagination from "../../Components/Pagination.vue";
 import Folders from "../../Components/Doramas/Folders.vue";
 
-
 export default {
     name: "DoramasPage",
     components: {Folders, Pagination, CardLoading, CardDorama},
     data() {
         return {
             dataDoramas: [Array, Object],
-            selectedFolder: 0,
             dataParams: {
                 page: 1,
                 folder: 0,
@@ -33,14 +31,16 @@ export default {
         this.dataLoading = false;
             await axios.get('/api/folders/doramas/show',  { params: this.dataParams })
                 .then(response => {
-                this.dataDoramas = response.data.data;
-                this.dataPagination = response.data.meta;
+                    this.dataDoramas = response.data.data;
+                    this.dataPagination = response.data.meta;
+                    this.dataLoading = true;
                 })
                 .catch(error => {
-                    console.log(error.response)
+                    if (error.status === 403) {
+                        console.log('Не твоя папка')  //TODO уведомление что у пользователя нет прав на просмотр
+                    }
                 })
                 .finally(() => {
-                    this.dataLoading = true;
                 });
         },
         updateSelectedFolder(obj) {
@@ -79,36 +79,38 @@ export default {
 </script>
 
 <template>
-    <section id="TopPage" class="mt-15">
-        <div class="flex flex-row w-full">
-            <div class="w-15% mt-2.5 mx-2 select-none">
+    <section id="TopPage">
+        <div class="flex">
+            <aside class="w-76 fixed top-17 left-0 flex justify-center z-10">
                 <Folders @updateSelectedFolder="updateSelectedFolder"
-                         :selectedFolder="selectedFolder"
+                         :selectedFolder="this.dataParams.folder"
                 />
-            </div>
+            </aside>
 
-            <div class="w-85% mt-2.5 px-2.5 grid gap-2 grid-flow-row grid-cols-7">
-                <CardDorama v-if="dataLoading"
-                           v-for="dataAnime in dataDoramas"
-                           :id="dataAnime.id"
-                           :slug="dataAnime.slug"
-                           :poster="dataAnime.poster"
-                           :title="dataAnime.title"
-                           :rating="dataAnime.rating"
-                           :episodes_released="dataAnime.episodes_released"
-                           :episodes_total="dataAnime.episodes_total"
-                />
+            <main class="ml-76 flex-1 overflow-y-auto">
+                <div class="mt-2.5 px-2.5 grid gap-2 grid-flow-row grid-cols-7">
+                    <CardDorama v-if="dataLoading"
+                                v-for="dataDorama in dataDoramas"
+                                :id="dataDorama.id"
+                                :slug="dataDorama.slug"
+                                :poster="dataDorama.poster"
+                                :title="dataDorama.title"
+                                :rating="dataDorama.rating"
+                                :episodes_released="dataDorama.episodes_released"
+                                :episodes_total="dataDorama.episodes_total"
+                    />
 
-                <CardLoading v-if="!dataLoading"
-                             v-for="n in 24"
-                             :key="n"
+                    <CardLoading v-if="!dataLoading"
+                                 v-for="n in 21"
+                                 :key="n"
+                    />
+                </div>
+
+                <Pagination v-if="dataDoramas"
+                            :dataPagination="dataPagination"
+                            @pageChange="pageChange"
                 />
-            </div>
+            </main>
         </div>
-
-        <Pagination v-if="dataDoramas"
-                    :dataPagination="dataPagination"
-                    @pageChange="pageChange"
-        />
     </section>
 </template>

@@ -91,7 +91,7 @@ export default {
 </script>
 
 <template>
-    <div class="mt-15">
+    <section>
         <Search @updateSelectFilters="updateSelectFilters"
                 :selectedDataSearch="selectedDataSearch"
         />
@@ -101,14 +101,14 @@ export default {
                          class="font-bold group flex flex-row items-center justify-center text-3xl"
             >
                 <span class="text-red-500">❮</span>
-                <span class="px-3 group-hover:text-red-500 duration-300">НАЙДЕНО</span>
+                <span class="px-3 group-hover:text-red-500 duration-300 group-hover:pl-5">НАЙДЕНО</span>
                 <span class="text-red-500 text-4xl">{{ this.animesTotalFound }}</span>
-                <span class="px-3 group-hover:text-red-500 duration-300">АНИМЕ</span>
+                <span class="px-3 group-hover:text-red-500 duration-300 group-hover:pr-5">АНИМЕ</span>
                 <span class="text-red-500">❯</span>
             </router-link>
         </div>
 
-        <div class="w-full px-2.5 grid gap-3 grid-cols-8 place-items-center grid-flow-row ">
+        <div class="w-full px-2.5 grid gap-3 grid-cols-8 place-items-center grid-flow-row">
             <CardAnime v-if="dataLoading"
                        v-for="dataAnime in dataAnimes"
                        :id="dataAnime.id"
@@ -128,9 +128,9 @@ export default {
                          class="font-bold group flex flex-row items-center justify-center text-3xl"
             >
                 <span class="text-violet-500">❮</span>
-                <span class="px-3 group-hover:text-violet-500 duration-300">НАЙДЕНО</span>
+                <span class="px-3 group-hover:text-violet-500 duration-300 group-hover:pl-5">НАЙДЕНО</span>
                 <span class="text-violet-500 text-4xl">{{ this.doramasTotalFound }}</span>
-                <span class="px-3 group-hover:text-violet-500 duration-300">ДОРАМА</span>
+                <span class="px-3 group-hover:text-violet-500 duration-300 group-hover:pr-5">ДОРАМА</span>
                 <span class="text-violet-500">❯</span>
             </router-link>
         </div>
@@ -149,5 +149,5 @@ export default {
 
             <CardLoading v-else v-for="n in 8" :key="n" />
         </div>
-    </div>
+    </section>
 </template>

@@ -1,9 +1,8 @@
 <?php /** @noinspection PhpInconsistentReturnPointsInspection */
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Folder;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class FolderDoramasRequest extends FormRequest
 {

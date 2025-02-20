@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\Folders;
 
 use App\Models\FolderDorama;
 use App\Models\User;

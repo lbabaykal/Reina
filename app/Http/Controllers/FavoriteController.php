@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\FavoriteAnimesRequest;
-use App\Http\Requests\FavoriteDoramasRequest;
+use App\Http\Requests\Favorite\FavoriteAnimesRequest;
+use App\Http\Requests\Favorite\FavoriteDoramasRequest;
 use App\Models\Anime;
 use App\Models\Dorama;
 use Illuminate\Http\RedirectResponse;

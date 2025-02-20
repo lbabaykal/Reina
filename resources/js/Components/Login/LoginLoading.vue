@@ -1,4 +1,5 @@
 <script>
+
 import NoAvatarSvg from "../Svg/NoAvatarSvg.vue";
 
 export default {

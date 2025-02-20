@@ -1,9 +1,10 @@
 <script>
-import NoAvatar from "@/Components/Svg/NoAvatarSvg.vue";
+
+import NoAvatarSvg from "../Svg/NoAvatarSvg.vue";
 
 export default {
     name: "LoginGuest",
-    components: {NoAvatar},
+    components: {NoAvatarSvg},
 }
 </script>
 
@@ -18,7 +19,7 @@ export default {
                     Вход | Регистрация
                 </div>
             </div>
-            <NoAvatar class="h-10 w-10 rounded-full bg-cover bg-center duration-300 group-hover:drop-shadow-[0_0_16px_rgb(0,0,255)]"/>
+            <NoAvatarSvg class="h-10 w-10 rounded-full bg-cover bg-center duration-300 group-hover:drop-shadow-[0_0_16px_rgb(0,0,255)]"/>
         </router-link>
     </div>
 </template>

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Favorite;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class FavoriteDoramasRequest extends FormRequest
+class FavoriteAnimesRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->check();
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class FavoriteDoramasRequest extends FormRequest
     {
         return [
             'folder' => ['required', 'numeric',
-                Rule::exists('folder_doramas', 'id')
+                Rule::exists('folder_animes', 'id')
                     ->whereIn('user_id', [0, auth()->id()])
             ],
         ];

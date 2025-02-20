@@ -79,19 +79,19 @@ export default {
         <div v-if="isRatingModalVisible"
             class="overflow-y-auto overflow-x-hidden fixed top-0 left-0 z-40 flex justify-center items-center w-full h-full"
         >
-            <div class="bg-black/75 rounded select-none shadow-modals min-w-128 max-w-136">
+            <div class="bg-black/80 rounded select-none shadow-modals min-w-128 max-w-136">
                 <div class="flex items-center justify-between p-2 border-b rounded-t">
                     <div class="text-xl text-white truncate pl-8 mx-auto">
                         Оценить
                     </div>
                     <button type="button"
                             @click="closeRatingModal"
-                            class="hover:bg-red-400 hover:text-black fill-white hover:fill-black text-sm p-1 inline-flex justify-center items-center">
+                            class="hover:bg-red-400 hover:text-black fill-white hover:fill-black text-sm p-1 inline-flex justify-center items-center rounded">
                         <CloseSvg classes="size-6"/>
                     </button>
                 </div>
 
-                <div class="p-2 space-y-2 text-white"
+                <div class="p-3 space-y-2 text-white"
                      v-if="!dataLoading"
                 >
                     <div class="w-full text-center text-lg"

@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\AnimeController;
-use App\Http\Controllers\Api\Animes\FolderAnimesController;
 use App\Http\Controllers\Api\DoramaController;
-use App\Http\Controllers\Api\Doramas\FolderDoramasController;
 use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\Folders\FolderAnimesController;
+use App\Http\Controllers\Api\Folders\FolderDoramasController;
 use App\Http\Controllers\Api\MainController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\SearchController;
@@ -72,13 +72,23 @@ Route::domain(env('APP_URL'))->group(function () {
     Route::prefix('folders')->group(function () {
         // Animes
         Route::prefix('animes')->group(function () {
-            Route::get('/', [FolderAnimesController::class, 'index']);
+            Route::get('/all-user-folders', [FolderAnimesController::class, 'allUserFolders']);
+            Route::get('/only-user-folders', [FolderAnimesController::class, 'onlyUserFolders']);
             Route::get('/show', [FolderAnimesController::class, 'show']);
+            Route::post('/', [FolderAnimesController::class, 'store']);
+            Route::get('/{folder}/edit', [FolderAnimesController::class, 'edit']);
+            Route::patch('/{folder}', [FolderAnimesController::class, 'update']);
+            Route::delete('/{folder}', [FolderAnimesController::class, 'destroy']);
         });
         // Doramas
         Route::prefix('doramas')->group(function () {
-            Route::get('/', [FolderDoramasController::class, 'index']);
+            Route::get('/all-user-folders', [FolderDoramasController::class, 'allUserFolders']);
+            Route::get('/only-user-folders', [FolderDoramasController::class, 'onlyUserFolders']);
             Route::get('/show', [FolderDoramasController::class, 'show']);
+            Route::post('/', [FolderDoramasController::class, 'store']);
+            Route::get('/{folder}/edit', [FolderDoramasController::class, 'edit']);
+            Route::patch('/{folder}', [FolderDoramasController::class, 'update']);
+            Route::delete('/{folder}', [FolderDoramasController::class, 'destroy']);
         });
     })->middleware(['auth']);
 });

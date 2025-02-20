@@ -96,8 +96,7 @@ export default {
 </script>
 
 <template>
-    <section id="TopPage" class="mt-15">
-
+    <section id="TopPage">
         <Search @updateSelectFilters="updateSelectFilters"
                 :selectedDataSearch="selectedDataSearch"
         />
