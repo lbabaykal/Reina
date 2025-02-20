@@ -61,7 +61,7 @@ class AnimeEpisodeObserver
         $animeEpisode->anime()->update([
             'episodes_released' => Anime::query()
                 ->find($animeEpisode->anime->id)
-                ->animeEpisodes()
+                ->episodes()
                 ->where('status', StatusEnum::PUBLISHED)
                 ->count(),
             'updated_at' => now()

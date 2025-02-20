@@ -9,13 +9,20 @@ use App\Http\Resources\Favorites\FavoriteAnimesResource;
 use App\Http\Resources\Favorites\FavoriteDoramasResource;
 use App\Models\Anime;
 use App\Models\Dorama;
-use App\Models\FolderAnime;
-use App\Models\FolderDorama;
+use App\Models\AnimeFolder;
+use App\Models\DoramaFolder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class FavoriteController extends Controller
 {
+    private function checkAuth(): void
+    {
+        if (!auth()->check()) {
+            abort(401);
+        }
+    }
+
     public function index(): JsonResponse
     {
         $this->checkAuth();
@@ -43,7 +50,7 @@ class FavoriteController extends Controller
     /* ================ Anime ================ */
     public function getForAnime(): JsonResponse
     {
-        $foldersUser = FolderAnime::query()
+        $foldersUser = AnimeFolder::query()
             ->select(['id', 'title'])
             ->where('user_id', auth()->id())
             ->orWhere('user_id', 0)
@@ -65,7 +72,7 @@ class FavoriteController extends Controller
 
         $anime->favorites()->updateOrCreate(
             ['user_id' => auth()->id()],
-            ['folder_anime_id' => $request->validated('folder')]
+            ['anime_folder_id' => $request->validated('folder')]
         );
 
         return response()->noContent();
@@ -90,7 +97,7 @@ class FavoriteController extends Controller
     /* ================ Dorama ================ */
     public function getForDorama(): JsonResponse
     {
-        $foldersUser = FolderDorama::query()
+        $foldersUser = DoramaFolder::query()
             ->select(['id', 'title'])
             ->where('user_id', auth()->id())
             ->orWhere('user_id', 0)
@@ -113,7 +120,7 @@ class FavoriteController extends Controller
 
         $dorama->favorites()->updateOrCreate(
             ['user_id' => auth()->id()],
-            ['folder_dorama_id' => $request->validated('folder')]
+            ['dorama_folder_id' => $request->validated('folder')]
         );
 
         return response()->noContent();
@@ -133,12 +140,5 @@ class FavoriteController extends Controller
             ->delete();
 
         return response()->noContent();
-    }
-
-    private function checkAuth(): void
-    {
-        if (!auth()->check()) {
-            abort(401);
-        }
     }
 }

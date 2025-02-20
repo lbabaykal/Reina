@@ -7,13 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class FolderAnime extends Model
+class AnimeFolder extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'title',
         'user_id',
+        'is_private',
+        'number',
     ];
 
     public function user(): BelongsTo

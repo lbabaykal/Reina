@@ -144,7 +144,7 @@ export default {
                 <div class="w-full my-1.5 text-gray-300 flex flex-row justify-center items-center content-center divide-x-2 divide-red-500">
                     <div v-for="(dataAnimeGenre, index) in dataAnime.genres">
                         <router-link :to="{ name: 'animes.index', query: { genres: dataAnimeGenre.slug } }"
-                                     class="underline decoration-1 underline-offset-4 hover:decoration-red-500 hover:text-red-500 tracking-wide mx-2"
+                                     class="underline decoration-1 underline-offset-4 hover:decoration-red-500 hover:text-red-500 tracking-wide mx-2 text-nowrap"
                         >
                             {{ dataAnimeGenre.title_ru }}
                         </router-link>

@@ -18,7 +18,7 @@ use App\Http\Resources\Doramas\DoramasShowResource;
 use App\Http\Resources\Doramas\DoramasWatchResource;
 use App\Http\Resources\Episodes\DoramaResource;
 use App\Models\Dorama;
-use App\Models\FolderDorama;
+use App\Models\DoramaFolder;
 use App\Reina;
 use App\Services\DoramasServices;
 use Illuminate\Http\JsonResponse;
@@ -49,6 +49,7 @@ class DoramaController extends Controller
     public function show($slug, DoramasServices $doramasService): JsonResponse
     {
         $dorama = $doramasService->dataInCacheBySlug($slug);
+
         $ratingUser = $doramasService->ratingUserFor();
         $favoriteUser = $doramasService->favoriteUserFor();
         $foldersUser = $doramasService->foldersUserFor();
@@ -74,7 +75,8 @@ class DoramaController extends Controller
         $foldersUser = $doramasService->foldersUserFor();
         $userFolderFavorite = $doramasService->userFolderFavorite();
 
-        $episodes = $dorama->doramaEpisodes()
+        /** @var Dorama $dorama */
+        $episodes = $dorama->episodes()
             ->where('status', StatusEnum::PUBLISHED)
             ->orderBy('number')
             ->get();

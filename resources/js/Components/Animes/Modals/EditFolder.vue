@@ -65,6 +65,11 @@ export default {
                     this.updateFolders();
                     this.closeEditFolderModal();
                     this.dataLoading = false;
+                    if (+this.$route.query.folder === this.dataFolder.id) {
+                        this.$router.replace({
+                            query: { ...this.$route.query, folder: 0 }
+                        });
+                    }
                 })
                 .catch(error => {
                     // TODO Уведомление не получилось загрузить данные

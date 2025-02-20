@@ -2,15 +2,13 @@
 
 namespace App\Traits;
 
-use App\Models\Country;
 use App\Models\Genre;
-use App\Models\Rating;
 use App\Models\Scopes\PublishedScope;
 use App\Models\Studio;
 use App\Models\Type;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -41,11 +39,6 @@ trait AnimeAndDoramaTrait
         return $this->belongsToMany(Genre::class);
     }
 
-    public function ratings(): MorphMany
-    {
-        return $this->morphMany(Rating::class, 'ratingable');
-    }
-
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
@@ -69,5 +62,23 @@ trait AnimeAndDoramaTrait
         }
 
         return $model;
+    }
+
+    public function getPosterUrlAttribute(): string
+    {
+        $table = $this->getTable();
+
+        return $this->poster
+            ? Storage::disk('s3_' .$table)->url($this->poster)
+            : Storage::disk('s3_' . $table)->url('no_poster.png');
+    }
+
+    public function getCoverUrlAttribute(): string
+    {
+        $table = $this->getTable();
+
+        return $this->cover
+            ? Storage::disk('s3_' . $table)->url($this->cover)
+            : Storage::disk('s3_' . $table)->url('no_cover.png');
     }
 }

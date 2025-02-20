@@ -23,6 +23,11 @@ class GenreSeeder extends Seeder
         ]);
 
         Genre::query()->create([
+            'title_ru' => 'Дзёсэй',
+            'title_en' => 'Josei',
+        ]);
+
+        Genre::query()->create([
             'title_ru' => 'Драма',
             'title_en' => 'Drama',
         ]);
@@ -35,6 +40,11 @@ class GenreSeeder extends Seeder
         Genre::query()->create([
             'title_ru' => 'Махо-сёдзё',
             'title_en' => 'Maho',
+        ]);
+
+        Genre::query()->create([
+            'title_ru' => 'Мелодрама',
+            'title_en' => 'Melodrama',
         ]);
 
         Genre::query()->create([
@@ -73,18 +83,23 @@ class GenreSeeder extends Seeder
         ]);
 
         Genre::query()->create([
-            'title_ru' => 'Сёнен',
-            'title_en' => 'Shonen',
-        ]);
-
-        Genre::query()->create([
             'title_ru' => 'Сёдзё',
             'title_en' => 'Shoujo',
         ]);
 
         Genre::query()->create([
+            'title_ru' => 'Сёнен',
+            'title_en' => 'Shonen',
+        ]);
+
+        Genre::query()->create([
             'title_ru' => 'Спорт',
             'title_en' => 'Sport',
+        ]);
+
+        Genre::query()->create([
+            'title_ru' => 'Сэйнэн',
+            'title_en' => 'Seinen',
         ]);
 
         Genre::query()->create([
@@ -110,11 +125,6 @@ class GenreSeeder extends Seeder
         Genre::query()->create([
             'title_ru' => 'Ужасы',
             'title_en' => 'Horror',
-        ]);
-
-        Genre::query()->create([
-            'title_ru' => 'Мелодрама',
-            'title_en' => 'Melodrama',
         ]);
 
     }

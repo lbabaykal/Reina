@@ -75,7 +75,8 @@ class AnimeController extends Controller
         $foldersUser = $animesService->foldersUserFor();
         $userFolderFavorite = $animesService->userFolderFavorite();
 
-        $episodes = $anime->animeEpisodes()
+        /** @var Anime $anime */
+        $episodes = $anime->episodes()
             ->where('status', StatusEnum::PUBLISHED)
             ->orderBy('number')
             ->get();

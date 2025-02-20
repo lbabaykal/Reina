@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Storage;
 
 #[ObservedBy([AnimeObserver::class])]
 class Anime extends Model
@@ -47,7 +46,12 @@ class Anime extends Model
 
     public function countries(): BelongsToMany
     {
-        return $this->belongsToMany(Country::class);
+        return $this->belongsToMany(Country::class, 'anime_country');
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(AnimeRating::class);
     }
 
     public function favorites(): HasMany
@@ -55,23 +59,9 @@ class Anime extends Model
         return $this->hasMany(FavoriteAnime::class);
     }
 
-    public function animeEpisodes(): HasMany
+    public function episodes(): HasMany
     {
         return $this->hasMany(AnimeEpisode::class);
-    }
-
-    public function getPosterUrlAttribute(): string
-    {
-        return $this->poster
-            ? Storage::disk('s3_animes')->url($this->poster)
-            : Storage::disk('s3_animes')->url('no_poster.png');
-    }
-
-    public function getCoverUrlAttribute(): string
-    {
-        return $this->cover
-            ? Storage::disk('s3_animes')->url($this->cover)
-            : Storage::disk('s3_animes')->url('no_cover.png');
     }
 
 }

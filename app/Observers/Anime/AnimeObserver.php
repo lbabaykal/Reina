@@ -4,7 +4,6 @@ namespace App\Observers\Anime;
 
 use App\Enums\StatusEnum;
 use App\Models\Anime;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class AnimeObserver
@@ -77,7 +76,7 @@ class AnimeObserver
         $anime->ratings()->delete();
         $anime->favorites()->delete();
 
-        $anime->animeEpisodes()->delete();
+        $anime->episodes()->delete();
 
         $anime->genres()->detach();
         $anime->studios()->detach();

@@ -49,29 +49,34 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function ratings(): HasMany
+    public function animeRating(): HasMany
     {
-        return $this->hasMany(Rating::class);
+        return $this->hasMany(AnimeRating::class);
     }
 
-    public function foldersAnimes(): HasMany
+    public function doramaRating(): HasMany
     {
-        return $this->hasMany(FolderAnime::class);
+        return $this->hasMany(DoramaRating::class);
     }
 
-    public function foldersDoramas(): HasMany
+    public function animeFolders(): HasMany
     {
-        return $this->hasMany(FolderDorama::class);
+        return $this->hasMany(AnimeFolder::class);
     }
 
-    public function foldersAnimesWithDefault(): HasMany
+    public function animeFoldersWithDefault(): HasMany
     {
-        return $this->hasMany(FolderAnime::class)->orWhere('user_id', 0);
+        return $this->hasMany(AnimeFolder::class)->orWhere('user_id', 0);
     }
 
-    public function foldersDoramasWithDefault(): HasMany
+    public function doramaFolders(): HasMany
     {
-        return $this->hasMany(FolderDorama::class)->orWhere('user_id', 0);
+        return $this->hasMany(DoramaFolder::class);
+    }
+
+    public function doramaFoldersWithDefault(): HasMany
+    {
+        return $this->hasMany(DoramaFolder::class)->orWhere('user_id', 0);
     }
 
     public function favoriteAnimes(): HasManyThrough

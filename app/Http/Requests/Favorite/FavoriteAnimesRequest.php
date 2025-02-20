@@ -20,8 +20,8 @@ class FavoriteAnimesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'folder' => ['required', 'numeric',
-                Rule::exists('folder_animes', 'id')
+            'folder' => ['required', 'integer',
+                Rule::exists('anime_folders', 'id')
                     ->whereIn('user_id', [0, auth()->id()])
             ],
         ];

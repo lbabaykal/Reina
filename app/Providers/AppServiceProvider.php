@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\FolderAnime;
-use App\Models\FolderDorama;
+use App\Models\AnimeFolder;
+use App\Models\DoramaFolder;
 use App\Policies\Folders\FolderAnimePolicy;
 use App\Policies\Folders\FolderDoramaPolicy;
 use Illuminate\Database\Eloquent\Model;
@@ -31,8 +31,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::policy(FolderAnime::class, FolderAnimePolicy::class);
-        Gate::policy(FolderDorama::class, FolderDoramaPolicy::class);
+        Gate::policy(AnimeFolder::class, FolderAnimePolicy::class);
+        Gate::policy(DoramaFolder::class, FolderDoramaPolicy::class);
 
         Model::preventLazyLoading(! $this->app->isProduction());
 

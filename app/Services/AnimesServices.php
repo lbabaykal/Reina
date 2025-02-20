@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Enums\CacheEnum;
 use App\Models\Anime;
-use App\Models\FolderAnime;
+use App\Models\AnimeFolder;
 
 class AnimesServices
 {
@@ -36,12 +36,12 @@ class AnimesServices
 
         return $this->anime->favorites()
             ->where('user_id', auth()->id())
-            ->value('folder_anime_id');
+            ->value('anime_folder_id');
     }
 
     public function foldersUserFor(): \Illuminate\Database\Eloquent\Collection
     {
-        return FolderAnime::query()
+        return AnimeFolder::query()
             ->select(['id', 'title'])
             ->where('user_id', auth()->id())
             ->orWhere('user_id', 0)

@@ -61,7 +61,7 @@ class DoramaEpisodeObserver
         $doramaEpisode->dorama()->update([
             'episodes_released' => Dorama::query()
                 ->find($doramaEpisode->dorama->id)
-                ->doramaEpisodes()
+                ->episodes()
                 ->where('status', StatusEnum::PUBLISHED)
                 ->count(),
             'updated_at' => now()

@@ -10,12 +10,17 @@ use Illuminate\Http\Response;
 
 class RatingController extends Controller
 {
-    /* ================ Anime ================ */
-    public function addForAnime(RatingRequest $request, $id): Response
+    private function checkAuth(): void
     {
         if (!auth()->check()) {
             abort(401);
         }
+    }
+
+    /* ================ Anime ================ */
+    public function addForAnime(RatingRequest $request, $id): Response
+    {
+        $this->checkAuth();
 
         $anime = Anime::query()
             ->select(['id', 'slug'])
@@ -32,9 +37,7 @@ class RatingController extends Controller
 
     public function removeForAnime($id): Response
     {
-        if (!auth()->check()) {
-            abort(401);
-        }
+        $this->checkAuth();
 
         $anime = Anime::query()
             ->select(['id', 'slug'])
@@ -51,9 +54,7 @@ class RatingController extends Controller
     /* ================ Dorama ================ */
     public function addForDorama(RatingRequest $request, $id): Response
     {
-        if (!auth()->check()) {
-            abort(401);
-        }
+        $this->checkAuth();
 
         $dorama = Dorama::query()
             ->select(['id', 'slug'])
@@ -70,9 +71,7 @@ class RatingController extends Controller
 
     public function removeForDorama($id): Response
     {
-        if (!auth()->check()) {
-            abort(401);
-        }
+        $this->checkAuth();
 
         $dorama = Dorama::query()
             ->select(['id', 'slug'])

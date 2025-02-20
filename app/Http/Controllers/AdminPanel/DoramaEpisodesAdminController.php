@@ -17,7 +17,7 @@ class DoramaEpisodesAdminController extends Controller
 {
     public function index(Dorama $dorama): View
     {
-        $episodes = $dorama->doramaEpisodes()
+        $episodes = $dorama->episodes()
             ->orderBy('number')
             ->paginate(Reina::COUNT_ADMIN_EPISODES)
             ->withQueryString();
@@ -38,7 +38,7 @@ class DoramaEpisodesAdminController extends Controller
 
     public function store(Dorama $dorama, EpisodeStoreRequest $request): RedirectResponse
     {
-        $episode = $dorama->doramaEpisodes()->create($request->validated());
+        $episode = $dorama->episodes()->create($request->validated());
 
         return redirect()
             ->route('admin.doramas.episodes.index', $dorama)

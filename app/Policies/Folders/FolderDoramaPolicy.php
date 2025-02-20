@@ -2,7 +2,7 @@
 
 namespace App\Policies\Folders;
 
-use App\Models\FolderDorama;
+use App\Models\DoramaFolder;
 use App\Models\User;
 use App\Reina;
 use Illuminate\Auth\Access\Response;
@@ -14,7 +14,7 @@ class FolderDoramaPolicy
         return Response::denyWithStatus(403);
     }
 
-    public function view(User $user, FolderDorama $folderDorama): Response
+    public function view(User $user, DoramaFolder $folderDorama): Response
     {
         return ($folderDorama->user_id == 0 || $folderDorama->user_id === $user->id)
             ? Response::allow()
@@ -23,21 +23,21 @@ class FolderDoramaPolicy
 
     public function create(User $user): Response
     {
-        $countFolders = $user->foldersDoramas()->count();
+        $countFolders = $user->doramaFolders()->count();
 
         return ($countFolders < Reina::COUNT_FOLDERS)
             ? Response::allow()
             : Response::deny('Нельзя создавать больше ' . Reina::COUNT_FOLDERS . ' папок.');
     }
 
-    public function update(User $user, FolderDorama $folderDorama): Response
+    public function update(User $user, DoramaFolder $folderDorama): Response
     {
         return ($folderDorama->user_id === $user->id)
             ? Response::allow()
             : Response::denyWithStatus(403);
     }
 
-    public function delete(User $user, FolderDorama $folderDorama): Response
+    public function delete(User $user, DoramaFolder $folderDorama): Response
     {
         return ($folderDorama->user_id === $user->id)
             ? Response::allow()

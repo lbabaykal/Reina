@@ -18,7 +18,7 @@ class AnimeEpisodesAdminController extends Controller
 
     public function index(Anime $anime): View
     {
-        $episodes = $anime->animeEpisodes()
+        $episodes = $anime->episodes()
             ->orderBy('number')
             ->paginate(Reina::COUNT_ADMIN_EPISODES)
             ->withQueryString();
@@ -39,7 +39,7 @@ class AnimeEpisodesAdminController extends Controller
 
     public function store(Anime $anime, EpisodeStoreRequest $request): RedirectResponse
     {
-        $episode = $anime->animeEpisodes()->create($request->validated());
+        $episode = $anime->episodes()->create($request->validated());
 
         return redirect()
             ->route('admin.animes.episodes.index', $anime)

@@ -4,7 +4,6 @@ namespace App\Observers\Dorama;
 
 use App\Enums\StatusEnum;
 use App\Models\Dorama;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class DoramaObserver
@@ -77,7 +76,7 @@ class DoramaObserver
         $dorama->ratings()->delete();
         $dorama->favorites()->delete();
 
-        $dorama->doramaEpisodes()->delete();
+        $dorama->episodes()->delete();
 
         $dorama->genres()->detach();
         $dorama->studios()->detach();

@@ -2,18 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FavoriteAnime extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
         'anime_id',
-        'folder_anime_id',
+        'anime_folder_id',
     ];
 
     public function user(): BelongsTo
@@ -21,8 +18,8 @@ class FavoriteAnime extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function foldersAnime(): BelongsTo
+    public function animeFolders(): BelongsTo
     {
-        return $this->belongsTo(FolderAnime::class);
+        return $this->belongsTo(AnimeFolder::class);
     }
 }

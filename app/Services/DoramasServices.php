@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Enums\CacheEnum;
 use App\Models\Dorama;
-use App\Models\FolderDorama;
+use App\Models\DoramaFolder;
 
 class DoramasServices
 {
@@ -36,12 +36,12 @@ class DoramasServices
 
         return $this->dorama->favorites()
             ->where('user_id', auth()->id())
-            ->value('folder_dorama_id');
+            ->value('dorama_folder_id');
     }
 
     public function foldersUserFor(): \Illuminate\Database\Eloquent\Collection
     {
-        return FolderDorama::query()
+        return DoramaFolder::query()
             ->select(['id', 'title'])
             ->where('user_id', auth()->id())
             ->orWhere('user_id', 0)

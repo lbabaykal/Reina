@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('folder_animes', function (Blueprint $table) {
+        Schema::create('anime_folders', function (Blueprint $table) {
             $table->id();
             $table->string('title', 32);
             $table->unsignedBigInteger('user_id');
-            $table->boolean('is_private')->default(false);
+            $table->boolean('is_private')->default(true);
             $table->unsignedBigInteger('number');
             $table->timestamps();
         });
@@ -20,6 +20,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('folder_animes');
+        Schema::dropIfExists('anime_folders');
     }
 };

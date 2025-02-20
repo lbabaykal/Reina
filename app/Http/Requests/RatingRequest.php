@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class RatingRequest extends FormRequest
 {
@@ -20,7 +19,7 @@ class RatingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'assessment' => ['required', 'numeric', 'between:1,10'],
+            'assessment' => ['required', 'integer', 'between:1,10'],
         ];
     }
 

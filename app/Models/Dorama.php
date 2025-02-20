@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Storage;
 
 #[ObservedBy([DoramaObserver::class])]
 class Dorama extends Model
@@ -50,28 +49,19 @@ class Dorama extends Model
         return $this->belongsToMany( Country::class, 'dorama_country');
     }
 
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(DoramaRating::class);
+    }
+
     public function favorites(): HasMany
     {
         return $this->hasMany(FavoriteDorama::class);
     }
 
-    public function doramaEpisodes(): HasMany
+    public function episodes(): HasMany
     {
         return $this->hasMany(DoramaEpisode::class);
-    }
-
-    public function getPosterUrlAttribute(): string
-    {
-        return $this->poster
-            ? Storage::disk('s3_doramas')->url($this->poster)
-            : Storage::disk('s3_doramas')->url('no_poster.png');
-    }
-
-    public function getCoverUrlAttribute(): string
-    {
-        return $this->cover
-            ? Storage::disk('s3_doramas')->url($this->cover)
-            : Storage::disk('s3_doramas')->url('no_cover.png');
     }
 
 }
