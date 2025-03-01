@@ -16,10 +16,10 @@ class DoramaAdminServices
 {
     public function store(Request $request): RedirectResponse
     {
-        $dorama = new Dorama();
+        $dorama = new Dorama;
 
-        $dorama->poster = (new PosterService())->setStorage('s3_doramas')->save();
-        $dorama->cover = (new CoverService())->setStorage('s3_doramas')->save();
+        $dorama->poster = (new PosterService)->setStorage('s3_doramas')->save();
+        $dorama->cover = (new CoverService)->setStorage('s3_doramas')->save();
 
         $dorama->slug = str()->slug($request->safe()->input('title_ru'));
         $dorama->title_org = $request->safe()->input('title_org');
@@ -52,7 +52,7 @@ class DoramaAdminServices
         $dorama->is_rating = $request->safe()->boolean('is_rating');
 
         try {
-            DB::transaction(function () use ($dorama, $countries, $genres, $studios){
+            DB::transaction(function () use ($dorama, $countries, $genres, $studios) {
                 $dorama->save();
 
                 $dorama->countries()->attach($countries);
@@ -74,18 +74,18 @@ class DoramaAdminServices
                 Storage::disk('dorama_covers')->delete($dorama->cover);
             }
 
-            return redirect()->back()->with('message', "Ошибка выполнения транзакции." . $e->getMessage());
+            return redirect()->back()->with('message', 'Ошибка выполнения транзакции.'.$e->getMessage());
         }
     }
 
     public function update(DoramaUpdateRequest $request, Model $dorama): RedirectResponse
     {
         if (request()->has('poster')) {
-            $dorama->poster = (new PosterService())->setStorage('s3_doramas')->save() ?? $dorama->poster;
+            $dorama->poster = (new PosterService)->setStorage('s3_doramas')->save() ?? $dorama->poster;
         }
 
         if (request()->has('cover')) {
-            $dorama->cover = (new CoverService())->setStorage('s3_doramas')->save() ?? $dorama->cover;
+            $dorama->cover = (new CoverService)->setStorage('s3_doramas')->save() ?? $dorama->cover;
         }
 
         $dorama->title_org = $request->safe()->input('title_org');
@@ -117,17 +117,17 @@ class DoramaAdminServices
         $dorama->is_rating = $request->safe()->boolean('is_rating');
 
         try {
-            DB::transaction(function () use ($dorama, $countries, $genres, $studios){
+            DB::transaction(function () use ($dorama, $countries, $genres, $studios) {
                 $dorama->update();
 
                 $dorama->countries()->sync($countries);
                 $dorama->genres()->sync($genres);
                 $dorama->studios()->sync($studios);
             });
+
             return redirect()->route('admin.doramas.index')->with('message', "Дорама {$dorama->title_ru} обновлена.");
         } catch (\Exception $e) {
-            return redirect()->back()->with('message', "Ошибка выполнения транзакции." . $e);
+            return redirect()->back()->with('message', 'Ошибка выполнения транзакции.'.$e);
         }
     }
-
 }

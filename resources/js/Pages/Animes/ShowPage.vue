@@ -1,17 +1,15 @@
 <script>
-import StarSvg from "../../Components/Svg/StarSvg.vue";
-import FavoriteSvg from "../../Components/Svg/FavoriteSvg.vue";
-import PlaySvg from "../../Components/Svg/PlaySvg.vue";
-import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
-import Description from "../../Components/Animes/Description.vue";
-import SendSvg from "../../Components/Svg/SendSvg.vue";
-import Rating from "../../Components/Animes/Modals/Rating.vue";
-import Favorite from "../../Components/Animes/Modals/Favorite.vue";
-import ToolTip from "../../Components/ToolTip.vue";
+import LoadingSvg from '../../Components/Svg/LoadingSvg.vue';
+import Description from '../../Components/Animes/Description.vue';
+import Rating from '../../Components/Animes/Modals/Rating.vue';
+import Favorite from '../../Components/Animes/Modals/Favorite.vue';
+import RatingButton from '../../Components/ui/Buttons/RatingButton.vue';
+import FavoriteButton from '../../Components/ui/Buttons/FavoriteButton.vue';
+import WatchOnlineButton from '../../Components/ui/Buttons/WatchOnlineButton.vue';
 
 export default {
-    name: "ShowPage",
-    components: {ToolTip, Favorite, Rating, SendSvg, Description, LoadingSvg, PlaySvg, FavoriteSvg, StarSvg},
+    name: 'ShowPage',
+    components: { WatchOnlineButton, FavoriteButton, RatingButton, Favorite, Rating, Description, LoadingSvg },
     props: {
         slug: String,
     },
@@ -68,17 +66,18 @@ export default {
                 },
             },
             dataLoading: false,
-        }
+        };
     },
     methods: {
         getAnimeData() {
             this.dataLoading = false;
-            axios.get(`/api/animes/${this.slug}`)
-                .then(response => {
+            axios
+                .get(`/api/animes/${this.slug}`)
+                .then((response) => {
                     this.dataAnime = response.data.dataAnime;
                     this.dataUserForAnime = response.data.dataUserForAnime;
                 })
-                .catch(error => {
+                .catch((error) => {
                     // TODO Уведомление не получилось загрузить данные
                 })
                 .finally(() => {
@@ -96,33 +95,35 @@ export default {
         isEpisodes() {
             return this.dataAnime.episodes_total !== 1;
         },
-        isRating() {
+        isRatingUser() {
             return this.dataUserForAnime.rating !== 0;
         },
-        isFavorite() {
+        isFavoriteUser() {
             return this.dataUserForAnime.favorite.id !== 0;
         },
     },
     mounted() {
-        this.getAnimeData()
-    }
-}
+        this.getAnimeData();
+    },
+};
 </script>
 
 <template>
     <section v-if="dataLoading">
-        <div class="relative w-full aspect-[16/7] flex flex-row select-none">
-            <div class="absolute bottom-24 left-24 min-w-120 max-w-200 flex flex-col justify-end justify-items-stretch items-center z-20 bg-black/60 backdrop-blur rounded py-2.5 px-5">
-
-                <div class="w-full text-2xl font-bold text-center my-1">
+        <div class="relative flex aspect-16/7 w-full flex-row select-none">
+            <div
+                class="absolute bottom-24 left-24 z-20 flex max-w-200 min-w-120 flex-col items-center justify-end justify-items-stretch rounded-md bg-black/60 px-5 py-2.5 backdrop-blur-sm"
+            >
+                <div class="my-1 w-full text-center text-2xl font-bold">
                     {{ dataAnime.title_ru }}
                 </div>
 
-                <div class="w-full flex flex-row items-center justify-center my-1 text-gray-300 text-lg divide-x divide-red-500">
-                    <span class="px-3 py-0.5 text-lime-400 font-bold text-2xl">{{ dataAnime.rating }}</span>
+                <div class="my-1 flex w-full flex-row items-center justify-center divide-x divide-red-500 text-lg text-gray-300">
+                    <span class="px-3 py-0.5 text-2xl font-bold text-lime-400">{{ dataAnime.rating }}</span>
 
-                    <span v-if="isEpisodes"
-                          class="px-3"
+                    <span
+                        v-if="isEpisodes"
+                        class="px-3"
                     >
                         {{ dataAnime.episodes_released }} / {{ dataAnime.episodes_total }}
                     </span>
@@ -130,94 +131,77 @@ export default {
                         {{ dataAnime.duration }}
                     </span>
 
-                    <router-link :to="{ name: 'animes.index', query: { year_from: dataAnime.year, year_to: dataAnime.year } }"
-                                 class="px-3 underline decoration-1 underline-offset-4 hover:decoration-red-500 hover:text-red-500 tracking-wide"
+                    <router-link
+                        :to="{ name: 'animes.index', query: { year_from: dataAnime.year, year_to: dataAnime.year } }"
+                        class="px-3 tracking-wide underline decoration-1 underline-offset-4 hover:text-red-500 hover:decoration-red-500"
                     >
                         {{ dataAnime.year }}
                     </router-link>
 
-                    <span class="px-3 text-red-500 text-xl font-bold">
+                    <span class="px-3 text-xl font-bold text-red-500">
                         {{ dataAnime.age_rating }}
                     </span>
                 </div>
 
-                <div class="w-full my-1.5 text-gray-300 flex flex-row justify-center items-center content-center divide-x-2 divide-red-500">
+                <div class="my-1.5 flex w-full flex-row content-center items-center justify-center divide-x divide-red-500 text-gray-300">
                     <div v-for="(dataAnimeGenre, index) in dataAnime.genres">
-                        <router-link :to="{ name: 'animes.index', query: { genres: dataAnimeGenre.slug } }"
-                                     class="underline decoration-1 underline-offset-4 hover:decoration-red-500 hover:text-red-500 tracking-wide mx-2 text-nowrap"
+                        <router-link
+                            :to="{ name: 'animes.index', query: { genres: dataAnimeGenre.slug } }"
+                            class="mx-2 tracking-wide text-nowrap underline decoration-1 underline-offset-4 hover:text-red-500 hover:decoration-red-500"
                         >
                             {{ dataAnimeGenre.title_ru }}
                         </router-link>
                     </div>
                 </div>
 
-                <div class="w-full flex flex-row justify-center items-center content-center my-3 space-x-3">
+                <div class="my-3 flex w-full flex-row content-center items-center justify-center space-x-3">
                     <router-link :to="{ name: 'animes.watch', params: { slug: dataAnime.slug } }">
-                        <div class="group px-12 py-2 rounded relative flex flex-row justify-center items-center text-white font-bold bg-gradient-to-r from-orange-500 via-red-500 to-violet-600"
-                        >
-                            <PlaySvg classes="w-7 h-7 inline-block"/>
-                            &nbsp;Смотреть онлайн
-                            <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-orange-500 via-red-500 to-violet-600 blur-md -z-10 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                        </div>
+                        <WatchOnlineButton />
                     </router-link>
 
-                    <ToolTip message="Оценить"
-                             classes="py-2 px-4 bg-gray-600 text-yellow-400"
-                    >
-                        <button type="button"
-                                class="group block bg-gray-700/80 hover:bg-gray-600 p-2 rounded"
-                                @click="openRatingModal"
-                        >
-                            <StarSvg :classes="[
-                            'w-7 h-7 stroke-amber-400 group-hover:fill-amber-400',
-                            isRating ? 'fill-amber-400' : 'fill-transparent'
-                            ]"
-                            />
-                        </button>
-                    </ToolTip>
+                    <RatingButton
+                        :is_rating="dataAnime.is_rating"
+                        :isRatingUser="isRatingUser"
+                        @clickMethod="openRatingModal"
+                    />
 
-                    <ToolTip message="В избранное"
-                             classes="py-2 px-4 bg-gray-600 text-red-400"
-                    >
-                        <button type="button"
-                             class="group flex flex-row items-center bg-gray-700/80 hover:bg-gray-600 p-2 rounded text-red-500"
-                             @click="openFavoriteModal"
-                        >
-                            <FavoriteSvg :classes="[
-                                'w-7 h-7 stroke-red-500 group-hover:fill-red-500',
-                                isFavorite ? 'fill-red-500' : 'fill-transparent'
-                                ]"
-                            />
-                        </button>
-                    </ToolTip>
+                    <FavoriteButton
+                        :isFavoriteUser="isFavoriteUser"
+                        @click="openFavoriteModal"
+                    />
                 </div>
             </div>
 
-            <div class="absolute top-0 left-0 w-full h-full bg-center bg-cover shadow-[0px_-80px_100px_25px_rgba(0,0,0,1)_inset] z-10"
-                 :style="{ backgroundImage: `url(${dataAnime.cover})` }">
-            </div>
+            <div
+                class="absolute top-0 left-0 z-10 h-full w-full bg-cover bg-center shadow-[0px_-80px_100px_25px_rgba(0,0,0,1)_inset]"
+                :style="{ backgroundImage: `url(${dataAnime.cover})` }"
+            ></div>
         </div>
 
-        <Description :dataAnime="this.dataAnime"
-                     :isEpisodes="isEpisodes"
+        <Description
+            :dataAnime="this.dataAnime"
+            :isEpisodes="isEpisodes"
         />
 
-        <Rating ref="ratingRef"
-                :animeId="dataAnime.id"
-                :dataUserForAnime="dataUserForAnime"
-                :isRating="isRating"
+        <Rating
+            ref="ratingRef"
+            :animeId="dataAnime.id"
+            :dataUserForAnime="dataUserForAnime"
+            :isRatingUser="isRatingUser"
         />
 
-        <Favorite ref="favoriteRef"
-                  :animeId="dataAnime.id"
-                  :dataUserForAnime="dataUserForAnime"
-                  :isFavorite="isFavorite"
+        <Favorite
+            ref="favoriteRef"
+            :animeId="dataAnime.id"
+            :dataUserForAnime="dataUserForAnime"
+            :isFavoriteUser="isFavoriteUser"
         />
     </section>
 
-    <section v-else
-             class="flex items-center justify-center h-screen"
+    <section
+        v-else
+        class="flex h-screen items-center justify-center"
     >
-        <LoadingSvg classes="w-20 fill-red-500"/>
+        <LoadingSvg classes="w-20 fill-red-500" />
     </section>
 </template>

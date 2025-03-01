@@ -1,33 +1,34 @@
 <script>
-import TrashSvg from "../../Svg/TrashSvg.vue";
-import CloseSvg from "../../Svg/CloseSvg.vue";
-import SendSvg from "../../Svg/SendSvg.vue";
-import LoadingSvg from "../../Svg/LoadingSvg.vue";
-import StarSvg from "../../Svg/StarSvg.vue";
+import CloseSvg from '../../Svg/CloseSvg.vue';
+import LoadingSvg from '../../Svg/LoadingSvg.vue';
+import SuccessButton from '../../ui/Buttons/SuccessButton.vue';
+import DangerButton from '../../ui/Buttons/DangerButton.vue';
 
 export default {
-    name: "CreateFolder",
-    components: {StarSvg, LoadingSvg, SendSvg, CloseSvg, TrashSvg},
+    name: 'CreateFolder',
+    components: { DangerButton, SuccessButton, LoadingSvg, CloseSvg },
     data() {
         return {
             titleFolder: '',
             isCreateFolderModalVisible: false,
-        }
+            dataLoading: false,
+        };
     },
     methods: {
         createFolder() {
             this.dataLoading = true;
-            axios.post(`/api/folders/animes/`, { title: this.titleFolder })
-                .then(response => {
+            axios
+                .post(`/api/folders/animes/`, { title: this.titleFolder })
+                .then((response) => {
                     // TODO Уведомление что папка успешно создана
                     this.updateFolders();
                     this.closeCreateFolderModal();
+                    this.dataLoading = false;
                 })
-                .catch(error => {
+                .catch((error) => {
                     // TODO Уведомление не получилось загрузить данные
                 })
-                .finally(() => {
-                });
+                .finally(() => {});
         },
         openCreateFolderModal() {
             this.titleFolder = '';
@@ -37,10 +38,10 @@ export default {
             this.isCreateFolderModalVisible = false;
         },
         updateFolders() {
-            this.$emit("updateFolders");
-        }
+            this.$emit('updateFolders');
+        },
     },
-}
+};
 </script>
 
 <template>
@@ -52,58 +53,64 @@ export default {
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
     >
-        <div v-if="isCreateFolderModalVisible"
-             class="overflow-y-auto overflow-x-hidden fixed top-0 left-0 z-40 flex justify-center items-center w-full h-full"
+        <div
+            v-if="isCreateFolderModalVisible"
+            class="fixed top-0 left-0 z-40 flex h-full w-full items-center justify-center overflow-x-hidden overflow-y-auto"
         >
-            <div class="bg-black/80 rounded select-none shadow-modals min-w-120 max-w-136">
-                <div class="flex items-center justify-between p-2 border-b rounded-t">
-                    <div class="text-xl text-white truncate pl-8 mx-auto">
-                        Добавление папки
-                    </div>
-                    <button type="button"
-                            @click="closeCreateFolderModal"
-                            class="hover:bg-red-400 hover:text-black fill-white hover:fill-black text-sm p-1 inline-flex justify-center items-center rounded">
-                        <CloseSvg classes="size-6"/>
+            <div class="shadow-modals max-w-136 min-w-120 rounded-md bg-black/80 select-none">
+                <div class="flex items-center justify-between border-b p-2">
+                    <div class="mx-auto truncate pl-8 text-xl text-white">Добавление папки</div>
+                    <button
+                        type="button"
+                        @click="closeCreateFolderModal"
+                        class="inline-flex cursor-pointer items-center justify-center rounded-sm fill-white p-1 text-sm hover:bg-red-400 hover:fill-black hover:text-black"
+                    >
+                        <CloseSvg classes="size-6" />
                     </button>
                 </div>
 
-                <div class="p-3 space-y-2">
-                    <div class="flex flex-col justify-center items-center text-lg">
-                        <label for="title"
-                               class="block mb-2 text-white"
+                <div
+                    v-if="!this.dataLoading"
+                    class="space-y-2 p-3"
+                >
+                    <div class="flex flex-col items-center justify-center text-lg">
+                        <label
+                            for="title"
+                            class="mb-2 block text-white"
                         >
                             Название
                         </label>
-                        <input type="text"
-                               id="title"
-                               name="title"
-                               v-model="titleFolder"
-                               class="w-80% bg-blackSimple text-white border-x-0 border-t-0 duration-300 transition text-center rounded
-                                        focus:ring-0 focus:border-b-red-400 hover:bg-blackActive focus:bg-blackActive py-2 m-0"
-                        >
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            v-model="titleFolder"
+                            class="w-80% bg-blackSimple hover:bg-blackActive focus:bg-blackActive m-0 rounded border-x-0 border-t-0 py-2 text-center text-white transition duration-300 focus:border-b-red-400 focus:ring-0"
+                        />
                     </div>
                 </div>
 
-                <div class="flex justify-center p-3 border-t border-gray-200 rounded-b">
-                    <button type="button"
-                            @click="createFolder"
-                            class="bg-black text-white font-bold rounded border-b-2 border-lime-500 hover:border-lime-600 hover:bg-lime-500 hover:text-black shadow-md py-2 px-4 inline-flex items-center mx-2"
-                    >
-                        <span class="mr-2">
-                            Добавить
-                        </span>
-                        <SendSvg classes="size-6 fill-none"/>
-                    </button>
+                <div
+                    v-else
+                    class="flex h-32 items-center justify-center"
+                >
+                    <LoadingSvg classes="w-20 fill-red-500" />
+                </div>
 
-                    <button type="button"
-                            @click="closeCreateFolderModal"
-                            class="bg-black text-white font-bold rounded border-b-2 border-red-500 hover:border-red-600 hover:bg-red-500 hover:text-black shadow-md py-2 px-4 inline-flex items-center mx-2"
-                    >
-                        <span class="mr-2">
-                            Отмена
-                        </span>
-                        <CloseSvg classes="size-6"/>
-                    </button>
+                <div class="flex justify-center border-t border-gray-200 p-3">
+                    <SuccessButton
+                        @click="createFolder"
+                        text="Добавить"
+                        :disabledButton="dataLoading"
+                        class="mx-2"
+                    />
+
+                    <DangerButton
+                        @click="closeCreateFolderModal"
+                        text="Отмена"
+                        :disabledButton="dataLoading"
+                        class="mx-2"
+                    />
                 </div>
             </div>
         </div>

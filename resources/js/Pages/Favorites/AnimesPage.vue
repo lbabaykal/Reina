@@ -1,12 +1,12 @@
 <script>
-import CardLoading from "../../Components/CardLoading.vue";
-import CardAnime from "../../Components/Animes/CardAnime.vue";
-import Pagination from "../../Components/Pagination.vue";
-import Folders from "../../Components/Animes/Folders.vue";
+import CardLoading from '../../Components/CardLoading.vue';
+import CardAnime from '../../Components/Animes/CardAnime.vue';
+import Pagination from '../../Components/Pagination.vue';
+import Folders from '../../Components/Animes/Folders.vue';
 
 export default {
-    name: "AnimesPage",
-    components: {Folders, Pagination, CardAnime, CardLoading},
+    name: 'AnimesPage',
+    components: { Folders, Pagination, CardAnime, CardLoading },
     data() {
         return {
             dataAnimes: [Array, Object],
@@ -24,24 +24,24 @@ export default {
                 total: Number,
             },
             dataLoading: false,
-        }
+        };
     },
     methods: {
         async getAnimesInFolderData() {
-        this.dataLoading = false;
-            await axios.get('/api/folders/animes/show',  { params: this.dataParams })
-                .then(response => {
+            this.dataLoading = false;
+            await axios
+                .get('/api/folders/animes/show', { params: this.dataParams })
+                .then((response) => {
                     this.dataAnimes = response.data.data;
                     this.dataPagination = response.data.meta;
                     this.dataLoading = true;
                 })
-                .catch(error => {
+                .catch((error) => {
                     if (error.status === 403) {
-                        console.log('Не твоя папка')  //TODO уведомление что у пользователя нет прав на просмотр
+                        console.log('Не твоя папка'); //TODO уведомление что у пользователя нет прав на просмотр
                     }
                 })
-                .finally(() => {
-                });
+                .finally(() => {});
         },
         updateSelectedFolder(obj) {
             this.dataParams.folder = obj.selectedFolder;
@@ -63,52 +63,57 @@ export default {
         },
         routerPush() {
             this.$router.push({ query: { ...this.dataParams } });
-        }
+        },
     },
     mounted() {
         this.loadParamsFromRoute();
         this.getAnimesInFolderData();
     },
     watch: {
-        '$route.query': function() {
+        '$route.query': function () {
             this.loadParamsFromRoute();
             this.getAnimesInFolderData();
-        }
+        },
     },
-}
+};
 </script>
 
 <template>
     <section id="TopPage">
         <div class="flex">
-            <aside class="w-76 fixed top-17 left-0 flex justify-center z-10">
-                <Folders @updateSelectedFolder="updateSelectedFolder"
-                         :selectedFolder="this.dataParams.folder"
+            <aside class="fixed top-17 left-0 z-10 flex w-76 justify-center">
+                <Folders
+                    @updateSelectedFolder="updateSelectedFolder"
+                    :selectedFolder="this.dataParams.folder"
                 />
             </aside>
 
-            <main class="ml-76 flex-1 overflow-y-auto">
-                <div class="mt-2.5 px-2.5 grid gap-2 grid-flow-row grid-cols-7">
-                    <CardAnime v-if="dataLoading"
-                               v-for="dataAnime in dataAnimes"
-                               :id="dataAnime.id"
-                               :slug="dataAnime.slug"
-                               :poster="dataAnime.poster"
-                               :title="dataAnime.title"
-                               :rating="dataAnime.rating"
-                               :episodes_released="dataAnime.episodes_released"
-                               :episodes_total="dataAnime.episodes_total"
+            <main class="ml-76 flex-1">
+                <div class="mt-2.5 grid grid-flow-row grid-cols-7 gap-2 px-2.5">
+                    <CardAnime
+                        v-if="dataLoading"
+                        v-for="dataAnime in dataAnimes"
+                        :id="dataAnime.id"
+                        :slug="dataAnime.slug"
+                        :poster="dataAnime.poster"
+                        :title="dataAnime.title"
+                        :rating="dataAnime.rating"
+                        :episodes_released="dataAnime.episodes_released"
+                        :episodes_total="dataAnime.episodes_total"
+                        :is_rating="dataAnime.is_rating"
                     />
 
-                    <CardLoading v-if="!dataLoading"
-                                 v-for="n in 21"
-                                 :key="n"
+                    <CardLoading
+                        v-if="!dataLoading"
+                        v-for="n in 21"
+                        :key="n"
                     />
                 </div>
 
-                <Pagination v-if="dataAnimes"
-                            :dataPagination="dataPagination"
-                            @pageChange="pageChange"
+                <Pagination
+                    v-if="dataAnimes"
+                    :dataPagination="dataPagination"
+                    @pageChange="pageChange"
                 />
             </main>
         </div>

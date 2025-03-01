@@ -26,11 +26,9 @@ use Illuminate\Support\Facades\Pipeline;
 
 class AnimeController extends Controller
 {
-
     public function index(SearchRequest $request): AnonymousResourceCollection
     {
-        $query = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total']);
-
+        $query = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating']);
         $animes = Pipeline::send($query)
             ->through([
                 TitleFilter::class,
@@ -93,5 +91,4 @@ class AnimeController extends Controller
             'dataEpisodes' => AnimeResource::collection($episodes),
         ]);
     }
-
 }

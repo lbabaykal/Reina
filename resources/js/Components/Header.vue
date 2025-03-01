@@ -1,15 +1,14 @@
 <script>
-
-import LogoSvg from "./Svg/LogoSvg.vue";
-import LoginMenu from "./Login/LoginMenu.vue";
+import LogoSvg from './Svg/LogoSvg.vue';
+import LoginMenu from './Login/LoginMenu.vue';
 
 export default {
-    name: "Header",
-    components: {LoginMenu, LogoSvg},
+    name: 'Header',
+    components: { LoginMenu, LogoSvg },
     data() {
         return {
-            isScrolledHeader: false
-        }
+            isScrolledHeader: false,
+        };
     },
     methods: {
         handleScroll() {
@@ -24,28 +23,28 @@ export default {
             }
         },
     },
-    computed: {
-
-    },
+    computed: {},
     mounted() {
-        window.addEventListener("scroll", this.handleScroll);
+        window.addEventListener('scroll', this.handleScroll);
     },
-}
+};
 </script>
 
 <template>
     <div>
-        <header id="header"
-                class="w-full bg-transparent fixed top-0 transition-all duration-300 ease-linear z-50"
+        <header
+            id="header"
+            class="fixed top-0 z-50 w-full bg-transparent transition-all duration-300 ease-linear"
         >
-            <nav class="mx-auto flex items-center justify-between h-14 px-15">
-                <RouterLink :to="{ name: 'main' }"
-                            class="text-3xl font-bold text-white flex flex-row content-center items-center select-none"
+            <nav class="mx-auto flex h-14 items-center justify-between px-15">
+                <RouterLink
+                    :to="{ name: 'main' }"
+                    class="flex flex-row content-center items-center text-3xl font-bold text-white select-none"
                 >
                     Reina
                     <LogoSvg classes="w-10 ml-2" />
                 </RouterLink>
-                <LoginMenu :isScrolledHeader/>
+                <LoginMenu :isScrolledHeader />
             </nav>
         </header>
     </div>

@@ -35,10 +35,13 @@ RUN pecl install redis && docker-php-ext-enable redis
 # Установка Zip
 RUN docker-php-ext-install zip
 
+# Устанавливаем Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 # Очистка
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Копирование конфигурации PHP
 COPY ./_docker/php/php.ini /usr/local/etc/php/conf.d/php.ini
 
-WORKDIR /var/www/laravel
+WORKDIR /var/www/reina

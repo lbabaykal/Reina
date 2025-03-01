@@ -16,10 +16,10 @@ class AnimeAdminServices
 {
     public function store(Request $request): RedirectResponse
     {
-        $anime = new Anime();
+        $anime = new Anime;
 
-        $anime->poster = (new PosterService())->setStorage('s3_animes')->save();
-        $anime->cover = (new CoverService())->setStorage('s3_animes')->save();
+        $anime->poster = (new PosterService)->setStorage('s3_animes')->save();
+        $anime->cover = (new CoverService)->setStorage('s3_animes')->save();
 
         $anime->slug = str()->slug($request->safe()->input('title_ru'));
         $anime->title_org = $request->safe()->input('title_org');
@@ -52,7 +52,7 @@ class AnimeAdminServices
         $anime->is_rating = $request->safe()->boolean('is_rating');
 
         try {
-            DB::transaction(function () use ($anime, $countries, $genres, $studios){
+            DB::transaction(function () use ($anime, $countries, $genres, $studios) {
                 $anime->save();
 
                 $anime->countries()->attach($countries);
@@ -74,18 +74,18 @@ class AnimeAdminServices
                 Storage::disk('s3_animes')->delete($anime->cover);
             }
 
-            return redirect()->back()->with('message', "Ошибка выполнения транзакции." . $e->getMessage());
+            return redirect()->back()->with('message', 'Ошибка выполнения транзакции.'.$e->getMessage());
         }
     }
 
     public function update(AnimeUpdateRequest $request, Model $anime): RedirectResponse
     {
         if (request()->has('poster')) {
-            $anime->poster = (new PosterService())->setStorage('s3_animes')->save() ?? $anime->poster;
+            $anime->poster = (new PosterService)->setStorage('s3_animes')->save() ?? $anime->poster;
         }
 
         if (request()->has('cover')) {
-            $anime->cover = (new CoverService())->setStorage('s3_animes')->save() ?? $anime->cover;
+            $anime->cover = (new CoverService)->setStorage('s3_animes')->save() ?? $anime->cover;
         }
 
         $anime->title_org = $request->safe()->input('title_org');
@@ -117,7 +117,7 @@ class AnimeAdminServices
         $anime->is_rating = $request->safe()->boolean('is_rating');
 
         try {
-            DB::transaction(function () use ($anime, $countries, $genres, $studios){
+            DB::transaction(function () use ($anime, $countries, $genres, $studios) {
                 $anime->update();
 
                 $anime->countries()->sync($countries);
@@ -127,8 +127,7 @@ class AnimeAdminServices
 
             return redirect()->route('admin.animes.index')->with('message', "Аниме {$anime->title_ru} обновлено.");
         } catch (\Exception $e) {
-            return redirect()->back()->with('message', "Ошибка выполнения транзакции." . $e);
+            return redirect()->back()->with('message', 'Ошибка выполнения транзакции.'.$e);
         }
     }
-
 }

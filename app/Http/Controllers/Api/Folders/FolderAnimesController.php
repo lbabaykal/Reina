@@ -52,7 +52,7 @@ class FolderAnimesController extends Controller
 
         $folderId = request()->input('folder', 0);
 
-        if ( $folderId > 0 ) {
+        if ($folderId > 0) {
             $folderAnime = AnimeFolder::query()->findOrFail($folderId);
             Gate::authorize('view', $folderAnime);
         }
@@ -72,10 +72,10 @@ class FolderAnimesController extends Controller
     {
         Gate::authorize('create', AnimeFolder::class);
 
-        $folder = new AnimeFolder();
+        $folder = new AnimeFolder;
         $folder->title = $request->input('title');
         $folder->user_id = auth()->id();
-        $folder->is_private = true; //TODO доделать функционал папок
+        $folder->is_private = true; // TODO доделать функционал папок
         $folder->number = 0;
         $folder->save();
 
@@ -95,7 +95,7 @@ class FolderAnimesController extends Controller
     {
         Gate::authorize('update', $folder);
 
-        $folder->title = $request->input('title'); //TODO доделать функционал папок
+        $folder->title = $request->input('title'); // TODO доделать функционал папок
         $folder->update();
 
         return response()->noContent();
@@ -109,5 +109,4 @@ class FolderAnimesController extends Controller
 
         return response()->noContent();
     }
-
 }

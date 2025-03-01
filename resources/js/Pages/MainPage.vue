@@ -8,8 +8,8 @@ export default {
     components: {CardDorama, CardAnime, CardLoading},
     data() {
         return {
-            dataAnimes: [Array, Object],
-            dataDoramas: [Array, Object],
+            dataAnimes: Array,
+            dataDoramas: Array,
             dataLoading: false,
         }
     },
@@ -57,6 +57,7 @@ export default {
                        :rating="dataAnime.rating"
                        :episodes_released="dataAnime.episodes_released"
                        :episodes_total="dataAnime.episodes_total"
+                       :is_rating="dataAnime.is_rating"
             />
 
             <CardLoading v-else v-for="n in 16" :key="n"/>
@@ -82,6 +83,7 @@ export default {
                         :rating="dataDorama.rating"
                         :episodes_released="dataDorama.episodes_released"
                         :episodes_total="dataDorama.episodes_total"
+                        :is_rating="dataDorama.is_rating"
             />
 
             <CardLoading v-else v-for="n in 16" :key="n"/>

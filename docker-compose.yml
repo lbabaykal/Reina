@@ -9,7 +9,7 @@ services:
       - "443:443"
     volumes:
       - ./_docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - .:/var/www/laravel
+      - .:/var/www/reina
       - ./_docker/cert/Certificate.crt:/etc/ssl/certs/reina.online/Certificate.crt:ro
       - ./_docker/cert/PrivateKey.key:/etc/ssl/private/reina.online/PrivateKey.key:ro
     restart: unless-stopped
@@ -18,7 +18,7 @@ services:
       - redis
       - php
     networks:
-      - laravel
+      - reina_network
 
   php:
     container_name: php
@@ -26,11 +26,11 @@ services:
       context: .
       dockerfile: _docker/php/php.Dockerfile
     volumes:
-      - .:/var/www/laravel
+      - .:/var/www/reina
     restart: unless-stopped
     networks:
-      - laravel
-# docker exec -it php /bin/sh -c "chmod -R 755 /var/www/laravel/public && chown -R www-data:www-data /var/www/laravel/public"
+      - reina_network
+# docker exec -it php /bin/sh -c "chmod -R 755 /var/www/reina/public && chown -R www-data:www-data /var/www/reina/public"
 # docker-compose exec php php artisan
 
   postgres:
@@ -39,14 +39,14 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: reina_db
-      POSTGRES_USER: reina_user
-      POSTGRES_PASSWORD: reina_password
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
-      - laravel
+      - reina_network
 
   redis:
     container_name: redis
@@ -59,7 +59,7 @@ services:
       - 'redis_data:/data'
     restart: unless-stopped
     networks:
-      - laravel
+      - reina_network
 
   node:
     container_name: node
@@ -69,26 +69,14 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./:/var/www/laravel
+      - ./:/var/www/reina
       - ./_docker/cert/Certificate.crt:/etc/ssl/certs/reina.online/Certificate.crt:ro
       - ./_docker/cert/PrivateKey.key:/etc/ssl/private/reina.online/PrivateKey.key:ro
     tty: true
     networks:
-      - laravel
+      - reina_network
 # docker-compose exec node npm install
 # docker-compose exec node npm run dev
-
-  composer:
-    container_name: composer
-    build:
-      context: .
-      dockerfile: _docker/dockerfiles/composer.Dockerfile
-    volumes:
-      - .:/var/www/laravel
-    networks:
-      - laravel
-# docker-compose run composer install
-
 # docker run --rm --dns=1.1.1.1 --dns=8.8.8.8 --net=host cloudflare/cloudflared:latest tunnel --url http://localhost:80
 
 volumes:
@@ -96,5 +84,5 @@ volumes:
   redis_data:
 
 networks:
-  laravel:
+  reina_network:
     driver: bridge

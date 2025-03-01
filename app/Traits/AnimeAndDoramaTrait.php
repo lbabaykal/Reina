@@ -14,14 +14,13 @@ use Spatie\Sluggable\SlugOptions;
 
 trait AnimeAndDoramaTrait
 {
-
     use HasSlug;
 
     protected static function boot()
     {
         parent::boot();
 
-        static::addGlobalScope(new PublishedScope());
+        static::addGlobalScope(new PublishedScope);
     }
 
     public function type(): BelongsTo
@@ -58,7 +57,7 @@ trait AnimeAndDoramaTrait
         $model = static::query()->where('id', $matches[0])->first($columns);
 
         if (is_null($model)) {
-            abort(404); //TODO
+            abort(404); // TODO
         }
 
         return $model;
@@ -69,8 +68,8 @@ trait AnimeAndDoramaTrait
         $table = $this->getTable();
 
         return $this->poster
-            ? Storage::disk('s3_' .$table)->url($this->poster)
-            : Storage::disk('s3_' . $table)->url('no_poster.png');
+            ? Storage::disk('s3_'.$table)->url($this->poster)
+            : Storage::disk('s3_'.$table)->url('no_poster.png');
     }
 
     public function getCoverUrlAttribute(): string
@@ -78,7 +77,7 @@ trait AnimeAndDoramaTrait
         $table = $this->getTable();
 
         return $this->cover
-            ? Storage::disk('s3_' . $table)->url($this->cover)
-            : Storage::disk('s3_' . $table)->url('no_cover.png');
+            ? Storage::disk('s3_'.$table)->url($this->cover)
+            : Storage::disk('s3_'.$table)->url('no_cover.png');
     }
 }

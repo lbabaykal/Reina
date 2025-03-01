@@ -65,7 +65,7 @@ export default {
 </script>
 
 <template>
-    <div class="w-72 shadow-[0_8px_6px_-4px_rgb(255,0,0)] bg-blackSimple rounded overflow-hidden select-none">
+    <div class="w-72 shadow-[0_8px_6px_-4px_rgb(255,0,0)] bg-blackSimple rounded-sm overflow-hidden select-none">
         <div class="flex flex-row justify-between items-center">
             <div @click="openCreateFolderModal"
                  class="size-10 flex items-center justify-center text-black bg-orange-400 hover:text-white hover:bg-red-500 cursor-pointer"
@@ -80,7 +80,7 @@ export default {
                  text-black bg-white
                  hover:text-white hover:bg-sky-500 cursor-pointer
 "
-                 :class="[ isEditFoldersButtons ? '!bg-sky-500 text-white' : '' ]"
+                 :class="[ isEditFoldersButtons ? 'bg-sky-500! text-white' : '' ]"
             >
                 <PenSvg classes="size-5"/>
             </div>

@@ -52,7 +52,7 @@ class FolderDoramasController extends Controller
 
         $folderId = request()->input('folder', 0);
 
-        if ( $folderId > 0 ) {
+        if ($folderId > 0) {
             $folderDorama = DoramaFolder::query()->findOrFail($folderId);
             Gate::authorize('view', $folderDorama);
         }
@@ -72,10 +72,10 @@ class FolderDoramasController extends Controller
     {
         Gate::authorize('create', DoramaFolder::class);
 
-        $folder = new DoramaFolder();
+        $folder = new DoramaFolder;
         $folder->title = $request->input('title');
         $folder->user_id = auth()->id();
-        $folder->is_private = true; //TODO доделать функционал папок
+        $folder->is_private = true; // TODO доделать функционал папок
         $folder->number = 0;
         $folder->save();
 
@@ -95,7 +95,7 @@ class FolderDoramasController extends Controller
     {
         Gate::authorize('update', $folder);
 
-        $folder->title = $request->input('title'); //TODO доделать функционал папок
+        $folder->title = $request->input('title'); // TODO доделать функционал папок
         $folder->update();
 
         return response()->noContent();
@@ -109,5 +109,4 @@ class FolderDoramasController extends Controller
 
         return response()->noContent();
     }
-
 }

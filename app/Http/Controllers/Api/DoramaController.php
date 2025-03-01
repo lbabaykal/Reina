@@ -18,18 +18,17 @@ use App\Http\Resources\Doramas\DoramasShowResource;
 use App\Http\Resources\Doramas\DoramasWatchResource;
 use App\Http\Resources\Episodes\DoramaResource;
 use App\Models\Dorama;
-use App\Models\DoramaFolder;
 use App\Reina;
 use App\Services\DoramasServices;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Pipeline;
-use Illuminate\View\View;
 
 class DoramaController extends Controller
 {
-    public function index(SearchRequest $request)
+    public function index(SearchRequest $request): AnonymousResourceCollection
     {
-        $query = Dorama::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total']);
+        $query = Dorama::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating']);
         $doramas = Pipeline::send($query)
             ->through([
                 TitleFilter::class,
@@ -49,7 +48,6 @@ class DoramaController extends Controller
     public function show($slug, DoramasServices $doramasService): JsonResponse
     {
         $dorama = $doramasService->dataInCacheBySlug($slug);
-
         $ratingUser = $doramasService->ratingUserFor();
         $favoriteUser = $doramasService->favoriteUserFor();
         $foldersUser = $doramasService->foldersUserFor();

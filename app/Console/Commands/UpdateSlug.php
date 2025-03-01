@@ -9,7 +9,8 @@ use Illuminate\Console\Command;
 class UpdateSlug extends Command
 {
     protected $signature = 'update-slug';
-    protected $description = 'Обновление слага.';
+
+    protected $description = 'Обновление slug.';
 
     public function handle(): void
     {
@@ -17,28 +18,29 @@ class UpdateSlug extends Command
         $startMemory = memory_get_peak_usage(true);
 
         foreach (Anime::query()
-                     ->withoutGlobalScopes()
-                     ->select(['id', 'slug', 'title_ru'])
-                     ->cursor() as $anime) {
+            ->withoutGlobalScopes()
+            ->select(['id', 'slug', 'title_ru'])
+            ->cursor() as $anime) {
             $anime->generateSlug();
             $anime->timestamps = false;
             $anime->saveQuietly();
         }
-        echo 'Слаг Аниме обновлён.' . PHP_EOL;
+        echo 'Slug - Аниме обновлён.'.PHP_EOL;
 
         foreach (Dorama::query()
-                     ->withoutGlobalScopes()
-                     ->select(['id', 'slug', 'title_ru'])
-                     ->cursor() as $dorama) {
+            ->withoutGlobalScopes()
+            ->select(['id', 'slug', 'title_ru'])
+            ->cursor() as $dorama) {
             $dorama->generateSlug();
             $dorama->timestamps = false;
             $dorama->saveQuietly();
         }
-        echo 'Слаг Дорам обновлён.' . PHP_EOL;
+        echo 'Slug - Дорам обновлён.'.PHP_EOL;
 
         cache()->store('redis_animes')->forget('main_animes');
         cache()->store('redis_doramas')->forget('main_doramas');
-        echo 'Кэш Аниме и Дорам сброшен.' . PHP_EOL;
+
+        echo 'Кэш Аниме и Дорам сброшен.'.PHP_EOL;
 
         $endTime = microtime(true);
         $endMemory = memory_get_peak_usage(true);

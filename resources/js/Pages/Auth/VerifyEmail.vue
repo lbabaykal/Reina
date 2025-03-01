@@ -79,7 +79,7 @@ export default {
 
             <input
                 v-if="response"
-                class="w-80 border border-b-2 border-gray-300 py-1 mt-4 rounded focus:border-rose-400 focus:ring-0"
+                class="w-80 border border-b-2 border-gray-300 py-1 mt-4 rounded-sm focus:border-rose-400 focus:ring-0"
                 name="hash"
                 type="text"
                 v-model="hash"

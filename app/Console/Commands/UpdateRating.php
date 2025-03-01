@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cache;
 class UpdateRating extends Command
 {
     protected $signature = 'update-rating';
+
     protected $description = 'Обновление рейтинга.';
 
     public function handle(): void
@@ -18,32 +19,33 @@ class UpdateRating extends Command
         $startMemory = memory_get_peak_usage(true);
 
         foreach (Anime::query()
-                     ->withoutGlobalScopes()
-                     ->select(['id', 'rating', 'count_assessments'])
-                     ->withCount('ratings')
-                     ->cursor() as $anime) {
+            ->withoutGlobalScopes()
+            ->select(['id', 'rating', 'count_assessments'])
+            ->withCount('ratings')
+            ->cursor() as $anime) {
             $anime->rating = round($anime->ratings()->avg('assessment'), 1);
             $anime->count_assessments = $anime->ratings_count;
             $anime->timestamps = false;
             $anime->saveQuietly();
         }
-        echo 'Рейтинг Аниме обновлён.' . PHP_EOL;
+        echo 'Рейтинг Аниме обновлён.'.PHP_EOL;
 
         foreach (Dorama::query()
-                     ->withoutGlobalScopes()
-                     ->select(['id', 'rating', 'count_assessments'])
-                     ->withCount('ratings')
-                     ->cursor() as $dorama) {
+            ->withoutGlobalScopes()
+            ->select(['id', 'rating', 'count_assessments'])
+            ->withCount('ratings')
+            ->cursor() as $dorama) {
             $dorama->rating = round($dorama->ratings()->avg('assessment'), 1);
             $dorama->count_assessments = $dorama->ratings_count;
             $dorama->timestamps = false;
             $dorama->saveQuietly();
         }
-        echo 'Рейтинг Дорам обновлён.' . PHP_EOL;
+        echo 'Рейтинг Дорам обновлён.'.PHP_EOL;
 
         Cache::store('redis_animes')->forget('main_animes');
         Cache::store('redis_doramas')->forget('main_doramas');
-        echo 'Кэш Аниме и Дорам сброшен.' . PHP_EOL;
+
+        echo 'Кэш Аниме и Дорам сброшен.'.PHP_EOL;
 
         $endTime = microtime(true);
         $endMemory = memory_get_peak_usage(true);

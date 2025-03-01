@@ -22,6 +22,7 @@ class FavoriteDoramasResource extends JsonResource
             'rating' => $this->rating,
             'episodes_released' => $this->episodes_released,
             'episodes_total' => $this->episodes_total,
+            'is_rating' => $this->is_rating,
         ];
     }
 }

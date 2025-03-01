@@ -1,6 +1,6 @@
 <script>
 export default {
-    name: "CardAnime",
+    name: 'CardAnime',
     props: {
         id: Number,
         slug: String,
@@ -9,34 +9,52 @@ export default {
         rating: [Number, String],
         episodes_released: Number,
         episodes_total: Number,
-    }
-}
+        is_rating: Boolean,
+    },
+    computed: {
+        isRating() {
+            return this.is_rating;
+        },
+    },
+};
 </script>
 
 <template>
-    <div class="w-full aspect-[5/7] flex items-center justify-center select-none">
-        <router-link :to="{ name: 'animes.show', params: { slug: this.slug } }"
-                     class="group relative overflow-hidden rounded-md w-95% aspect-[5/7] bg-gray-700
-                     transition-all duration-500
-                     hover:w-full hover:drop-shadow-[0_0_8px_rgb(255,0,0)]"
+    <div class="flex aspect-5/7 w-full items-center justify-center select-none">
+        <router-link
+            :to="{ name: 'animes.show', params: { slug: this.slug } }"
+            class="group w-95% relative aspect-5/7 overflow-hidden rounded-md bg-gray-700 transition-all duration-500 hover:w-full hover:drop-shadow-[0_0_8px_rgb(255,0,0)]"
         >
-            <img :src="poster"
-                 :alt="title"
-                 class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110"
+            <img
+                :src="poster"
+                :alt="title"
+                class="h-full w-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110"
             />
 
-            <div class="absolute px-2 py-1 top-1 right-1 bg-red-500/80 group-hover:bg-red-500 rounded duration-500">★ {{ rating }}</div>
+            <div
+                v-if="isRating"
+                class="absolute top-1.5 right-1.5 bg-red-500/80 px-2 py-1 duration-500"
+            >
+                ★ {{ rating }}
+            </div>
+            <div
+                v-else
+                class="absolute top-1.5 right-1.5 bg-red-500/80 px-2 py-1 duration-500"
+            >
+                —
+            </div>
 
-            <div v-if="episodes_total !== 1"
-                 class="absolute bottom-2 left-2 px-2 py-1.5 bg-violet-600/80 transition-all duration-500 group-hover:opacity-0 group-hover:invisible"
+            <div
+                v-if="episodes_total !== 1"
+                class="absolute bottom-2 left-2 bg-violet-600/80 px-2 py-1.5 transition-all duration-500 group-hover:invisible group-hover:opacity-0"
             >
                 EPS: {{ episodes_released + ' / ' + episodes_total }}
             </div>
 
-            <div class="absolute w-full p-2 h-14 bottom-0 flex justify-center items-center transition-all duration-500 invisible opacity-0 bg-black/25
-            group-hover:visible group-hover:opacity-100 backdrop-blur"
+            <div
+                class="invisible absolute bottom-0 flex h-14 w-full items-center justify-center bg-black/25 p-2 opacity-0 backdrop-blur transition-all duration-500 group-hover:visible group-hover:opacity-100"
             >
-                <span class="text-center line-clamp-2">
+                <span class="line-clamp-2 text-center">
                     {{ title }}
                 </span>
             </div>

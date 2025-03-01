@@ -43,7 +43,7 @@
                     </thead>
                     <tbody>
                     @foreach($episodes as $episode)
-                        <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                        <tr class="odd:bg-white dark:odd:bg-gray-900 even:bg-gray-50 dark:even:bg-gray-800 border-b dark:border-gray-700">
                             <td class="px-6 py-4">
                                 {{ $episode->number }}
                             </td>

@@ -8,8 +8,8 @@ use App\Http\Requests\Favorite\FavoriteDoramasRequest;
 use App\Http\Resources\Favorites\FavoriteAnimesResource;
 use App\Http\Resources\Favorites\FavoriteDoramasResource;
 use App\Models\Anime;
-use App\Models\Dorama;
 use App\Models\AnimeFolder;
+use App\Models\Dorama;
 use App\Models\DoramaFolder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -18,7 +18,7 @@ class FavoriteController extends Controller
 {
     private function checkAuth(): void
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             abort(401);
         }
     }
@@ -29,14 +29,14 @@ class FavoriteController extends Controller
 
         $foldersAnimes = auth()->user()
             ->favoriteAnimes()
-            ->select(['slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'favorite_animes.updated_at'])
+            ->select(['slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating', 'favorite_animes.updated_at'])
             ->latest('favorite_animes.updated_at')
             ->limit(8)
             ->get();
 
         $foldersDoramas = auth()->user()
             ->favoriteDoramas()
-            ->select(['slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'favorite_doramas.updated_at'])
+            ->select(['slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating', 'favorite_doramas.updated_at'])
             ->latest('favorite_doramas.updated_at')
             ->limit(8)
             ->get();
@@ -61,6 +61,7 @@ class FavoriteController extends Controller
             'folders' => $foldersUser,
         ]);
     }
+
     public function addForAnime(FavoriteAnimesRequest $request, $id): Response
     {
         $this->checkAuth();

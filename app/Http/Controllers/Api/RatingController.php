@@ -12,7 +12,7 @@ class RatingController extends Controller
 {
     private function checkAuth(): void
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             abort(401);
         }
     }

@@ -29,9 +29,16 @@ use Illuminate\Support\Facades\Pipeline;
 
 class SearchController extends Controller
 {
+    const array sortingData = [
+        ['id' => 1, 'title' => 'По дате обновления', 'slug' => 'date_updated'],
+        ['id' => 2, 'title' => 'По рейтингу', 'slug' => 'rating'],
+        ['id' => 3, 'title' => 'По дате выхода ▲', 'slug' => 'premiere_asc'],
+        ['id' => 4, 'title' => 'По дате выхода ▼', 'slug' => 'premiere_desc'],
+    ];
+
     public function index(SearchRequest $request): JsonResponse
     {
-        $queryAnime = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])->limit(8);
+        $queryAnime = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating'])->limit(8);
         $animesFiltered = Pipeline::send($queryAnime)
             ->through([
                 TitleFilter::class,
@@ -47,7 +54,7 @@ class SearchController extends Controller
         $dataAnimes = $animesFiltered->get();
         $animesTotalFound = $animesFiltered->count();
 
-        $queryDorama = Dorama::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total'])->limit(8);
+        $queryDorama = Dorama::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating'])->limit(8);
         $doramasFiltered = Pipeline::send($queryDorama)
             ->through([
                 TitleFilter::class,
@@ -78,12 +85,7 @@ class SearchController extends Controller
             'genres' => GenresResource::collection((new Genre)->cache()),
             'studios' => StudiosResource::collection((new Studio)->cache()),
             'countries' => CountriesResource::collection((new Country)->cache()),
-            'sorting' => [
-                ['id'=> 1, 'title' => 'По дате обновления', 'slug' => 'date_updated'],
-                ['id'=> 2, 'title' => 'По рейтингу', 'slug' => 'rating'],
-                ['id'=> 3, 'title' => 'По дате выхода ▲', 'slug' => 'premiere_asc'],
-                ['id'=> 4, 'title' => 'По дате выхода ▼', 'slug' => 'premiere_desc'],
-            ],
+            'sorting' => self::sortingData,
         ]);
     }
 }

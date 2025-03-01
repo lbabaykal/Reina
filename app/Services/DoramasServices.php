@@ -9,9 +9,10 @@ use App\Models\DoramaFolder;
 class DoramasServices
 {
     private ?Dorama $dorama = null;
+
     public function dataInCacheBySlug(string $slug)
     {
-        return $this->dorama = cache()->store('redis_doramas')->flexible(CacheEnum::DORAMA->value.$slug, [1200,1800], function () use ($slug) {
+        return $this->dorama = cache()->store('redis_doramas')->flexible(CacheEnum::DORAMA->value.$slug, [1200, 1800], function () use ($slug) {
             return Dorama::query()
 //                ->select([])
                 ->where('id', getIdFromSlug($slug))
@@ -64,9 +65,8 @@ class DoramasServices
             match (true) {
                 $dorama instanceof Dorama => $this->dorama = $dorama,
                 is_string($dorama) => $this->dorama = $this->dataInCacheBySlug($dorama),
-                default => throw new \InvalidArgumentException(),
+                default => throw new \InvalidArgumentException,
             };
         }
     }
-
 }

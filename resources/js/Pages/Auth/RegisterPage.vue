@@ -67,7 +67,7 @@ export default {
 
         <div class="flex flex-col items-center text-black">
             <input
-                class="w-80 border border-b-2 border-gray-300 py-1 rounded focus:border-blue-400 focus:ring-0"
+                class="w-80 border border-b-2 border-gray-300 py-1 rounded-sm focus:border-blue-400 focus:ring-0"
                 name="name"
                 type="text"
                 v-model="name"
@@ -82,7 +82,7 @@ export default {
             </span>
 
             <input
-                class="w-80 border border-b-2 border-gray-300 py-1 mt-4 rounded focus:border-blue-400 focus:ring-0"
+                class="w-80 border border-b-2 border-gray-300 py-1 mt-4 rounded-sm focus:border-blue-400 focus:ring-0"
                 name="email"
                 type="email"
                 v-model="email"
@@ -97,7 +97,7 @@ export default {
             </span>
 
             <input
-                class="w-80 border border-b-2 border-gray-300 py-1 mt-4 rounded focus:border-blue-400 focus:ring-0"
+                class="w-80 border border-b-2 border-gray-300 py-1 mt-4 rounded-sm focus:border-blue-400 focus:ring-0"
                 name="password"
                 type="password"
                 v-model="password"
@@ -106,7 +106,7 @@ export default {
             />
 
             <input
-                class="w-80 border border-b-2 border-gray-300 py-1 mt-4 rounded focus:border-blue-400 focus:ring-0"
+                class="w-80 border border-b-2 border-gray-300 py-1 mt-4 rounded-sm focus:border-blue-400 focus:ring-0"
                 name="password_confirmation"
                 type="password"
                 v-model="password_confirmation"

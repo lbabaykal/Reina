@@ -51,11 +51,11 @@ class SearchRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-//        if (!$this->filled('sorting')) {
-//            $this->merge(['sorting' => 'date_added']);
-//        }
+        if (! $this->filled('sorting')) {
+            $this->merge(['sorting' => 'date_added']);
+        }
 
-        if (!$this->filled('page')) {
+        if (! $this->filled('page')) {
             $this->merge(['page' => 1]);
         }
     }

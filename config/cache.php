@@ -102,7 +102,6 @@ return [
             'connection' => env('REDIS_CACHE_CONNECTION', 'doramas'),
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
         ],
-
     ],
 
     /*

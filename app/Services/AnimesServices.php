@@ -9,9 +9,10 @@ use App\Models\AnimeFolder;
 class AnimesServices
 {
     private ?Anime $anime = null;
+
     public function dataInCacheBySlug(string $slug)
     {
-        return $this->anime = cache()->store('redis_animes')->flexible(CacheEnum::ANIME->value.$slug, [1200,1800], function () use ($slug) {
+        return $this->anime = cache()->store('redis_animes')->flexible(CacheEnum::ANIME->value.$slug, [1200, 1800], function () use ($slug) {
             return Anime::query()
 //                ->select([])
                 ->where('id', getIdFromSlug($slug))
@@ -64,9 +65,8 @@ class AnimesServices
             match (true) {
                 $anime instanceof Anime => $this->anime = $anime,
                 is_string($anime) => $this->anime = $this->dataInCacheBySlug($anime),
-                default => throw new \InvalidArgumentException(),
+                default => throw new \InvalidArgumentException,
             };
         }
     }
-
 }

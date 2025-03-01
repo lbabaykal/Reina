@@ -1,28 +1,16 @@
 <script>
-import SearchSvg from "./Svg/SearchSvg.vue";
-import FilterSvg from "./Svg/FilterSvg.vue";
-import DownArrowSvg from "./Svg/DownArrowSvg.vue";
-import QuestionMarkSvg from "./Svg/QuestionMarkSvg.vue";
-import SortingSvg from "./Svg/SortingSvg.vue";
-import ToolTip from "./ToolTip.vue";
+import SearchSvg from './Svg/SearchSvg.vue';
+import QuestionMarkSvg from './Svg/QuestionMarkSvg.vue';
+import ToolTip from './ToolTip.vue';
+import SortingButton from './ui/Buttons/SortingButton.vue';
+import FilterButton from './ui/Buttons/FilterButton.vue';
+import PlusSvg from './Svg/PlusSvg.vue';
+import MinusSvg from './Svg/MinusSvg.vue';
+import CircleSvg from './Svg/CircleSvg.vue';
 
 export default {
-    name: "Search",
-    components: {ToolTip, SortingSvg, QuestionMarkSvg, DownArrowSvg, FilterSvg, SearchSvg},
-    props: {
-        selectedDataSearch: {
-            title: String,
-            types: Array,
-            genres: Array,
-            studios: Array,
-            countries: Array,
-            strict_genre: Boolean,
-            strict_studio: Boolean,
-            year_from: Number,
-            year_to: Number,
-            sorting: String,
-        },
-    },
+    name: 'Search',
+    components: { CircleSvg, MinusSvg, PlusSvg, FilterButton, SortingButton, ToolTip, QuestionMarkSvg, SearchSvg },
     data() {
         return {
             dataSearch: {
@@ -32,323 +20,408 @@ export default {
                 countries: [],
                 sorting: [],
             },
+            selectedSearchData: {
+                page: 1,
+                title: null,
+                types: [],
+                genres: [],
+                studios: [],
+                countries: [],
+                strict_genre: false,
+                strict_studio: false,
+                year_from: null,
+                year_to: null,
+                sorting: 'date_updated',
+            },
             dataLoading: false,
             isFiltersMenu: false,
-            isSorting: false,
-        }
+            isSortingMenu: false,
+            pageOld: 0,
+        };
     },
     methods: {
         toggleFiltersMenu() {
             this.isFiltersMenu = !this.isFiltersMenu;
         },
         toggleSorting() {
-            this.isSorting = !this.isSorting;
+            this.isSortingMenu = !this.isSortingMenu;
         },
-        getSearchData() {
-            axios.get('/api/search-data')
-                .then(response => {
-                    if (response.data.types &&
-                        response.data.genres &&
-                        response.data.studios &&
-                        response.data.countries &&
-                        response.data.sorting
-                    ) {
+        async getSearchData() {
+            await axios
+                .get('/api/search-data')
+                .then((response) => {
+                    if (response.data.types && response.data.genres && response.data.studios && response.data.countries && response.data.sorting) {
                         this.dataSearch = {
                             types: response.data.types,
                             genres: response.data.genres,
                             studios: response.data.studios,
                             countries: response.data.countries,
                             sorting: response.data.sorting,
-                        }
+                        };
                     }
                 })
-                .catch(error => {
-                    console.log(error.response) // TODO ошибка загрузки данных для поиска
+                .catch((error) => {
+                    console.log(error.response); // TODO ошибка загрузки данных для поиска
                 });
         },
         updateDataFilters() {
+            this.pageOld = this.selectedSearchData.page;
+
             this.$emit('updateSelectFilters', {
-                selectedDataSearch: this.selectedDataSearch
+                selectedSearchData: this.selectedSearchData,
             });
+        },
+        loadQueryFromUrl() {
+            const query = this.$route.query;
+
+            this.selectedSearchData = {
+                page: Number(query.page) || 1,
+                types: Array.isArray(query.types) ? query.types : query.types != null ? [query.types] : [],
+                genres: Array.isArray(query.genres) ? query.genres : query.genres != null ? [query.genres] : [],
+                studios: Array.isArray(query.studios) ? query.studios : query.studios != null ? [query.studios] : [],
+                countries: Array.isArray(query.countries) ? query.countries : query.countries != null ? [query.countries] : [],
+                title: query.title || '',
+                strict_genre: query.strict_genre === 'true',
+                strict_studio: query.strict_studio === 'true',
+                year_from: query.year_from ? Number(query.year_from) : null,
+                year_to: query.year_to ? Number(query.year_to) : null,
+                sorting: query.sorting || 'date_updated',
+            };
+        },
+        changePage(page) {
+            this.selectedSearchData.page = page;
+            this.routerPush();
+        },
+        routerPush() {
+            if (this.pageOld === this.selectedSearchData.page) {
+                this.selectedSearchData.page = 1;
+            }
+
+            this.$router.push({ query: { ...this.selectedSearchData } });
         },
     },
     mounted() {
         this.getSearchData();
+        this.loadQueryFromUrl();
+        this.updateDataFilters();
     },
-}
+    watch: {
+        '$route.query': function () {
+            this.loadQueryFromUrl();
+            this.updateDataFilters();
+        },
+    },
+};
 </script>
 
 <template>
-        <div class="w-full">
-            <nav class="flex flex-row justify-between px-4 py-2.5">
+    <div class="w-full">
+        <nav class="flex flex-row justify-between px-4 py-2.5">
+            <div class="relative">
+                <SortingButton
+                    @click="toggleSorting"
+                    :isSortingMenu="isSortingMenu"
+                    text="Сортировка"
+                />
 
-                <div class="relative">
-                    <button @click="toggleSorting"
-                            class="flex items-center justify-between w-56 py-2 px-3 font-medium text-white bg-blackSimple border-b border-red-400 hover:bg-blackActive"
-                            type="button"
-                    >
-                        <DownArrowSvg classes="w-4 h-4"/>
-                        <span class="px-6">
-                            Сортировка
-                        </span>
-                        <SortingSvg classes="w-6 h-6"/>
-                    </button>
-
-                    <div v-show="isSorting"
-                         class="absolute z-20 bg-blackSimple text-white w-60 mt-2 select-none rounded shadow-modals"
-                    >
-                        <div class="flex items-center ps-2 hover:bg-blackActive"
-                             v-for="dataSorting in dataSearch.sorting" :key="dataSorting.id"
-                        >
-                            <input :id="dataSorting.slug"
-                                   type="radio"
-                                   name="sorting"
-                                   :value="dataSorting.slug"
-                                   v-model="this.selectedDataSearch.sorting"
-                                   @click="toggleSorting"
-                                   @change="updateDataFilters"
-                                   class="w-4 h-4 p-2 mx-1 text-red-400 bg-gray-500 border-gray-500 ring-0 focus:ring-0"
-                            >
-                            <label :for="dataSorting.slug"
-                                   class="w-full py-2.5 ms-2 rounded truncate"
-                            >
-                                {{ dataSorting.title }}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between">
-                    <input type="search"
-                           name="title"
-                           placeholder="Поиск по ключевым словам..."
-                           v-model="selectedDataSearch.title"
-                           @keydown.enter="updateDataFilters"
-                           class="w-144 bg-blackSimple text-white border-x-0 border-t-0 duration-300 transition text-center rounded-s-md focus:ring-0 focus:border-b-red-400 hover:bg-blackActive focus:bg-blackActive"
-                    />
-
-                    <button @click="updateDataFilters"
-                            class="px-5 h-full text-red-400 hover:text-white border border-red-400 hover:bg-red-400 rounded-e-md"
-                    >
-                        <SearchSvg classes="h-7 w-7"/>
-                    </button>
-                </div>
-
-                <button @click="toggleFiltersMenu"
-                        class="flex items-center justify-between w-56 py-2 px-3 font-medium text-white bg-blackSimple border-b border-red-400 hover:bg-blackActive"
-                        type="button"
+                <div
+                    v-show="isSortingMenu"
+                    class="bg-blackSimple shadow-modals absolute z-20 mt-2 w-60 overflow-hidden rounded-sm text-white select-none"
                 >
-                    <FilterSvg classes="w-6 h-6"/>
-                    <span class="px-6">
-                        Фильтры
-                    </span>
-                    <DownArrowSvg classes="w-4 h-4"/>
+                    <div
+                        v-for="dataSorting in dataSearch.sorting"
+                        :key="dataSorting.id"
+                    >
+                        <label class="hover:bg-blackActive flex items-center rounded-sm ps-2">
+                            <input
+                                type="radio"
+                                name="sorting"
+                                class="peer hidden"
+                                :value="dataSorting.slug"
+                                v-model="this.selectedSearchData.sorting"
+                                @click="toggleSorting"
+                                @change="routerPush"
+                            />
+                            <span class="mx-1 inline-block size-5 shrink-0 rounded-full bg-gray-500 peer-checked:hidden peer-indeterminate:hidden"></span>
+                            <CircleSvg
+                                classes="size-4 stroke-black fill-none"
+                                class="mx-1 hidden size-5 shrink-0 rounded-full peer-checked:inline-block peer-checked:bg-gray-500 peer-checked:fill-red-400 peer-checked:stroke-none"
+                            />
+                            <span class="ms-2 truncate py-2.5">{{ dataSorting.title }}</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <input
+                    type="search"
+                    name="title"
+                    placeholder="Поиск по ключевым словам..."
+                    v-model="selectedSearchData.title"
+                    @keydown.enter="routerPush"
+                    class="bg-blackSimple hover:bg-blackActive focus:bg-blackActive h-10 w-144 rounded-s-md border-b border-b-gray-600 px-3 text-center text-lg text-white transition duration-300 focus:border-b-red-400"
+                />
+
+                <button
+                    @click="routerPush"
+                    class="h-10 cursor-pointer rounded-e-md border border-red-400 px-5 text-red-400 hover:bg-red-400 hover:text-white"
+                >
+                    <SearchSvg classes="h-7 w-7" />
                 </button>
-            </nav>
+            </div>
 
-            <div v-show="isFiltersMenu"
-                 class="bg-blackSimple border-blackActive border-y"
-            >
-                <div class="flex flex-row justify-center">
-                    <div class="bg-blackSimple text-white w-60 select-none mx-5">
-                        <div class="text-center font-bold py-2.5">
-                            Тип
-                        </div>
-                        <ul class="min-h-20 max-h-64 px-2 overflow-y-auto">
-                            <li v-for="dataType in dataSearch.types" :key="dataType.id">
-                                <div class="flex items-center ps-2 rounded hover:bg-blackActive">
-                                    <input :id="`types_${dataType.slug}`"
-                                           type="checkbox"
-                                           name="types[]"
-                                           :value="dataType.slug"
-                                           v-model="this.selectedDataSearch.types"
-                                           class="w-4 h-4 p-2 mx-1 text-red-400 bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
-                                           @change="updateDataFilters"
-                                    >
-                                    <label :for="`types_${dataType.slug}`"
-                                           class="w-full py-2.5 ms-2 rounded truncate"
-                                    >
-                                        {{ dataType.title_ru }}
-                                    </label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+            <FilterButton
+                @click="toggleFiltersMenu"
+                :isFiltersMenu="isFiltersMenu"
+                text="Фильтры"
+            />
+        </nav>
 
-                    <div class="bg-blackSimple text-white w-60 select-none mx-5">
-                        <div class="font-bold flex flex-row justify-center items-center py-2.5">
-                            Жанр
-                            <label class="inline-flex items-center cursor-pointer ms-3">
-                                <input type="checkbox"
-                                       name="strict_genre"
-                                       class="sr-only peer"
-                                       v-model="selectedDataSearch.strict_genre"
-                                       @change="updateDataFilters"
-                                >
-                                <span class="relative w-9 h-5 bg-red-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime-300"></span>
+        <div
+            v-show="isFiltersMenu"
+            class="bg-blackSimple border-blackActive border-y"
+        >
+            <div class="flex flex-row justify-center">
+                <div class="bg-blackSimple mx-5 w-60 text-white select-none">
+                    <div class="py-2.5 text-center font-bold">Тип</div>
+                    <ul class="max-h-64 min-h-20 overflow-y-auto px-2">
+                        <li
+                            v-for="dataType in dataSearch.types"
+                            :key="dataType.id"
+                        >
+                            <label class="hover:bg-blackActive flex items-center rounded-sm ps-2">
+                                <input
+                                    type="checkbox"
+                                    name="types[]"
+                                    class="peer hidden"
+                                    :value="dataType.slug"
+                                    v-model="this.selectedSearchData.types"
+                                    @change="routerPush"
+                                />
+                                <span class="mx-1 inline-block size-5 shrink-0 rounded-sm bg-gray-500 peer-checked:hidden peer-indeterminate:hidden"></span>
+                                <PlusSvg
+                                    classes="size-5 stroke-black fill-none"
+                                    class="mx-1 hidden size-5 shrink-0 rounded-sm peer-checked:inline-block peer-checked:bg-lime-500"
+                                />
+                                <MinusSvg
+                                    classes="size-5 stroke-black fill-none"
+                                    class="mx-1 hidden size-5 shrink-0 rounded-sm peer-indeterminate:inline-block peer-indeterminate:bg-red-500"
+                                />
+                                <span class="ms-2 truncate py-2.5">{{ dataType.title_ru }}</span>
                             </label>
+                        </li>
+                    </ul>
+                </div>
 
-                            <ToolTip classes="py-1.5 px-2 bg-gray-600 text-white font-normal text-sm"
-                                     message="Строгий / Нестрогий поиск"
-                            >
-                                <QuestionMarkSvg classes="w-5 h-5 ml-3 cursor-pointer"/>
-                            </ToolTip>
-                        </div>
+                <div class="bg-blackSimple mx-5 w-60 text-white select-none">
+                    <div class="flex flex-row items-center justify-center py-2.5 font-bold">
+                        Жанр
+                        <label class="ms-3 inline-flex cursor-pointer items-center">
+                            <input
+                                type="checkbox"
+                                name="strict_genre"
+                                class="peer sr-only"
+                                v-model="selectedSearchData.strict_genre"
+                                @change="routerPush"
+                            />
+                            <span
+                                class="peer relative h-5 w-9 rounded-full bg-red-300 peer-checked:bg-lime-300 after:absolute after:start-[2px] after:top-0.5 after:h-4 after:w-4 after:rounded-full after:border after:border-gray-400 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full"
+                            ></span>
+                        </label>
 
-                        <ul class="min-h-20 max-h-64 px-2 overflow-y-auto">
-                            <li v-for="dataGenre in dataSearch.genres" :key="dataGenre.id">
-                                <div class="flex items-center ps-2 rounded hover:bg-blackActive">
-                                    <input :id="`genres_${dataGenre.slug}`"
-                                           type="checkbox"
-                                           name="genres[]"
-                                           :value="dataGenre.slug"
-                                           v-model="this.selectedDataSearch.genres"
-                                           @change="updateDataFilters"
-                                           class="w-4 h-4 p-2 mx-1 text-red-400 bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
-                                    >
-                                    <label :for="`genres_${dataGenre.slug}`"
-                                           class="w-full py-2.5 ms-2 rounded truncate"
-                                    >
-                                        {{ dataGenre.title_ru }}
-                                    </label>
-                                </div>
-                            </li>
-                        </ul>
+                        <ToolTip
+                            classes="py-1.5 px-2 bg-gray-600 text-white font-normal text-sm"
+                            message="Строгий / Нестрогий поиск"
+                        >
+                            <QuestionMarkSvg classes="w-5 h-5 ml-3 cursor-pointer" />
+                        </ToolTip>
                     </div>
 
-                    <div class="bg-blackSimple text-white w-60 select-none mx-5">
-                        <div class="font-bold flex flex-row justify-center items-center py-2.5">
-                            Студия
-                            <label class="inline-flex items-center cursor-pointer ms-3">
-                                <input type="checkbox"
-                                       name="strict_studio"
-                                       class="sr-only peer"
-                                       v-model="selectedDataSearch.strict_studio"
-                                       @change="updateDataFilters"
-                                >
-                                <span class="relative w-9 h-5 bg-red-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime-300"></span>
+                    <ul class="max-h-64 min-h-20 overflow-y-auto px-2">
+                        <li
+                            v-for="dataGenre in dataSearch.genres"
+                            :key="dataGenre.id"
+                        >
+                            <label class="hover:bg-blackActive flex items-center rounded-sm ps-2">
+                                <input
+                                    type="checkbox"
+                                    name="genres[]"
+                                    class="peer hidden"
+                                    :value="dataGenre.slug"
+                                    v-model="this.selectedSearchData.genres"
+                                    @change="routerPush"
+                                />
+                                <span class="mx-1 inline-block size-5 shrink-0 rounded-sm bg-gray-500 peer-checked:hidden peer-indeterminate:hidden"></span>
+                                <PlusSvg
+                                    classes="size-5 stroke-black fill-none"
+                                    class="mx-1 hidden size-5 shrink-0 rounded-sm peer-checked:inline-block peer-checked:bg-lime-500"
+                                />
+                                <MinusSvg
+                                    classes="size-5 stroke-black fill-none"
+                                    class="mx-1 hidden size-5 shrink-0 rounded-sm peer-indeterminate:inline-block peer-indeterminate:bg-red-500"
+                                />
+                                <span class="ms-2 truncate py-2.5">{{ dataGenre.title_ru }}</span>
                             </label>
-                            <ToolTip classes="py-1.5 px-2 bg-gray-600 text-white font-normal text-sm"
-                                     message="Строгий / Нестрогий поиск"
-                            >
-                                <QuestionMarkSvg classes="w-5 h-5 ml-3 cursor-pointer"/>
-                            </ToolTip>
-                        </div>
+                        </li>
+                    </ul>
+                </div>
 
-                        <ul class="min-h-20 max-h-64 px-2 overflow-y-auto">
-                            <li v-for="dataStudio in dataSearch.studios" :key="dataStudio.id">
-                                <div class="flex items-center ps-2 rounded hover:bg-blackActive">
-                                    <input :id="`studios_${dataStudio.slug}`"
-                                           type="checkbox"
-                                           name="studios[]"
-                                           :value="dataStudio.slug"
-                                           v-model="this.selectedDataSearch.studios"
-                                           @change="updateDataFilters"
-                                           class="w-4 h-4 p-2 mx-1 text-red-400 bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
-                                    >
-                                    <label :for="`studios_${dataStudio.slug}`"
-                                           class="w-full py-2.5 ms-2 rounded truncate"
-                                    >
-                                        {{ dataStudio.title }}
-                                    </label>
-                                </div>
-                            </li>
-                        </ul>
+                <div class="bg-blackSimple mx-5 w-60 text-white select-none">
+                    <div class="flex flex-row items-center justify-center py-2.5 font-bold">
+                        Студия
+                        <label class="ms-3 inline-flex cursor-pointer items-center">
+                            <input
+                                type="checkbox"
+                                name="strict_studio"
+                                class="peer sr-only"
+                                v-model="selectedSearchData.strict_studio"
+                                @change="routerPush"
+                            />
+                            <span
+                                class="peer relative h-5 w-9 rounded-full bg-red-300 peer-checked:bg-lime-300 after:absolute after:start-[2px] after:top-0.5 after:h-4 after:w-4 after:rounded-full after:border after:border-gray-400 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full"
+                            ></span>
+                        </label>
+                        <ToolTip
+                            classes="py-1.5 px-2 bg-gray-600 text-white font-normal text-sm"
+                            message="Строгий / Нестрогий поиск"
+                        >
+                            <QuestionMarkSvg classes="w-5 h-5 ml-3 cursor-pointer" />
+                        </ToolTip>
                     </div>
 
-                    <div class="bg-blackSimple text-white w-60 select-none mx-5">
-                        <div class="text-center font-bold py-2.5">
-                            Страна
+                    <ul class="max-h-64 min-h-20 overflow-y-auto px-2">
+                        <li
+                            v-for="dataStudio in dataSearch.studios"
+                            :key="dataStudio.id"
+                        >
+                            <label class="hover:bg-blackActive flex items-center rounded-sm ps-2">
+                                <input
+                                    type="checkbox"
+                                    name="studios[]"
+                                    class="peer hidden"
+                                    :value="dataStudio.slug"
+                                    v-model="this.selectedSearchData.studios"
+                                    @change="routerPush"
+                                />
+                                <span class="mx-1 inline-block size-5 shrink-0 rounded-sm bg-gray-500 peer-checked:hidden peer-indeterminate:hidden"></span>
+                                <PlusSvg
+                                    classes="size-5 stroke-black fill-none"
+                                    class="mx-1 hidden size-5 shrink-0 rounded-sm peer-checked:inline-block peer-checked:bg-lime-500"
+                                />
+                                <MinusSvg
+                                    classes="size-5 stroke-black fill-none"
+                                    class="mx-1 hidden size-5 shrink-0 rounded-sm peer-indeterminate:inline-block peer-indeterminate:bg-red-500"
+                                />
+                                <span class="ms-2 truncate py-2.5">{{ dataStudio.title }}</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-blackSimple mx-5 w-60 text-white select-none">
+                    <div class="py-2.5 text-center font-bold">Страна</div>
+                    <ul class="max-h-64 min-h-20 overflow-y-auto px-2">
+                        <li
+                            v-for="dataCountry in dataSearch.countries"
+                            :key="dataCountry.id"
+                        >
+                            <label class="hover:bg-blackActive flex items-center rounded-sm ps-2">
+                                <input
+                                    type="checkbox"
+                                    name="countries[]"
+                                    class="peer hidden"
+                                    :value="dataCountry.slug"
+                                    v-model="this.selectedSearchData.countries"
+                                    @change="routerPush"
+                                />
+                                <span class="mx-1 inline-block size-5 shrink-0 rounded-sm bg-gray-500 peer-checked:hidden peer-indeterminate:hidden"></span>
+                                <PlusSvg
+                                    classes="size-5 stroke-black fill-none"
+                                    class="mx-1 hidden size-5 shrink-0 rounded-sm peer-checked:inline-block peer-checked:bg-lime-500"
+                                />
+                                <MinusSvg
+                                    classes="size-5 stroke-black fill-none"
+                                    class="mx-1 hidden size-5 shrink-0 rounded-sm peer-indeterminate:inline-block peer-indeterminate:bg-red-500"
+                                />
+                                <span class="ms-2 truncate py-2.5">{{ dataCountry.title_ru }}</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-blackSimple mx-3 w-60 text-white select-none">
+                    <div class="py-2.5 text-center font-bold">Год</div>
+
+                    <div class="px-2 py-2">
+                        <div class="mb-4 flex">
+                            <div class="rounded-s-sm bg-gray-500 px-5 py-2.5 text-white">ОТ</div>
+                            <input
+                                id="year_fromInput"
+                                name="year_from"
+                                v-model="selectedSearchData.year_from"
+                                type="number"
+                                min="1970"
+                                max="2030"
+                                placeholder="Введите год"
+                                @change="routerPush"
+                                class="bg-blackActive w-full rounded-e-sm border-none py-1.5 text-center text-white focus:ring-0"
+                            />
                         </div>
-                        <ul class="min-h-20 max-h-64 px-2 overflow-y-auto">
-                            <li v-for="dataCountry in dataSearch.countries" :key="dataCountry.id">
-                                <div class="flex items-center ps-2 rounded hover:bg-blackActive">
-                                    <input :id="`studios_${dataCountry.slug}`"
-                                           type="checkbox"
-                                           name="countries[]"
-                                           :value="dataCountry.slug"
-                                           v-model="this.selectedDataSearch.countries"
-                                           @change="updateDataFilters"
-                                           class="w-4 h-4 p-2 mx-1 text-red-400 bg-gray-500 border-gray-500 rounded ring-0 focus:ring-0"
-                                    >
-                                    <label :for="`studios_${dataCountry.slug}`"
-                                           class="w-full py-2.5 ms-2 rounded truncate"
-                                    >
-                                        {{ dataCountry.title_ru }}
-                                    </label>
-                                </div>
-                            </li>
-                        </ul>
+                        <div class="relative">
+                            <label
+                                for="year_fromRange"
+                                class="sr-only"
+                            ></label>
+                            <input
+                                id="year_fromRange"
+                                type="range"
+                                v-model="selectedSearchData.year_from"
+                                min="1970"
+                                max="2030"
+                                @change="routerPush"
+                                class="range-sm h-2.5 w-full cursor-ew-resize appearance-none rounded-lg bg-white in-range:bg-gray-400"
+                            />
+                            <span class="absolute start-0 -bottom-6 text-sm text-gray-300">1970</span>
+                            <span class="absolute end-0 -bottom-6 text-sm text-gray-300">2030</span>
+                        </div>
                     </div>
 
-                    <div class="bg-blackSimple text-white w-60 select-none mx-3">
-                        <div class="text-center font-bold py-2.5">
-                            Год
+                    <div class="mt-10 px-2 py-2">
+                        <div class="mb-4 flex">
+                            <div class="rounded-s-sm bg-gray-500 px-5 py-2.5 text-white">ДО</div>
+                            <input
+                                id="year_toInput"
+                                name="year_to"
+                                v-model="selectedSearchData.year_to"
+                                type="number"
+                                min="1970"
+                                max="2030"
+                                placeholder="Введите год"
+                                @change="routerPush"
+                                class="bg-blackActive w-full rounded-e-sm border-none py-1.5 text-center text-white focus:ring-0"
+                            />
                         </div>
-
-                        <div class="px-2 py-2">
-                            <div class="flex mb-4">
-                                <div class="py-2.5 px-5 text-white rounded-s-md bg-gray-500">
-                                    ОТ
-                                </div>
-                                <input id="year_fromInput"
-                                       name="year_from"
-                                       v-model="selectedDataSearch.year_from"
-                                       type="number"
-                                       min="1970"
-                                       max="2030"
-                                       placeholder="Введите год"
-                                       @change="updateDataFilters"
-                                       class="py-1.5 w-full text-center text-white bg-blackActive rounded-e-md border-none focus:ring-red-400"
-                                >
-                            </div>
-                            <div class="relative">
-                                <label for="year_fromRange" class="sr-only"></label>
-                                <input id="year_fromRange"
-                                       type="range"
-                                       v-model="selectedDataSearch.year_from"
-                                       min="1970"
-                                       max="2030"
-                                       @change="updateDataFilters"
-                                       class="w-full h-2.5 bg-white rounded-lg appearance-none cursor-ew-resize range-sm in-range:bg-gray-500"
-                                >
-                                <span class="text-sm text-gray-300 absolute start-0 -bottom-6">1970</span>
-                                <span class="text-sm text-gray-300 absolute end-0 -bottom-6">2030</span>
-                            </div>
-                        </div>
-
-                        <div class="px-2 py-2 mt-10">
-                            <div class="flex mb-4">
-                                <div class="py-2.5 px-5 text-white rounded-s-md bg-gray-500">
-                                    ДО
-                                </div>
-                                <input id="year_toInput"
-                                       name="year_to"
-                                       v-model="selectedDataSearch.year_to"
-                                       type="number"
-                                       min="1970"
-                                       max="2030"
-                                       placeholder="Введите год"
-                                       @change="updateDataFilters"
-                                       class="py-1.5 w-full text-center text-white bg-blackActive rounded-e-md border-none focus:ring-red-400"
-                                >
-                            </div>
-                            <div class="relative">
-                                <label for="year_toRange" class="sr-only"></label>
-                                <input id="year_toRange"
-                                       type="range"
-                                       v-model="selectedDataSearch.year_to"
-                                       min="1970"
-                                       max="2030"
-                                       @change="updateDataFilters"
-                                       class="w-full h-2.5 bg-gray-500 rounded-lg appearance-none cursor-ew-resize range-sm"
-                                >
-                                <span class="text-sm text-gray-300 absolute start-0 -bottom-6">1970</span>
-                                <span class="text-sm text-gray-300 absolute end-0 -bottom-6">2030</span>
-                            </div>
+                        <div class="relative">
+                            <label
+                                for="year_toRange"
+                                class="sr-only"
+                            ></label>
+                            <input
+                                id="year_toRange"
+                                type="range"
+                                v-model="selectedSearchData.year_to"
+                                min="1970"
+                                max="2030"
+                                @change="routerPush"
+                                class="range-sm h-2.5 w-full cursor-ew-resize appearance-none rounded-lg bg-gray-400"
+                            />
+                            <span class="absolute start-0 -bottom-6 text-sm text-gray-300">1970</span>
+                            <span class="absolute end-0 -bottom-6 text-sm text-gray-300">2030</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </template>
