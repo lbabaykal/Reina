@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\CacheEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Main\MainAnimesResource;
-use App\Http\Resources\Main\MainDoramasResource;
+use App\Http\Resources\MainResource;
 use App\Models\Anime;
 use App\Models\Dorama;
 use App\Reina;
@@ -32,8 +31,8 @@ class MainController extends Controller
         });
 
         return response()->json([
-            'animes' => MainAnimesResource::collection($animes),
-            'doramas' => MainDoramasResource::collection($doramas),
+            'animes' => MainResource::collection($animes),
+            'doramas' => MainResource::collection($doramas),
         ]);
     }
 }

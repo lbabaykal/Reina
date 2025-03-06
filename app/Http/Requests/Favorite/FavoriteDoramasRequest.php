@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Favorite;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\Rule;
 
 class FavoriteDoramasRequest extends FormRequest
@@ -20,11 +21,17 @@ class FavoriteDoramasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'folder' => ['required', 'integer',
+            'folder_id' => ['required', 'integer',
                 Rule::exists('dorama_folders', 'id')
-                    ->whereIn('user_id', [0, auth()->id()])
+                    ->whereIn('user_id', [0, auth()->id()]),
             ],
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'folder_id.exists' => Lang::get('reina.folder.is_not_yours'),
+        ];
+    }
 }

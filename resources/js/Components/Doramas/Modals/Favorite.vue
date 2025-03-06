@@ -1,14 +1,15 @@
 <script>
-import CloseSvg from '../../Svg/CloseSvg.vue';
 import LoadingSvg from '../../Svg/LoadingSvg.vue';
 import StarSvg from '../../Svg/StarSvg.vue';
 import SuccessButton from '../../ui/Buttons/SuccessButton.vue';
 import WarningButton from '../../ui/Buttons/WarningButton.vue';
 import DangerButton from '../../ui/Buttons/DangerButton.vue';
+import { push } from 'notivue';
+import ModalCloseButton from '../../ui/Buttons/ModalCloseButton.vue';
 
 export default {
     name: 'Favorite',
-    components: { DangerButton, WarningButton, SuccessButton, StarSvg, LoadingSvg, CloseSvg },
+    components: { ModalCloseButton, DangerButton, WarningButton, SuccessButton, StarSvg, LoadingSvg },
     props: {
         doramaId: Number,
         dataUserForDorama: {
@@ -26,7 +27,7 @@ export default {
                 id: Number,
                 title: String,
             },
-            folder: 0,
+            folder_id: 0,
             dataLoading: false,
             isFavoriteModalVisible: false,
         };
@@ -40,7 +41,7 @@ export default {
                     this.dataUserFolders = response.data.folders;
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
+                    push.error(error.response.data);
                 })
                 .finally(() => {
                     this.dataLoading = false;
@@ -48,18 +49,35 @@ export default {
         },
         addDoramaFavorite() {
             this.dataLoading = true;
-            axios
-                .post(`/api/doramas/${this.doramaId}/favorite`, { folder: this.folder })
-                .then((response) => {
-                    this.dataUserForDorama.favorite.id = this.folder;
-                    this.closeFavoriteModal();
-                })
-                .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
-                })
-                .finally(() => {
-                    this.dataLoading = false;
-                });
+            if (!this.isFavoriteUser) {
+                axios
+                    .post(`/api/doramas/${this.doramaId}/favorite`, { folder_id: this.folder_id })
+                    .then((response) => {
+                        this.dataUserForDorama.favorite.id = this.folder_id;
+                        this.closeFavoriteModal();
+                        push.success(response.data);
+                    })
+                    .catch((error) => {
+                        push.error(error.response.data);
+                    })
+                    .finally(() => {
+                        this.dataLoading = false;
+                    });
+            } else {
+                axios
+                    .patch(`/api/doramas/${this.doramaId}/favorite`, { folder_id: this.folder_id })
+                    .then((response) => {
+                        this.dataUserForDorama.favorite.id = this.folder_id;
+                        this.closeFavoriteModal();
+                        push.success(response.data);
+                    })
+                    .catch((error) => {
+                        push.error(error.response.data);
+                    })
+                    .finally(() => {
+                        this.dataLoading = false;
+                    });
+            }
         },
         removeDoramaFavorite() {
             this.dataLoading = true;
@@ -68,22 +86,25 @@ export default {
                 .then((response) => {
                     this.dataUserForDorama.favorite.id = 0;
                     this.closeFavoriteModal();
+                    push.success(response.data);
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
+                    push.error(error.response.data);
                 })
                 .finally(() => {
                     this.dataLoading = false;
                 });
         },
         openFavoriteModal() {
-            this.getDoramaFavorite();
-            this.folder = this.dataUserForDorama.favorite.id;
+            this.folder_id = this.dataUserForDorama.favorite.id;
             this.isFavoriteModalVisible = true;
         },
         closeFavoriteModal() {
             this.isFavoriteModalVisible = false;
         },
+    },
+    mounted() {
+        this.getDoramaFavorite();
     },
 };
 </script>
@@ -101,80 +122,54 @@ export default {
             v-if="isFavoriteModalVisible"
             class="fixed top-0 left-0 z-40 flex h-full w-full items-center justify-center overflow-x-hidden overflow-y-auto"
         >
-            <div class="shadow-modals max-w-136 min-w-120 rounded-md bg-black/80 select-none">
+            <div class="shadow-modals max-w-96 min-w-80 rounded-md bg-black/80 select-none">
                 <div class="flex items-center justify-between border-b p-2">
                     <div class="mx-auto truncate pl-8 text-xl text-white">Избранное</div>
-                    <button
-                        type="button"
-                        @click="closeFavoriteModal"
-                        class="inline-flex cursor-pointer items-center justify-center rounded-sm fill-white p-1 text-sm hover:bg-red-400 hover:fill-black hover:text-black"
-                    >
-                        <CloseSvg classes="size-6" />
-                    </button>
+                    <ModalCloseButton @click="closeFavoriteModal" />
                 </div>
 
-                <div
-                    class="space-y-2 p-3"
-                    v-if="!dataLoading"
-                >
+                <div class="relative space-y-2 p-3">
                     <div
-                        class="w-full text-center text-lg"
-                        v-if="!isFavoriteUser"
+                        class="absolute top-0 left-0 flex h-full w-full items-center justify-center bg-black/60"
+                        v-if="dataLoading"
                     >
-                        Вы не добавляли данное аниме в папку
+                        <LoadingSvg classes="w-20 fill-violet-500" />
                     </div>
 
-                    <div class="flex flex-col items-center justify-center text-xl">
-                        <div
-                            v-for="dataFolder in dataUserFolders"
-                            class="group flex max-w-96 min-w-64 bg-black text-white hover:bg-white hover:text-black"
+                    <label
+                        v-for="dataFolder in dataUserFolders"
+                        class="my-2 flex cursor-pointer justify-start text-lg"
+                    >
+                        <input
+                            :value="dataFolder.id"
+                            v-model="folder_id"
+                            type="radio"
+                            class="peer hidden"
+                        />
+                        <span
+                            class="bg-blackActive/70 flex-grow truncate rounded-md px-3 py-1 font-medium peer-checked:bg-white peer-checked:text-black hover:bg-violet-500/80 hover:text-white"
                         >
-                            <input
-                                :id="dataFolder.id"
-                                :value="dataFolder.id"
-                                v-model="folder"
-                                type="radio"
-                                name="folder"
-                                class="peer hidden"
-                            />
-                            <label
-                                :for="dataFolder.id"
-                                class="flex w-full cursor-pointer items-center justify-between p-1 peer-checked:bg-white peer-checked:text-black"
-                            >
-                                <span class="w-full truncate text-center">
-                                    {{ dataFolder.title }}
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    v-else
-                    class="flex h-32 items-center justify-center"
-                >
-                    <LoadingSvg classes="w-20 fill-red-500" />
+                            {{ dataFolder.title }}
+                        </span>
+                    </label>
                 </div>
 
                 <div class="flex justify-center border-t border-gray-200 p-3">
                     <WarningButton
                         v-if="isFavoriteUser"
                         @click="removeDoramaFavorite"
-                        text="Удалить"
                         :disabledButton="dataLoading"
                         class="mx-2"
                     />
 
                     <SuccessButton
                         @click="addDoramaFavorite"
-                        :text="!isFavoriteUser ? 'Добавить' : 'Изменить'"
                         :disabledButton="dataLoading"
                         class="mx-2"
                     />
 
                     <DangerButton
                         @click="closeFavoriteModal"
-                        text="Отмена"
                         :disabledButton="dataLoading"
                         class="mx-2"
                     />

@@ -2,6 +2,7 @@
 import AuthWindow from "../../Components/Login/AuthWindow.vue";
 import router from "../../router.js";
 import {useAuthStore} from "../../Stores/authStore.js";
+import { push } from 'notivue';
 
 export default {
     name: "VerifyEmail",
@@ -39,16 +40,11 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log(response)
                     if (response.data.verified === true) {
                         router.push({name: 'index'});
                     }
                 })
-                .catch(error => {
-                    console.log(error)
-                    //TODO Уведомление
-                });
-
+                .catch(error => {});
         },
     },
 }

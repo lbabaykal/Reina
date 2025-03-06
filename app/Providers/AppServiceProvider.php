@@ -4,8 +4,12 @@ namespace App\Providers;
 
 use App\Models\AnimeFolder;
 use App\Models\DoramaFolder;
-use App\Policies\Folders\FolderAnimePolicy;
-use App\Policies\Folders\FolderDoramaPolicy;
+use App\Models\FavoriteAnime;
+use App\Models\FavoriteDorama;
+use App\Policies\Favorite\FavoriteAnimePolicy;
+use App\Policies\Favorite\FavoriteDoramaPolicy;
+use App\Policies\Folders\AnimeFolderPolicy;
+use App\Policies\Folders\DoramaFolderPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
@@ -23,8 +27,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Gate::policy(AnimeFolder::class, FolderAnimePolicy::class);
-        Gate::policy(DoramaFolder::class, FolderDoramaPolicy::class);
+        Gate::policy(AnimeFolder::class, AnimeFolderPolicy::class);
+        Gate::policy(DoramaFolder::class, DoramaFolderPolicy::class);
 
         Model::preventLazyLoading(! $this->app->isProduction());
 

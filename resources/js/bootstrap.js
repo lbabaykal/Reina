@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useAuthStore } from "./Stores/authStore.js";
 import router from './router.js'
+import { push } from 'notivue';
 
 
 window.axios = axios;
@@ -22,6 +23,10 @@ axios.interceptors.response.use((response) => {
     return response
 }, (error) => {
     // if (error.response.status === 401 || error.response.status === 419) {
+    // if (error.response.status === 401) {
+    //     push.warning(error.response.data);
+    // }
+
     if (error.response.status === 419) {
         useAuthStore().destroyUser();
         router.push({name: 'login'});

@@ -3,6 +3,7 @@ import CardDorama from '../Components/Doramas/CardDorama.vue';
 import CardAnime from '../Components/Animes/CardAnime.vue';
 import CardLoading from '../Components/CardLoading.vue';
 import Search from '../Components/Search.vue';
+import { push } from 'notivue';
 
 export default {
     name: 'SearchPage',
@@ -41,7 +42,9 @@ export default {
                     this.doramasTotalFound = response.data.doramasTotalFound;
                     this.dataLoading = true;
                 })
-                .catch((error) => {});
+                .catch((error) => {
+                    push.error(error.response.data.message);
+                });
         },
         updateSelectFilters(filters) {
             this.selectedSearchData = { ...this.selectedSearchData, ...filters.selectedSearchData };

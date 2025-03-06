@@ -11,6 +11,7 @@ class FavoriteAnime extends Model
         'user_id',
         'anime_id',
         'anime_folder_id',
+        'episode',
     ];
 
     public function user(): BelongsTo

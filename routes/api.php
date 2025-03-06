@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\Api\AnimeController;
 use App\Http\Controllers\Api\DoramaController;
+use App\Http\Controllers\Api\Favorite\FavoriteAnimeController;
+use App\Http\Controllers\Api\Favorite\FavoriteDoramaController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\Folders\FolderAnimesController;
 use App\Http\Controllers\Api\Folders\FolderDoramasController;
 use App\Http\Controllers\Api\MainController;
-use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\Api\Rating\AnimeRatingController;
+use App\Http\Controllers\Api\Rating\DoramaRatingController;
 use App\Http\Controllers\Api\SearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,21 +33,23 @@ Route::domain(env('APP_URL'))->group(function () {
     Route::get('/search', [SearchController::class, 'index']);
     Route::get('/search-data', [SearchController::class, 'searchData']);
 
-
     Route::prefix('animes')->name('animes.')->group(function () {
         Route::get('/', [AnimeController::class, 'index']);
 
         Route::get('/{slug}', [AnimeController::class, 'show']);
         Route::get('/{slug}/watch', [AnimeController::class, 'watch']);
 
-        // Rating
-        Route::post('/{id}/rating', [RatingController::class, 'addForAnime']);
-        Route::delete('/{id}/rating', [RatingController::class, 'removeForAnime']);
-
-        // Favorite
-        Route::post('/favorite', [FavoriteController::class, 'getForAnime']);
-        Route::post('/{id}/favorite', [FavoriteController::class, 'addForAnime']);
-        Route::delete('/{id}/favorite', [FavoriteController::class, 'removeForAnime']);
+        Route::middleware('auth')->group(function () {
+            // Rating
+            Route::post('/{id}/rating', [AnimeRatingController::class, 'store']);
+            Route::patch('/{id}/rating', [AnimeRatingController::class, 'update']);
+            Route::delete('/{id}/rating', [AnimeRatingController::class, 'destroy']);
+            // Favorite
+            Route::post('/favorite', [FavoriteAnimeController::class, 'show'])->withoutMiddleware('auth');
+            Route::post('/{id}/favorite', [FavoriteAnimeController::class, 'store']);
+            Route::patch('/{id}/favorite', [FavoriteAnimeController::class, 'update']);
+            Route::delete('/{id}/favorite', [FavoriteAnimeController::class, 'destroy']);
+        });
     });
 
     Route::prefix('doramas')->name('doramas.')->group(function () {
@@ -53,14 +58,17 @@ Route::domain(env('APP_URL'))->group(function () {
         Route::get('/{slug}', [DoramaController::class, 'show']);
         Route::get('/{slug}/watch', [DoramaController::class, 'watch']);
 
-        // Rating
-        Route::post('/{id}/rating', [RatingController::class, 'addForDorama']);
-        Route::delete('/{id}/rating', [RatingController::class, 'removeForDorama']);
-
-        // Favorite
-        Route::post('/favorite', [FavoriteController::class, 'getForDorama']);
-        Route::post('/{id}/favorite', [FavoriteController::class, 'addForDorama']);
-        Route::delete('/{id}/favorite', [FavoriteController::class, 'removeForDorama']);
+        Route::middleware('auth')->group(function () {
+            // Rating
+            Route::post('/{id}/rating', [DoramaRatingController::class, 'store']);
+            Route::patch('/{id}/rating', [DoramaRatingController::class, 'update']);
+            Route::delete('/{id}/rating', [DoramaRatingController::class, 'destroy']);
+            // Favorite
+            Route::post('/favorite', [FavoriteDoramaController::class, 'show'])->withoutMiddleware('auth');
+            Route::post('/{id}/favorite', [FavoriteDoramaController::class, 'store']);
+            Route::patch('/{id}/favorite', [FavoriteDoramaController::class, 'update']);
+            Route::delete('/{id}/favorite', [FavoriteDoramaController::class, 'destroy']);
+        });
     });
 
     Route::prefix('favorites')->name('favorites.')->group(function () {
@@ -92,4 +100,3 @@ Route::domain(env('APP_URL'))->group(function () {
         });
     })->middleware(['auth']);
 });
-

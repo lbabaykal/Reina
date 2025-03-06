@@ -3,6 +3,7 @@ import CardDorama from '../../Components/Doramas/CardDorama.vue';
 import CardLoading from '../../Components/CardLoading.vue';
 import Pagination from '../../Components/Pagination.vue';
 import Folders from '../../Components/Doramas/Folders.vue';
+import { push } from 'notivue';
 
 export default {
     name: 'DoramasPage',
@@ -34,14 +35,14 @@ export default {
                 .then((response) => {
                     this.dataDoramas = response.data.data;
                     this.dataPagination = response.data.meta;
-                    this.dataLoading = true;
+
                 })
                 .catch((error) => {
-                    if (error.status === 403) {
-                        console.log('Не твоя папка'); //TODO уведомление что у пользователя нет прав на просмотр
-                    }
+                    push.error(error.response.data.message); //TODO уведомление что у пользователя нет прав на просмотр
                 })
-                .finally(() => {});
+                .finally(() => {
+                    this.dataLoading = true;
+                });
         },
         updateSelectedFolder(obj) {
             this.dataParams.folder = obj.selectedFolder;

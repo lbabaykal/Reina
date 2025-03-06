@@ -23,6 +23,7 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+            $table->unsignedSmallInteger('episode')->default(0);
             $table->timestamps();
         });
     }

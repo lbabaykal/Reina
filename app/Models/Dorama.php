@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[ObservedBy([DoramaObserver::class])]
 class Dorama extends Model
 {
+    use AnimeAndDoramaTrait;
     use HasFactory;
     use SoftDeletes;
-    use AnimeAndDoramaTrait;
 
     protected $fillable = [
         'slug',
@@ -46,7 +46,7 @@ class Dorama extends Model
 
     public function countries(): BelongsToMany
     {
-        return $this->belongsToMany( Country::class, 'dorama_country');
+        return $this->belongsToMany(Country::class, 'dorama_country');
     }
 
     public function ratings(): HasMany
@@ -63,5 +63,4 @@ class Dorama extends Model
     {
         return $this->hasMany(DoramaEpisode::class);
     }
-
 }

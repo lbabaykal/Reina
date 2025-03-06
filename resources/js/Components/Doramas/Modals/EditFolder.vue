@@ -1,13 +1,14 @@
 <script>
-import CloseSvg from '../../Svg/CloseSvg.vue';
 import LoadingSvg from '../../Svg/LoadingSvg.vue';
 import SuccessButton from '../../ui/Buttons/SuccessButton.vue';
 import WarningButton from '../../ui/Buttons/WarningButton.vue';
 import DangerButton from '../../ui/Buttons/DangerButton.vue';
+import { push } from 'notivue';
+import ModalCloseButton from '../../ui/Buttons/ModalCloseButton.vue';
 
 export default {
     name: 'EditFolder',
-    components: { DangerButton, WarningButton, SuccessButton, LoadingSvg, CloseSvg },
+    components: { ModalCloseButton, DangerButton, WarningButton, SuccessButton, LoadingSvg },
     data() {
         return {
             dataOnlyUserFolders: [Array, Object],
@@ -27,10 +28,13 @@ export default {
                 .get('/api/folders/doramas/only-user-folders')
                 .then((response) => {
                     this.dataOnlyUserFolders = response.data.dataOnlyUserFolders;
-                    this.dataLoading = false;
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
+                    this.closeEditFolderModal();
+                    push.warning(error.response.data);
+                })
+                .finally(() => {
+                    this.dataLoading = false;
                 });
         },
         async getFolder(id) {
@@ -38,12 +42,13 @@ export default {
             await axios
                 .get(`/api/folders/doramas/${id}/edit`, { id: id })
                 .then((response) => {
-                    // TODO Уведомление что папка успешно загружена
                     this.dataFolder = response.data.folder;
-                    this.dataLoading = false;
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
+                    push.warning(error.response.data);
+                    this.closeEditFolderModal();
+                })
+                .finally(() => {
                     this.dataLoading = false;
                 });
         },
@@ -52,13 +57,15 @@ export default {
             axios
                 .patch(`/api/folders/doramas/${this.dataFolder.id}`, this.dataFolder)
                 .then((response) => {
-                    // TODO Уведомление что папка успешно обновлена
                     this.updateFolders();
                     this.closeEditFolderModal();
-                    this.dataLoading = false;
+                    push.success(response.data);
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
+                    push.warning(error.response.data);
+                })
+                .finally(() => {
+                    this.dataLoading = false;
                 });
         },
         deleteFolder() {
@@ -66,18 +73,20 @@ export default {
             axios
                 .delete(`/api/folders/doramas/${this.dataFolder.id}`, this.dataFolder)
                 .then((response) => {
-                    // TODO Уведомление что папка успешно удалена
                     this.updateFolders();
                     this.closeEditFolderModal();
-                    this.dataLoading = false;
                     if (+this.$route.query.folder === this.dataFolder.id) {
                         this.$router.replace({
                             query: { ...this.$route.query, folder: 0 },
                         });
                     }
+                    push.success(response.data);
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
+                    push.warning(error.response.data);
+                })
+                .finally(() => {
+                    this.dataLoading = false;
                 });
         },
         openEditFolderModal(id) {
@@ -111,13 +120,7 @@ export default {
             <div class="shadow-modals max-w-136 min-w-120 rounded-md bg-black/80 select-none">
                 <div class="flex items-center justify-between border-b p-2">
                     <div class="mx-auto truncate pl-8 text-xl text-white">Редактирование папки</div>
-                    <button
-                        type="button"
-                        @click="closeEditFolderModal"
-                        class="inline-flex cursor-pointer items-center justify-center rounded-sm fill-white p-1 text-sm hover:bg-red-400 hover:fill-black hover:text-black"
-                    >
-                        <CloseSvg classes="size-6" />
-                    </button>
+                    <ModalCloseButton @click="closeEditFolderModal" />
                 </div>
 
                 <div
@@ -135,6 +138,7 @@ export default {
                             type="text"
                             id="title"
                             name="title"
+                            maxlength="32"
                             v-model="this.dataFolder.title"
                             class="w-80% bg-blackSimple hover:bg-blackActive focus:bg-blackActive m-0 rounded border-x-0 border-t-0 py-2 text-center text-white transition duration-300 focus:border-b-red-400 focus:ring-0"
                         />

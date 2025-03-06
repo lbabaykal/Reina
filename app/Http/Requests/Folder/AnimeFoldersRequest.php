@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpInconsistentReturnPointsInspection */
+<?php
+
+/** @noinspection PhpInconsistentReturnPointsInspection */
 
 namespace App\Http\Requests\Folder;
 
@@ -18,33 +20,20 @@ class AnimeFoldersRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->isMethod('POST')) {  //TODO включить правила валидации для создание папок аниме
+        if ($this->isMethod('POST')) {  // TODO включить правила валидации для создание папок аниме
             return [
                 'title' => ['required', 'string', 'min:2', 'max:32'],
-//                'is_private' => ['required', 'boolean'],
-//                'number' => ['required', 'integer', 'min:6'],
-
-//                'title' => ['required', 'string', 'min:2', 'max:255',
-//                    Rule::unique('folder_animes')
-//                        ->where(function ($query) {
-//                            return $query->where('user_id', auth()->id());
-//                        })
-//                ],
+                //                'is_private' => ['required', 'boolean'],
+                //                'number' => ['required', 'integer', 'min:6'],
             ];
-        } elseif ($this->isMethod('PATCH')) {
+        }
+
+        if ($this->isMethod('PATCH')) {
             return [
                 'title' => ['required', 'string', 'min:2', 'max:32'],
-//                'is_private' => ['required', 'boolean'],
-//                'number' => ['required', 'integer', 'min:6'],
-
-//                'title' => ['required', 'string', 'min:2', 'max:255',
-//                    Rule::unique('folder_animes')
-//                        ->where(function ($query) {
-//                            return $query->where('user_id', auth()->id());
-//                        })
-//                        ->ignore($this->folder->id)],
+                //                'is_private' => ['required', 'boolean'],
+                //                'number' => ['required', 'integer', 'min:6'],
             ];
         }
     }
-
 }

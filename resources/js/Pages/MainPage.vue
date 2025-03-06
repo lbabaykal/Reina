@@ -2,6 +2,7 @@
 import CardDorama from "../Components/Doramas/CardDorama.vue";
 import CardAnime from "../Components/Animes/CardAnime.vue";
 import CardLoading from "../Components/CardLoading.vue";
+import { push } from 'notivue';
 
 export default {
     name: "MainPage",
@@ -20,12 +21,10 @@ export default {
                 .then(response => {
                     this.dataAnimes = response.data.animes;
                     this.dataDoramas = response.data.doramas;
+                    this.dataLoading = true;
                 })
                 .catch(error => {
-                    // TODO Уведомление не получилось загрузить данные
-                })
-                .finally(() => {
-                    this.dataLoading = true;
+                    push.error(error.response.data.message);
                 });
         }
     },

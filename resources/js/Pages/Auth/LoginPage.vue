@@ -38,13 +38,9 @@ export default {
                             if (error.response.status === 422) {
                                 this.errors = error.response.data.errors;
                             }
-                            //TODO Уведомление что ошибка
                         });
                 })
-                .catch(error => {
-
-                    //TODO Уведомление что ошибка
-                })
+                .catch(error => {})
                 .finally(() => {
                     this.loading = false;
                 });

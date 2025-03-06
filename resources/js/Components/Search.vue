@@ -7,6 +7,7 @@ import FilterButton from './ui/Buttons/FilterButton.vue';
 import PlusSvg from './Svg/PlusSvg.vue';
 import MinusSvg from './Svg/MinusSvg.vue';
 import CircleSvg from './Svg/CircleSvg.vue';
+import { push } from 'notivue';
 
 export default {
     name: 'Search',
@@ -25,6 +26,7 @@ export default {
                 title: null,
                 types: [],
                 genres: [],
+                genres_exclude: [],
                 studios: [],
                 countries: [],
                 strict_genre: false,
@@ -61,7 +63,7 @@ export default {
                     }
                 })
                 .catch((error) => {
-                    console.log(error.response); // TODO ошибка загрузки данных для поиска
+                    push.error('Не удалось загрузить данные для фильтра.');
                 });
         },
         updateDataFilters() {
@@ -78,6 +80,9 @@ export default {
                 page: Number(query.page) || 1,
                 types: Array.isArray(query.types) ? query.types : query.types != null ? [query.types] : [],
                 genres: Array.isArray(query.genres) ? query.genres : query.genres != null ? [query.genres] : [],
+                genres_exclude: Array.isArray(query.genres_exclude) ? query.genres_exclude : query.genres_exclude != null ? [query.genres_exclude] : [],
+                // genres: query.genres ? query.genres.split(',') : [],
+                // genres_exclude: query.genres_exclude ? query.genres_exclude.split(',') : [],
                 studios: Array.isArray(query.studios) ? query.studios : query.studios != null ? [query.studios] : [],
                 countries: Array.isArray(query.countries) ? query.countries : query.countries != null ? [query.countries] : [],
                 title: query.title || '',
@@ -97,7 +102,23 @@ export default {
                 this.selectedSearchData.page = 1;
             }
 
-            this.$router.push({ query: { ...this.selectedSearchData } });
+            // const query = { ...this.selectedSearchData };
+            // if (Array.isArray(query.genres)) {
+            //     query.genres = query.genres.join(',');
+            // }
+            // if (Array.isArray(query.genres_exclude)) {
+            //     query.genres_exclude = query.genres_exclude.join(',');
+            // }
+
+            this.$router.push({ query: this.selectedSearchData });
+        },
+        changeGenres() {
+            this.selectedSearchData.genres_exclude = this.selectedSearchData.genres_exclude.filter((genre) => !this.selectedSearchData.genres.includes(genre));
+            this.routerPush();
+        },
+        changeGenresExclude() {
+            this.selectedSearchData.genres = this.selectedSearchData.genres.filter((genre) => !this.selectedSearchData.genres_exclude.includes(genre));
+            this.routerPush();
         },
     },
     mounted() {
@@ -214,7 +235,7 @@ export default {
                     </ul>
                 </div>
 
-                <div class="bg-blackSimple mx-5 w-60 text-white select-none">
+                <div class="bg-blackSimple mx-5 w-64 text-white select-none">
                     <div class="flex flex-row items-center justify-center py-2.5 font-bold">
                         Жанр
                         <label class="ms-3 inline-flex cursor-pointer items-center">
@@ -242,26 +263,38 @@ export default {
                         <li
                             v-for="dataGenre in dataSearch.genres"
                             :key="dataGenre.id"
+                            class="hover:bg-blackActive flex h-9 items-center justify-between rounded-sm px-1"
                         >
-                            <label class="hover:bg-blackActive flex items-center rounded-sm ps-2">
+                            <label class="group flex size-9 items-center justify-center">
                                 <input
                                     type="checkbox"
                                     name="genres[]"
                                     class="peer hidden"
                                     :value="dataGenre.slug"
                                     v-model="this.selectedSearchData.genres"
-                                    @change="routerPush"
+                                    @change="changeGenres"
                                 />
-                                <span class="mx-1 inline-block size-5 shrink-0 rounded-sm bg-gray-500 peer-checked:hidden peer-indeterminate:hidden"></span>
                                 <PlusSvg
                                     classes="size-5 stroke-black fill-none"
-                                    class="mx-1 hidden size-5 shrink-0 rounded-sm peer-checked:inline-block peer-checked:bg-lime-500"
+                                    class="size-5 shrink-0 rounded-sm bg-gray-500 group-hover:bg-lime-400 peer-checked:bg-lime-500"
+                                />
+                            </label>
+
+                            <span class="group-hover:bg-blackActive mx-2 truncate">{{ dataGenre.title_ru }}</span>
+
+                            <label class="group flex size-9 items-center justify-center">
+                                <input
+                                    type="checkbox"
+                                    name="genres_exclude[]"
+                                    class="peer hidden"
+                                    :value="dataGenre.slug"
+                                    v-model="this.selectedSearchData.genres_exclude"
+                                    @change="changeGenresExclude"
                                 />
                                 <MinusSvg
                                     classes="size-5 stroke-black fill-none"
-                                    class="mx-1 hidden size-5 shrink-0 rounded-sm peer-indeterminate:inline-block peer-indeterminate:bg-red-500"
+                                    class="size-5 shrink-0 rounded-sm bg-gray-500 group-hover:bg-rose-400 peer-checked:bg-rose-500"
                                 />
-                                <span class="ms-2 truncate py-2.5">{{ dataGenre.title_ru }}</span>
                             </label>
                         </li>
                     </ul>

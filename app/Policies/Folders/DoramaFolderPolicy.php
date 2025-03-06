@@ -6,8 +6,9 @@ use App\Models\DoramaFolder;
 use App\Models\User;
 use App\Reina;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Lang;
 
-class FolderDoramaPolicy
+class DoramaFolderPolicy
 {
     public function viewAny(User $user): Response
     {
@@ -27,21 +28,20 @@ class FolderDoramaPolicy
 
         return ($countFolders < Reina::COUNT_FOLDERS)
             ? Response::allow()
-            : Response::deny('Нельзя создавать больше ' . Reina::COUNT_FOLDERS . ' папок.');
+            : Response::deny(Lang::get('reina.folder.limit'));
     }
 
     public function update(User $user, DoramaFolder $folderDorama): Response
     {
         return ($folderDorama->user_id === $user->id)
             ? Response::allow()
-            : Response::denyWithStatus(403);
+            : Response::deny(Lang::get('reina.folder.is_not_yours'));
     }
 
     public function delete(User $user, DoramaFolder $folderDorama): Response
     {
         return ($folderDorama->user_id === $user->id)
             ? Response::allow()
-            : Response::denyWithStatus(403);
+            : Response::deny(Lang::get('reina.folder.is_not_yours'));
     }
-
 }

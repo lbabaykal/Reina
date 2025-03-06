@@ -5,8 +5,21 @@ export default {
     name: 'InfoButton',
     components: { CloseSvg },
     props: {
-        text: String,
-        disabledButton: Boolean,
+        text: {
+            type: String,
+            required: false,
+            default: null,
+        },
+        disabledButton: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+    },
+    computed: {
+        isText() {
+            return this.text && this.text.length > 0;
+        },
     },
 };
 </script>
@@ -14,10 +27,15 @@ export default {
 <template>
     <button
         type="button"
-        class="inline-flex min-w-32 cursor-pointer items-center justify-center rounded-sm border-b-2 border-sky-500 bg-black px-4 py-2 font-bold text-white shadow-md hover:border-sky-600 hover:bg-sky-500 hover:text-black disabled:opacity-60"
+        class="inline-flex min-w-16 cursor-pointer items-center justify-center rounded-sm border-b-2 border-sky-500 bg-black px-4 py-2 font-bold text-white shadow-md hover:border-sky-600 hover:bg-sky-500 hover:text-black disabled:opacity-60"
         :disabled="disabledButton"
     >
-        <span class="mr-2">{{ text }}</span>
+        <span
+            class="mr-2"
+            v-if="isText"
+        >
+            {{ text }}
+        </span>
         <CloseSvg classes="size-6" />
     </button>
 </template>

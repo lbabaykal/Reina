@@ -5,25 +5,25 @@ use Illuminate\Support\Facades\Route;
 
 Route::pattern('slug', '[a-zA-Z0-9_-]+');
 
-Route::domain(env('APP_URL'))->get('/{page?}', function() {
+Route::domain(env('APP_URL'))->get('/{page?}', function () {
     return view('app');
 })->where('page', '.*')->name('index');
 
-require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';
 
-//============================================
+// ============================================
 Route::domain(env('APP_URL'))->group(function () {
     Route::get('/')->name('main');
 
-// ====ANIME====
+    // ====ANIME====
     Route::prefix('animes')->name('animes.')->group(function () {
         Route::get('/{animes:slug}')->name('show');
         Route::get('/{anime:slug}/watch')->name('watch');
         Route::get('/')->name('index');
-            });
+    });
 
-// ====DORAMA====
+    // ====DORAMA====
     Route::prefix('dorama')
         ->name('dorama.')
         ->group(function () {
@@ -47,5 +47,3 @@ Route::domain(env('APP_URL'))->group(function () {
                 });
         });
 });
-
-

@@ -11,8 +11,8 @@ use App\Models\DoramaFolder;
 use App\Reina;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Lang;
 
 class FolderDoramasController extends Controller
 {
@@ -68,7 +68,7 @@ class FolderDoramasController extends Controller
         return DoramasIndexResource::collection($doramas->paginate(Reina::COUNT_ARTICLES_FOLDERS, ['*'], 'page', request()->input('page', 1)));
     }
 
-    public function store(DoramaFoldersRequest $request): Response
+    public function store(DoramaFoldersRequest $request): JsonResponse
     {
         Gate::authorize('create', DoramaFolder::class);
 
@@ -76,10 +76,9 @@ class FolderDoramasController extends Controller
         $folder->title = $request->input('title');
         $folder->user_id = auth()->id();
         $folder->is_private = true; // TODO доделать функционал папок
-        $folder->number = 0;
         $folder->save();
 
-        return response()->noContent();
+        return response()->json(Lang::get('reina.folder.created', ['title' => $folder->title]));
     }
 
     public function edit(DoramaFolder $folder): JsonResponse
@@ -91,22 +90,22 @@ class FolderDoramasController extends Controller
         ]);
     }
 
-    public function update(DoramaFoldersRequest $request, DoramaFolder $folder): Response
+    public function update(DoramaFoldersRequest $request, DoramaFolder $folder): JsonResponse
     {
         Gate::authorize('update', $folder);
 
         $folder->title = $request->input('title'); // TODO доделать функционал папок
         $folder->update();
 
-        return response()->noContent();
+        return response()->json(Lang::get('reina.folder.updated', ['title' => $folder->title]));
     }
 
-    public function destroy(DoramaFolder $folder): Response
+    public function destroy(DoramaFolder $folder): JsonResponse
     {
         Gate::authorize('delete', $folder);
 
         $folder->delete();
 
-        return response()->noContent();
+        return response()->json(Lang::get('reina.folder.deleted', ['title' => $folder->title]));
     }
 }

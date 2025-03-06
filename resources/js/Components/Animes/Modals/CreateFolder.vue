@@ -1,12 +1,13 @@
 <script>
-import CloseSvg from '../../Svg/CloseSvg.vue';
 import LoadingSvg from '../../Svg/LoadingSvg.vue';
 import SuccessButton from '../../ui/Buttons/SuccessButton.vue';
 import DangerButton from '../../ui/Buttons/DangerButton.vue';
+import { push } from 'notivue';
+import ModalCloseButton from '../../ui/Buttons/ModalCloseButton.vue';
 
 export default {
     name: 'CreateFolder',
-    components: { DangerButton, SuccessButton, LoadingSvg, CloseSvg },
+    components: { DangerButton, SuccessButton, LoadingSvg, ModalCloseButton },
     data() {
         return {
             titleFolder: '',
@@ -20,15 +21,16 @@ export default {
             axios
                 .post(`/api/folders/animes/`, { title: this.titleFolder })
                 .then((response) => {
-                    // TODO Уведомление что папка успешно создана
                     this.updateFolders();
                     this.closeCreateFolderModal();
-                    this.dataLoading = false;
+                    push.success(response.data);
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
+                    push.warning(error.response.data);
                 })
-                .finally(() => {});
+                .finally(() => {
+                    this.dataLoading = false;
+                });
         },
         openCreateFolderModal() {
             this.titleFolder = '';
@@ -60,13 +62,7 @@ export default {
             <div class="shadow-modals max-w-136 min-w-120 rounded-md bg-black/80 select-none">
                 <div class="flex items-center justify-between border-b p-2">
                     <div class="mx-auto truncate pl-8 text-xl text-white">Добавление папки</div>
-                    <button
-                        type="button"
-                        @click="closeCreateFolderModal"
-                        class="inline-flex cursor-pointer items-center justify-center rounded-sm fill-white p-1 text-sm hover:bg-red-400 hover:fill-black hover:text-black"
-                    >
-                        <CloseSvg classes="size-6" />
-                    </button>
+                    <ModalCloseButton @click="closeCreateFolderModal" />
                 </div>
 
                 <div
@@ -84,6 +80,7 @@ export default {
                             type="text"
                             id="title"
                             name="title"
+                            maxlength="32"
                             v-model="titleFolder"
                             class="w-80% bg-blackSimple hover:bg-blackActive focus:bg-blackActive m-0 rounded border-x-0 border-t-0 py-2 text-center text-white transition duration-300 focus:border-b-red-400 focus:ring-0"
                         />

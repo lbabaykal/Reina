@@ -34,6 +34,9 @@ class SearchRequest extends FormRequest
             'genres' => ['nullable', 'array'],
             'genres.*' => ['nullable', 'string', Rule::in(new Genre()->cache()->pluck('slug')->toArray())],
 
+            'genres_exclude' => ['nullable', 'array'],
+            'genres_exclude.*' => ['nullable', 'string', Rule::in(new Genre()->cache()->pluck('slug')->toArray())],
+
             'studios' => ['nullable', 'array'],
             'studios.*' => ['nullable', 'string', Rule::in(new Studio()->cache()->pluck('slug')->toArray())],
 

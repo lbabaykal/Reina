@@ -6,6 +6,7 @@ import GoogleLogoSvg from "../../Components/Svg/Auth/GoogleLogoSvg.vue";
 import YandexLogoSvg from "../../Components/Svg/Auth/YandexLogoSvg.vue";
 import VkLogoSvg from "../../Components/Svg/Auth/VkLogoSvg.vue";
 import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
+import { push } from 'notivue';
 
 export default {
     name: "ForgotPasswordPage",
@@ -37,7 +38,6 @@ export default {
                 if (error.response.status === 422) {
                     this.errors = error.response.data.errors;
                 }
-                //TODO Уведомление что ошибка авторизации
             })
             .finally(() => {
                 this.loading = false;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Fields\CountriesFilter;
+use App\Http\Filters\Fields\GenresExcludeFilter;
 use App\Http\Filters\Fields\GenresFilter;
 use App\Http\Filters\Fields\SortingFilter;
 use App\Http\Filters\Fields\StudiosFilter;
@@ -24,18 +25,12 @@ use App\Models\Dorama;
 use App\Models\Genre;
 use App\Models\Studio;
 use App\Models\Type;
+use App\Reina;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Pipeline;
 
 class SearchController extends Controller
 {
-    const array sortingData = [
-        ['id' => 1, 'title' => 'По дате обновления', 'slug' => 'date_updated'],
-        ['id' => 2, 'title' => 'По рейтингу', 'slug' => 'rating'],
-        ['id' => 3, 'title' => 'По дате выхода ▲', 'slug' => 'premiere_asc'],
-        ['id' => 4, 'title' => 'По дате выхода ▼', 'slug' => 'premiere_desc'],
-    ];
-
     public function index(SearchRequest $request): JsonResponse
     {
         $queryAnime = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating'])->limit(8);
@@ -44,6 +39,7 @@ class SearchController extends Controller
                 TitleFilter::class,
                 TypesFilter::class,
                 GenresFilter::class,
+                GenresExcludeFilter::class,
                 CountriesFilter::class,
                 StudiosFilter::class,
                 YearFromFilter::class,
@@ -85,7 +81,12 @@ class SearchController extends Controller
             'genres' => GenresResource::collection((new Genre)->cache()),
             'studios' => StudiosResource::collection((new Studio)->cache()),
             'countries' => CountriesResource::collection((new Country)->cache()),
-            'sorting' => self::sortingData,
+            'sorting' => [
+                ['id' => 1, 'title' => 'По дате обновления', 'slug' => 'date_updated'],
+                ['id' => 2, 'title' => 'По рейтингу', 'slug' => 'rating'],
+                ['id' => 3, 'title' => 'По дате выхода ▲', 'slug' => 'premiere_asc'],
+                ['id' => 4, 'title' => 'По дате выхода ▼', 'slug' => 'premiere_desc'],
+            ],
         ]);
     }
 }

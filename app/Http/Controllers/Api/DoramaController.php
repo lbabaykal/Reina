@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Fields\CountriesFilter;
+use App\Http\Filters\Fields\GenresExcludeFilter;
 use App\Http\Filters\Fields\GenresFilter;
 use App\Http\Filters\Fields\SortingFilter;
 use App\Http\Filters\Fields\StudiosFilter;
@@ -16,7 +17,7 @@ use App\Http\Requests\SearchRequest;
 use App\Http\Resources\Doramas\DoramasIndexResource;
 use App\Http\Resources\Doramas\DoramasShowResource;
 use App\Http\Resources\Doramas\DoramasWatchResource;
-use App\Http\Resources\Episodes\DoramaResource;
+use App\Http\Resources\Episodes\DoramaEpisodesResource;
 use App\Models\Dorama;
 use App\Reina;
 use App\Services\DoramasServices;
@@ -34,6 +35,7 @@ class DoramaController extends Controller
                 TitleFilter::class,
                 TypesFilter::class,
                 GenresFilter::class,
+                GenresExcludeFilter::class,
                 CountriesFilter::class,
                 StudiosFilter::class,
                 YearFromFilter::class,
@@ -88,7 +90,7 @@ class DoramaController extends Controller
                     'title' => $userFolderFavorite->title,
                 ],
             ],
-            'dataEpisodes' => DoramaResource::collection($episodes),
+            'dataEpisodes' => DoramaEpisodesResource::collection($episodes),
         ]);
     }
 

@@ -6,6 +6,7 @@ import VkLogoSvg from "../../Components/Svg/Auth/VkLogoSvg.vue";
 import axios from "axios";
 import router from "../../router.js";
 import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
+import { push } from 'notivue';
 
 export default {
     name: "ResetPasswordPage",
@@ -36,10 +37,8 @@ export default {
             })
             .catch(error => {
                 if (error.response.status === 422) {
-                    console.log(error);
                     this.errors = error.response.data.errors;
                 }
-                //TODO Уведомление что ошибка
             })
             .finally(() => {
                 this.loading = false;

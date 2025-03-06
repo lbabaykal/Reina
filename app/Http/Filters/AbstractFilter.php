@@ -2,20 +2,17 @@
 
 namespace App\Http\Filters;
 
-use App\Http\Requests\SearchRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 abstract class AbstractFilter implements FilterInterface
 {
-
     public function handle(Builder $builder, \Closure $next)
     {
-
-//        if (isset($request[$this->getName()])) {
         if (array_key_exists($this->getName(), request()->toArray())) {
             $this->applyFilter($builder);
         }
+
         return $next($builder);
     }
 
@@ -23,5 +20,4 @@ abstract class AbstractFilter implements FilterInterface
     {
         return Str::snake(Str::before(class_basename($this), 'Filter'));
     }
-
 }

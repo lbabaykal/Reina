@@ -13,7 +13,6 @@ return new class extends Migration
             $table->string('title', 32);
             $table->unsignedBigInteger('user_id');
             $table->boolean('is_private')->default(true);
-            $table->unsignedBigInteger('number');
             $table->timestamps();
         });
     }

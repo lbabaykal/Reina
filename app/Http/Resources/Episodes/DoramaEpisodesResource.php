@@ -5,7 +5,7 @@ namespace App\Http\Resources\Episodes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DoramaResource extends JsonResource
+class DoramaEpisodesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

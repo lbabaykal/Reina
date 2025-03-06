@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Fields\CountriesFilter;
+use App\Http\Filters\Fields\GenresExcludeFilter;
 use App\Http\Filters\Fields\GenresFilter;
 use App\Http\Filters\Fields\SortingFilter;
 use App\Http\Filters\Fields\StudiosFilter;
@@ -16,7 +17,7 @@ use App\Http\Requests\SearchRequest;
 use App\Http\Resources\Animes\AnimesIndexResource;
 use App\Http\Resources\Animes\AnimesShowResource;
 use App\Http\Resources\Animes\AnimesWatchResource;
-use App\Http\Resources\Episodes\AnimeResource;
+use App\Http\Resources\Episodes\AnimeEpisodesResource;
 use App\Models\Anime;
 use App\Reina;
 use App\Services\AnimesServices;
@@ -34,6 +35,7 @@ class AnimeController extends Controller
                 TitleFilter::class,
                 TypesFilter::class,
                 GenresFilter::class,
+                GenresExcludeFilter::class,
                 CountriesFilter::class,
                 StudiosFilter::class,
                 YearFromFilter::class,
@@ -88,7 +90,7 @@ class AnimeController extends Controller
                     'title' => $userFolderFavorite->title,
                 ],
             ],
-            'dataEpisodes' => AnimeResource::collection($episodes),
+            'dataEpisodes' => AnimeEpisodesResource::collection($episodes),
         ]);
     }
 }

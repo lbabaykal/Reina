@@ -6,6 +6,7 @@ import Favorite from '../../Components/Animes/Modals/Favorite.vue';
 import RatingButton from '../../Components/ui/Buttons/RatingButton.vue';
 import FavoriteButton from '../../Components/ui/Buttons/FavoriteButton.vue';
 import WatchOnlineButton from '../../Components/ui/Buttons/WatchOnlineButton.vue';
+import { push } from 'notivue';
 
 export default {
     name: 'ShowPage',
@@ -76,12 +77,10 @@ export default {
                 .then((response) => {
                     this.dataAnime = response.data.dataAnime;
                     this.dataUserForAnime = response.data.dataUserForAnime;
+                    this.dataLoading = true;
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
-                })
-                .finally(() => {
-                    this.dataLoading = true;
+                    push.error(error.response.data.message);
                 });
         },
         openRatingModal() {

@@ -1,14 +1,15 @@
 <script>
 import StarSvg from '../../Svg/StarSvg.vue';
-import CloseSvg from '../../Svg/CloseSvg.vue';
 import LoadingSvg from '../../Svg/LoadingSvg.vue';
 import SuccessButton from '../../ui/Buttons/SuccessButton.vue';
 import WarningButton from '../../ui/Buttons/WarningButton.vue';
 import DangerButton from '../../ui/Buttons/DangerButton.vue';
+import { push } from 'notivue';
+import ModalCloseButton from '../../ui/Buttons/ModalCloseButton.vue';
 
 export default {
     name: 'Rating',
-    components: { DangerButton, WarningButton, SuccessButton, LoadingSvg, CloseSvg, StarSvg },
+    components: { ModalCloseButton, DangerButton, WarningButton, SuccessButton, LoadingSvg, StarSvg },
     props: {
         doramaId: Number,
         dataUserForDorama: {
@@ -30,18 +31,35 @@ export default {
     methods: {
         addDoramaRating() {
             this.dataLoading = true;
-            axios
-                .post(`/api/doramas/${this.doramaId}/rating`, { assessment: this.assessment })
-                .then((response) => {
-                    this.dataUserForDorama.rating = this.assessment;
-                    this.closeRatingModal();
-                })
-                .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
-                })
-                .finally(() => {
-                    this.dataLoading = false;
-                });
+            if (!this.isRatingUser) {
+                axios
+                    .post(`/api/doramas/${this.doramaId}/rating`, { assessment: this.assessment })
+                    .then((response) => {
+                        this.dataUserForDorama.rating = this.assessment;
+                        this.closeRatingModal();
+                        push.success(response.data);
+                    })
+                    .catch((error) => {
+                        push.error(error.response.data);
+                    })
+                    .finally(() => {
+                        this.dataLoading = false;
+                    });
+            } else {
+                axios
+                    .patch(`/api/doramas/${this.doramaId}/rating`, { assessment: this.assessment })
+                    .then((response) => {
+                        this.dataUserForDorama.rating = this.assessment;
+                        this.closeRatingModal();
+                        push.success(response.data);
+                    })
+                    .catch((error) => {
+                        push.error(error.response.data);
+                    })
+                    .finally(() => {
+                        this.dataLoading = false;
+                    });
+            }
         },
         removeDoramaRating() {
             this.dataLoading = true;
@@ -51,9 +69,10 @@ export default {
                     this.dataUserForDorama.rating = 0;
                     this.assessment = 0;
                     this.closeRatingModal();
+                    push.success(response.data);
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
+                    push.error(error.response.data);
                 })
                 .finally(() => {
                     this.dataLoading = false;
@@ -84,21 +103,19 @@ export default {
             class="fixed top-0 left-0 z-40 flex h-full w-full items-center justify-center overflow-x-hidden overflow-y-auto"
         >
             <div class="shadow-modals max-w-136 min-w-128 rounded-md bg-black/80 select-none">
-                <div class="flex items-center justify-between border-b p-2">
+                <div class="flex items-center justify-between border-b border-gray-400 p-2">
                     <div class="mx-auto truncate pl-8 text-xl text-white">Оценить</div>
-                    <button
-                        type="button"
-                        @click="closeRatingModal"
-                        class="inline-flex cursor-pointer items-center justify-center rounded-sm fill-white p-1 text-sm hover:bg-red-400 hover:fill-black hover:text-black"
-                    >
-                        <CloseSvg classes="size-6" />
-                    </button>
+                    <ModalCloseButton @click="closeRatingModal" />
                 </div>
 
-                <div
-                    class="space-y-2 p-3 text-white"
-                    v-if="!dataLoading"
-                >
+                <div class="relative space-y-2 p-3 text-white">
+                    <div
+                        class="absolute top-0 left-0 flex h-full w-full items-center justify-center bg-black/60"
+                        v-if="dataLoading"
+                    >
+                        <LoadingSvg classes="w-20 fill-violet-500" />
+                    </div>
+
                     <div
                         class="w-full text-center text-lg"
                         v-if="isRatingUser"
@@ -137,14 +154,7 @@ export default {
                     </div>
                 </div>
 
-                <div
-                    v-else
-                    class="flex h-32 items-center justify-center"
-                >
-                    <LoadingSvg classes="w-20 fill-red-500" />
-                </div>
-
-                <div class="flex justify-center border-t border-gray-200 p-3">
+                <div class="flex justify-center border-t border-gray-400 p-3">
                     <WarningButton
                         v-if="isRatingUser"
                         text="Удалить"

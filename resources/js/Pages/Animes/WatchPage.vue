@@ -7,6 +7,7 @@ import Favorite from '../../Components/Animes/Modals/Favorite.vue';
 import FavoriteButton from '../../Components/ui/Buttons/FavoriteButton.vue';
 import RatingButton from '../../Components/ui/Buttons/RatingButton.vue';
 import EpisodesButton from '../../Components/ui/Buttons/EpisodesButton.vue';
+import { push } from 'notivue';
 
 export default {
     name: 'WatchPage',
@@ -58,20 +59,18 @@ export default {
         };
     },
     methods: {
-        getAnimeData() {
+        async getAnimeData() {
             this.dataLoading = false;
-            axios
+            await axios
                 .get(`/api/animes/${this.slug}/watch`)
                 .then((response) => {
                     this.dataAnime = response.data.dataAnime;
                     this.dataUserForAnime = response.data.dataUserForAnime;
                     this.dataEpisodes = response.data.dataEpisodes || [];
+                    this.dataLoading = true;
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
-                })
-                .finally(() => {
-                    this.dataLoading = true;
+                    push.error(error.response.data.message);
                 });
         },
         openRatingModal() {

@@ -1,10 +1,14 @@
 <?php
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,5 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi(); // Sanctum
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (AuthenticationException $e, Request $request) {
+            return response()->json(Lang::get('auth.unauthenticated'), 401);
+        });
     })->create();

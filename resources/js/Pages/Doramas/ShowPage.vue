@@ -6,6 +6,7 @@ import Favorite from '../../Components/Doramas/Modals/Favorite.vue';
 import FavoriteButton from '../../Components/ui/Buttons/FavoriteButton.vue';
 import RatingButton from '../../Components/ui/Buttons/RatingButton.vue';
 import WatchOnlineButton from '../../Components/ui/Buttons/WatchOnlineButton.vue';
+import { push } from 'notivue';
 
 export default {
     name: 'ShowPage',
@@ -78,7 +79,7 @@ export default {
                     this.dataUserForDorama = response.data.dataUserForDorama;
                 })
                 .catch((error) => {
-                    // TODO Уведомление не получилось загрузить данные
+                    push.error(error.response.data.message);
                 })
                 .finally(() => {
                     this.dataLoading = true;

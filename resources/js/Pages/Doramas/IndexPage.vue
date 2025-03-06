@@ -3,6 +3,7 @@ import CardDorama from '../../Components/Doramas/CardDorama.vue';
 import Search from '../../Components/Search.vue';
 import Pagination from '../../Components/Pagination.vue';
 import CardLoading from '../../Components/CardLoading.vue';
+import { push } from 'notivue';
 
 export default {
     name: 'IndexPage',
@@ -25,6 +26,7 @@ export default {
                 title: String,
                 types: Array,
                 genres: Array,
+                genres_exclude: Array,
                 studios: Array,
                 countries: Array,
                 strict_genre: Boolean,
@@ -46,7 +48,7 @@ export default {
                     this.dataLoading = true;
                 })
                 .catch((error) => {
-                    console.log(error.response);
+                    push.error(error.response.data.message);
                 });
         },
         updateSelectFilters(filters) {

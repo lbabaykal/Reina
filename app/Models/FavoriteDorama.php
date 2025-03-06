@@ -9,8 +9,9 @@ class FavoriteDorama extends Model
 {
     protected $fillable = [
         'user_id',
-        'anime_id',
+        'dorama_id',
         'dorama_folder_id',
+        'episode',
     ];
 
     public function user(): BelongsTo
