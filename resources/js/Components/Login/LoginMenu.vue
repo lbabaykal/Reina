@@ -6,6 +6,7 @@ import SearchSvg from '../Svg/SearchSvg.vue';
 import LoginGuest from './LoginGuest.vue';
 import LoginAuth from './LoginAuth.vue';
 import { useAuthStore } from '../../Stores/authStore.js';
+import { push } from 'notivue';
 
 export default {
     name: 'LoginMenu',
@@ -42,7 +43,7 @@ export default {
                     }
                 })
                 .catch((error) => {
-                    //TODO Уведомление что не получилось получить пользователя
+                    push.error(error.response.data);
                 })
                 .finally(() => {
                     this.isLoaderDataUser = false;

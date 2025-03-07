@@ -27,7 +27,7 @@ export default {
 <template>
     <button
         type="button"
-        class="inline-flex min-w-16 cursor-pointer items-center justify-center rounded-sm border-b-2 border-red-500 bg-black px-4 py-2 font-bold text-white shadow-md hover:border-red-600 hover:bg-red-500 hover:text-black disabled:opacity-60"
+        class="flex min-w-16 shrink-0 cursor-pointer items-center justify-center rounded-sm border-b-1 border-red-500 bg-black px-3 py-1.5 font-bold text-white hover:border-red-600 hover:bg-red-500 hover:text-black disabled:opacity-60"
         :disabled="disabledButton"
     >
         <span

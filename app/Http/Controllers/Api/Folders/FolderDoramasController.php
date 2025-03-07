@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Folders;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Folder\DoramaFoldersRequest;
+use App\Http\Requests\FolderRequest;
 use App\Http\Resources\Doramas\DoramasIndexResource;
 use App\Http\Resources\Folders\FolderResource;
 use App\Http\Resources\Folders\FoldersDoramasResource;
@@ -46,11 +46,11 @@ class FolderDoramasController extends Controller
 
     public function show(): AnonymousResourceCollection
     {
-        request()->validate([
+        $validatedFolderId = request()->validate([
             'folder' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        $folderId = request()->input('folder', 0);
+        $folderId = $validatedFolderId['folder'] ?? 0;
 
         if ($folderId > 0) {
             $folderDorama = DoramaFolder::query()->findOrFail($folderId);
@@ -68,14 +68,14 @@ class FolderDoramasController extends Controller
         return DoramasIndexResource::collection($doramas->paginate(Reina::COUNT_ARTICLES_FOLDERS, ['*'], 'page', request()->input('page', 1)));
     }
 
-    public function store(DoramaFoldersRequest $request): JsonResponse
+    public function store(FolderRequest $request): JsonResponse
     {
         Gate::authorize('create', DoramaFolder::class);
 
         $folder = new DoramaFolder;
-        $folder->title = $request->input('title');
+        $folder->title = $request->validated('title');
         $folder->user_id = auth()->id();
-        $folder->is_private = true; // TODO доделать функционал папок
+        $folder->is_private = $request->validated('is_private');
         $folder->save();
 
         return response()->json(Lang::get('reina.folder.created', ['title' => $folder->title]));
@@ -90,11 +90,12 @@ class FolderDoramasController extends Controller
         ]);
     }
 
-    public function update(DoramaFoldersRequest $request, DoramaFolder $folder): JsonResponse
+    public function update(FolderRequest $request, DoramaFolder $folder): JsonResponse
     {
         Gate::authorize('update', $folder);
 
-        $folder->title = $request->input('title'); // TODO доделать функционал папок
+        $folder->title = $request->validated('title');
+        $folder->is_private = $request->validated('is_private');
         $folder->update();
 
         return response()->json(Lang::get('reina.folder.updated', ['title' => $folder->title]));

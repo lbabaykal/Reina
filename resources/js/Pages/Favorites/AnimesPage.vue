@@ -37,7 +37,7 @@ export default {
                     this.dataPagination = response.data.meta;
                 })
                 .catch((error) => {
-                    push.error(error.response.data.message); //TODO уведомление что у пользователя нет прав на просмотр
+                    push.error(error.response.data.message);
                 })
                 .finally(() => {
                     this.dataLoading = true;

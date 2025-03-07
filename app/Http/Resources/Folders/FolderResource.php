@@ -18,7 +18,7 @@ class FolderResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'user_id' => $this->user_id,
-            'is_private' => true,
+            'is_private' => $this->is_private,
         ];
     }
 }

@@ -24,7 +24,8 @@
     --breakpoint-xl: 1280px;
     --breakpoint-2xl: 1536px;
 
-    --shadow-modals: 0 5px 10px 0 rgba(0, 0, 0, 0.7);
+    --shadow-modals: 0 0 20px 0 rgba(0, 0, 0, 1);
+    --shadow-modals-white: 0 0 20px 0 rgba(255, 255, 255, 0.6);
 
     --color-love: #ec6161;
     --color-blackSimple: #24282f;
@@ -35,6 +36,9 @@
     --color-google2: #303134;
     --color-google3: #4d5156;
     --color-google4: #252527;
+    --color-white1: rgb(242, 242, 242);
+    --color-white2: rgb(232, 232, 232);
+    --color-white3: rgb(250, 250, 250);
 
     --spacing-4\.5: 1.125rem;   /* 18px */
     --spacing-15: 3.75rem; /* 60px */

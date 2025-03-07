@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\CacheEnum;
 use App\Models\Dorama;
 use App\Models\DoramaFolder;
+use Illuminate\Database\Eloquent\Collection;
 
 class DoramasServices
 {
@@ -14,12 +15,11 @@ class DoramasServices
     {
         return $this->dorama = cache()->store('redis_doramas')->flexible(CacheEnum::DORAMA->value.$slug, [1200, 1800], function () use ($slug) {
             return Dorama::query()
-//                ->select([])
+//                ->select([])  //TODO написать поля для выборки
                 ->where('id', getIdFromSlug($slug))
                 ->with(['type', 'countries', 'studios', 'genres'])
                 ->firstOrFail();
         });
-
     }
 
     public function ratingUserFor(Dorama|string|null $dorama = null)
@@ -40,7 +40,7 @@ class DoramasServices
             ->value('dorama_folder_id');
     }
 
-    public function foldersUserFor(): \Illuminate\Database\Eloquent\Collection
+    public function foldersUserFor(): Collection
     {
         return DoramaFolder::query()
             ->select(['id', 'title'])

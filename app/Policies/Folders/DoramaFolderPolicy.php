@@ -17,9 +17,11 @@ class DoramaFolderPolicy
 
     public function view(User $user, DoramaFolder $folderDorama): Response
     {
-        return ($folderDorama->user_id == 0 || $folderDorama->user_id === $user->id)
+        return ($folderDorama->user_id == 0
+            || $folderDorama->user_id === $user->id
+            || $folderDorama->is_private)
             ? Response::allow()
-            : Response::denyWithStatus(403);
+            : Response::deny(Lang::get('reina.folder.not_permission_view'));
     }
 
     public function create(User $user): Response

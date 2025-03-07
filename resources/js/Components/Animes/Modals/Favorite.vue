@@ -123,12 +123,12 @@ export default {
             class="fixed top-0 left-0 z-40 flex h-full w-full items-center justify-center overflow-x-hidden overflow-y-auto"
         >
             <div class="shadow-modals max-w-96 min-w-80 rounded-md bg-black/80 select-none">
-                <div class="flex items-center justify-between border-b p-2">
+                <div class="flex items-center justify-between border-b border-gray-400 p-2">
                     <div class="mx-auto truncate pl-8 text-xl text-white">Избранное</div>
                     <ModalCloseButton @click="closeFavoriteModal" />
                 </div>
 
-                <div class="relative space-y-2 p-3">
+                <div class="relative space-y-1.5 p-3">
                     <div
                         class="absolute top-0 left-0 flex h-full w-full items-center justify-center bg-black/60"
                         v-if="dataLoading"
@@ -138,7 +138,7 @@ export default {
 
                     <label
                         v-for="dataFolder in dataUserFolders"
-                        class="my-2 flex cursor-pointer justify-start text-lg"
+                        class="flex cursor-pointer justify-start text-lg"
                     >
                         <input
                             :value="dataFolder.id"
@@ -146,13 +146,15 @@ export default {
                             type="radio"
                             class="peer hidden"
                         />
-                        <span class="flex-grow truncate px-3 font-medium bg-blackActive/70 peer-checked:bg-white peer-checked:text-black rounded-md py-1 hover:bg-red-500/80 hover:text-white">
+                        <span
+                            class="bg-blackActive/70 flex-grow truncate rounded-md px-3 py-1 font-medium peer-checked:bg-white peer-checked:text-black hover:bg-red-500/80 hover:text-white"
+                        >
                             {{ dataFolder.title }}
                         </span>
                     </label>
                 </div>
 
-                <div class="flex justify-center border-t border-gray-200 p-3">
+                <div class="flex justify-center border-t border-gray-400 p-2">
                     <WarningButton
                         v-if="isFavoriteUser"
                         @click="removeAnimeFavorite"

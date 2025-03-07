@@ -54,13 +54,7 @@ trait AnimeAndDoramaTrait
             return null;
         }
 
-        $model = static::query()->where('id', $matches[0])->first($columns);
-
-        if (is_null($model)) {
-            abort(404); // TODO
-        }
-
-        return $model;
+        return static::query()->where('id', $matches[0])->firstOrFail($columns);
     }
 
     public function getPosterUrlAttribute(): string

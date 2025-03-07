@@ -39,7 +39,7 @@ Route::domain(env('APP_URL'))->group(function () {
         Route::get('/{slug}', [AnimeController::class, 'show']);
         Route::get('/{slug}/watch', [AnimeController::class, 'watch']);
 
-        Route::middleware('auth')->group(function () {
+        Route::middleware(['auth', 'throttle:10,1'])->group(function () {
             // Rating
             Route::post('/{id}/rating', [AnimeRatingController::class, 'store']);
             Route::patch('/{id}/rating', [AnimeRatingController::class, 'update']);

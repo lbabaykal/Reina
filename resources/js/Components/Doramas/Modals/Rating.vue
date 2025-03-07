@@ -154,7 +154,7 @@ export default {
                     </div>
                 </div>
 
-                <div class="flex justify-center border-t border-gray-400 p-3">
+                <div class="flex justify-center border-t border-gray-400 p-2">
                     <WarningButton
                         v-if="isRatingUser"
                         text="Удалить"

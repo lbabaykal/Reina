@@ -8,10 +8,11 @@ import PlusSvg from './Svg/PlusSvg.vue';
 import MinusSvg from './Svg/MinusSvg.vue';
 import CircleSvg from './Svg/CircleSvg.vue';
 import { push } from 'notivue';
+import SwitchInput from './ui/Input/SwitchInput.vue';
 
 export default {
     name: 'Search',
-    components: { CircleSvg, MinusSvg, PlusSvg, FilterButton, SortingButton, ToolTip, QuestionMarkSvg, SearchSvg },
+    components: { SwitchInput, CircleSvg, MinusSvg, PlusSvg, FilterButton, SortingButton, ToolTip, QuestionMarkSvg, SearchSvg },
     data() {
         return {
             dataSearch: {
@@ -181,7 +182,7 @@ export default {
                     placeholder="Поиск по ключевым словам..."
                     v-model="selectedSearchData.title"
                     @keydown.enter="routerPush"
-                    class="bg-blackSimple hover:bg-blackActive focus:bg-blackActive h-10 w-144 rounded-s-md border-b border-b-gray-600 px-3 text-center text-lg text-white transition duration-300 focus:border-b-red-400"
+                    class="bg-blackSimple hover:bg-blackActive focus:bg-blackActive h-10 w-144 rounded-s-md border-b border-b-gray-600 px-3 text-center text-white transition duration-300 focus:border-b-red-400"
                 />
 
                 <button
@@ -238,18 +239,10 @@ export default {
                 <div class="bg-blackSimple mx-5 w-64 text-white select-none">
                     <div class="flex flex-row items-center justify-center py-2.5 font-bold">
                         Жанр
-                        <label class="ms-3 inline-flex cursor-pointer items-center">
-                            <input
-                                type="checkbox"
-                                name="strict_genre"
-                                class="peer sr-only"
-                                v-model="selectedSearchData.strict_genre"
-                                @change="routerPush"
-                            />
-                            <span
-                                class="peer relative h-5 w-9 rounded-full bg-red-300 peer-checked:bg-lime-300 after:absolute after:start-[2px] after:top-0.5 after:h-4 after:w-4 after:rounded-full after:border after:border-gray-400 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full"
-                            ></span>
-                        </label>
+                        <SwitchInput
+                            v-model="selectedSearchData.strict_genre"
+                            @change="routerPush"
+                        />
 
                         <ToolTip
                             classes="py-1.5 px-2 bg-gray-600 text-white font-normal text-sm"
@@ -303,18 +296,10 @@ export default {
                 <div class="bg-blackSimple mx-5 w-60 text-white select-none">
                     <div class="flex flex-row items-center justify-center py-2.5 font-bold">
                         Студия
-                        <label class="ms-3 inline-flex cursor-pointer items-center">
-                            <input
-                                type="checkbox"
-                                name="strict_studio"
-                                class="peer sr-only"
-                                v-model="selectedSearchData.strict_studio"
-                                @change="routerPush"
-                            />
-                            <span
-                                class="peer relative h-5 w-9 rounded-full bg-red-300 peer-checked:bg-lime-300 after:absolute after:start-[2px] after:top-0.5 after:h-4 after:w-4 after:rounded-full after:border after:border-gray-400 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full"
-                            ></span>
-                        </label>
+                        <SwitchInput
+                            v-model="selectedSearchData.strict_studio"
+                            @change="routerPush"
+                        />
                         <ToolTip
                             classes="py-1.5 px-2 bg-gray-600 text-white font-normal text-sm"
                             message="Строгий / Нестрогий поиск"

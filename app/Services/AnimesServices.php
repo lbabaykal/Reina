@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\CacheEnum;
 use App\Models\Anime;
 use App\Models\AnimeFolder;
+use Illuminate\Database\Eloquent\Collection;
 
 class AnimesServices
 {
@@ -14,12 +15,11 @@ class AnimesServices
     {
         return $this->anime = cache()->store('redis_animes')->flexible(CacheEnum::ANIME->value.$slug, [1200, 1800], function () use ($slug) {
             return Anime::query()
-//                ->select([])
+//                ->select([]) //TODO написать поля для выборки
                 ->where('id', getIdFromSlug($slug))
                 ->with(['type', 'countries', 'studios', 'genres'])
                 ->firstOrFail();
         });
-
     }
 
     public function ratingUserFor(Anime|string|null $anime = null)
@@ -40,7 +40,7 @@ class AnimesServices
             ->value('anime_folder_id');
     }
 
-    public function foldersUserFor(): \Illuminate\Database\Eloquent\Collection
+    public function foldersUserFor(): Collection
     {
         return AnimeFolder::query()
             ->select(['id', 'title'])

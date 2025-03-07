@@ -2,11 +2,11 @@
 
 /** @noinspection PhpInconsistentReturnPointsInspection */
 
-namespace App\Http\Requests\Folder;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AnimeFoldersRequest extends FormRequest
+class FolderRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -20,19 +20,17 @@ class AnimeFoldersRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->isMethod('POST')) {  // TODO включить правила валидации для создание папок аниме
+        if ($this->isMethod('POST')) {
             return [
                 'title' => ['required', 'string', 'min:2', 'max:32'],
-                //                'is_private' => ['required', 'boolean'],
-                //                'number' => ['required', 'integer', 'min:6'],
+                'is_private' => ['required', 'boolean'],
             ];
         }
 
         if ($this->isMethod('PATCH')) {
             return [
                 'title' => ['required', 'string', 'min:2', 'max:32'],
-                //                'is_private' => ['required', 'boolean'],
-                //                'number' => ['required', 'integer', 'min:6'],
+                'is_private' => ['required', 'boolean'],
             ];
         }
     }

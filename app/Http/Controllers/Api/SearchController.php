@@ -25,7 +25,6 @@ use App\Models\Dorama;
 use App\Models\Genre;
 use App\Models\Studio;
 use App\Models\Type;
-use App\Reina;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Pipeline;
 
