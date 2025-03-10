@@ -16,6 +16,17 @@ class SearchRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation(): void
+    {
+        if (! $this->filled('sorting')) {
+            $this->merge(['sorting' => 'date_added']);
+        }
+
+        if (! $this->filled('page')) {
+            $this->merge(['page' => 1]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -51,16 +62,4 @@ class SearchRequest extends FormRequest
             'page' => ['nullable', 'integer'],
         ];
     }
-
-    public function prepareForValidation(): void
-    {
-        if (! $this->filled('sorting')) {
-            $this->merge(['sorting' => 'date_added']);
-        }
-
-        if (! $this->filled('page')) {
-            $this->merge(['page' => 1]);
-        }
-    }
-
 }

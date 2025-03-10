@@ -62,8 +62,8 @@ export default {
             dataUserForAnime: {
                 rating: Number,
                 favorite: {
-                    id: Number,
-                    title: String,
+                    folder_id: Number,
+                    episode: Number,
                 },
             },
             dataLoading: false,
@@ -98,7 +98,7 @@ export default {
             return this.dataUserForAnime.rating !== 0;
         },
         isFavoriteUser() {
-            return this.dataUserForAnime.favorite.id !== 0;
+            return this.dataUserForAnime.favorite.folder_id !== 0;
         },
     },
     mounted() {

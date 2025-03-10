@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api\Favorite;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Favorite\FavoriteAnimesChangeEpisodeRequest;
 use App\Http\Requests\Favorite\FavoriteAnimesRequest;
 use App\Models\Anime;
-use App\Models\AnimeFolder;
 use App\Models\FavoriteAnime;
+use App\Services\AnimeFolderServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Lang;
 
@@ -14,15 +15,8 @@ class FavoriteAnimeController extends Controller
 {
     public function show(): JsonResponse
     {
-        $foldersUser = AnimeFolder::query()
-            ->select(['id', 'title'])
-            ->where('user_id', auth()->id())
-            ->orWhere('user_id', 0)
-            ->orderBy('id')
-            ->get();
-
         return response()->json([
-            'folders' => $foldersUser,
+            'folders' => new AnimeFolderServices()->foldersUserFor(),
         ]);
     }
 
@@ -33,16 +27,22 @@ class FavoriteAnimeController extends Controller
             ->where('id', $animeId)
             ->firstOrFail();
 
-        $favoriteAnime = new FavoriteAnime([
-            'user_id' => auth()->id(),
-            'anime_id' => $anime->id,
-            'anime_folder_id' => $request->validated('folder_id'),
-            'episode' => 0,
+        $favorite = FavoriteAnime::query()
+            ->updateOrCreate([
+                'user_id' => auth()->id(),
+                'anime_id' => $anime->id,
+            ], [
+                'anime_folder_id' => $request->validated('folder_id'),
+                'episode' => 0,
+            ]);
+
+        return response()->json([
+            'favorite' => [
+                'folder_id' => $favorite->anime_folder_id,
+                'episode' => $favorite->episode,
+            ],
+            'message' => Lang::get('reina.anime.favorite_store'),
         ]);
-
-        $favoriteAnime->save();
-
-        return response()->json(Lang::get('reina.anime.favorite_store'));
     }
 
     public function update(FavoriteAnimesRequest $request, $animeId): JsonResponse
@@ -56,7 +56,9 @@ class FavoriteAnimeController extends Controller
             ->where('user_id', auth()->id())
             ->update(['anime_folder_id' => $request->validated('folder_id')]);
 
-        return response()->json(Lang::get('reina.anime.favorite_update'));
+        return response()->json([
+            'message' => Lang::get('reina.anime.favorite_update'),
+        ]);
     }
 
     public function destroy($animeId): JsonResponse
@@ -70,6 +72,32 @@ class FavoriteAnimeController extends Controller
             ->where('user_id', auth()->id())
             ->delete();
 
-        return response()->json(Lang::get('reina.anime.favorite_destroy'));
+        return response()->json([
+            'message' => Lang::get('reina.anime.favorite_destroy'),
+        ]);
+    }
+
+    public function changeEpisode(FavoriteAnimesChangeEpisodeRequest $request, $animeId): JsonResponse
+    {
+        $anime = Anime::query()
+            ->select(['id', 'slug'])
+            ->where('id', $animeId)
+            ->firstOrFail();
+
+        $favorite = $anime->favorites()
+            ->updateOrCreate([
+                'user_id' => auth()->id(),
+            ], [
+                'anime_folder_id' => $request->validated('folder_id', 1),
+                'episode' => $request->validated('episode'),
+            ]);
+
+        return response()->json([
+            'favorite' => [
+                'folder_id' => $favorite->anime_folder_id,
+                'episode' => $favorite->episode,
+            ],
+            'message' => Lang::get('reina.anime.favorite_change_episode'),
+        ]);
     }
 }

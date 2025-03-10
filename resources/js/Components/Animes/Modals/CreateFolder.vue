@@ -27,10 +27,10 @@ export default {
                 .then((response) => {
                     this.updateFolders();
                     this.closeCreateFolderModal();
-                    push.success(response.data);
+                    push.success(response.data.message);
                 })
                 .catch((error) => {
-                    push.warning(error.response.data);
+                    push.warning(error.response.data.message);
                 })
                 .finally(() => {
                     this.dataLoading = false;

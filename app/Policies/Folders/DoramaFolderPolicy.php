@@ -21,7 +21,7 @@ class DoramaFolderPolicy
             || $folderDorama->user_id === $user->id
             || $folderDorama->is_private)
             ? Response::allow()
-            : Response::deny(Lang::get('reina.folder.not_permission_view'));
+            : Response::deny(['message' => Lang::get('reina.folder.not_permission_view')]);
     }
 
     public function create(User $user): Response
@@ -30,20 +30,20 @@ class DoramaFolderPolicy
 
         return ($countFolders < Reina::COUNT_FOLDERS)
             ? Response::allow()
-            : Response::deny(Lang::get('reina.folder.limit'));
+            : Response::deny(['message' => Lang::get('reina.folder.limit')]);
     }
 
     public function update(User $user, DoramaFolder $folderDorama): Response
     {
         return ($folderDorama->user_id === $user->id)
             ? Response::allow()
-            : Response::deny(Lang::get('reina.folder.is_not_yours'));
+            : Response::deny(['message' => Lang::get('reina.folder.is_not_yours')]);
     }
 
     public function delete(User $user, DoramaFolder $folderDorama): Response
     {
         return ($folderDorama->user_id === $user->id)
             ? Response::allow()
-            : Response::deny(Lang::get('reina.folder.is_not_yours'));
+            : Response::deny(['message' => Lang::get('reina.folder.is_not_yours')]);
     }
 }

@@ -15,7 +15,6 @@ class DoramaFolder extends Model
         'title',
         'user_id',
         'is_private',
-        'number',
     ];
 
     public function user(): BelongsTo

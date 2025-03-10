@@ -28,7 +28,7 @@ export default {
             @click="clickMethod"
             :disabled="!is_rating"
         >
-            <StarSvg :classes="['w-7 h-7 stroke-amber-400 group-hover:fill-amber-400', isRatingUser ? 'fill-amber-400' : 'fill-transparent']" />
+            <StarSvg :classes="['size-7 stroke-amber-400 group-hover:fill-amber-400', isRatingUser ? 'fill-amber-400' : 'fill-transparent']" />
         </button>
     </ToolTip>
 </template>

@@ -13,7 +13,7 @@ export default {
 <template>
     <button
         type="button"
-        class="flex cursor-pointer items-center rounded-sm bg-gray-700/80 px-4 py-3.5 whitespace-nowrap hover:bg-gray-600"
+        class="flex cursor-pointer items-center rounded-sm bg-gray-600/80 px-4 py-3.5 whitespace-nowrap hover:bg-gray-500"
     >
         {{ text }}
         <DownArrowSvg classes="size-4 ms-2.5" />

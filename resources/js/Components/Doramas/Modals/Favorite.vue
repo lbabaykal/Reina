@@ -15,17 +15,17 @@ export default {
         dataUserForDorama: {
             rating: Number,
             favorite: {
-                id: Number,
-                title: String,
+                folder_id: Number,
+                episode: Number,
             },
         },
         isFavoriteUser: Boolean,
     },
     data() {
         return {
-            dataUserFolders: {
-                id: Number,
-                title: String,
+            dataFoldersUser: {
+                folder_id: Number,
+                episode: Number,
             },
             folder_id: 0,
             dataLoading: false,
@@ -38,27 +38,27 @@ export default {
             axios
                 .post('/api/doramas/favorite')
                 .then((response) => {
-                    this.dataUserFolders = response.data.folders;
+                    this.dataFoldersUser = response.data.folders;
                 })
                 .catch((error) => {
-                    push.error(error.response.data);
+                    push.error(error.response.data.message);
                 })
                 .finally(() => {
                     this.dataLoading = false;
                 });
         },
-        addDoramaFavorite() {
+        addOrUpdateDoramaFavorite() {
             this.dataLoading = true;
             if (!this.isFavoriteUser) {
                 axios
                     .post(`/api/doramas/${this.doramaId}/favorite`, { folder_id: this.folder_id })
                     .then((response) => {
-                        this.dataUserForDorama.favorite.id = this.folder_id;
+                        this.dataUserForDorama.favorite = response.data.favorite;
+                        push.success(response.data.message);
                         this.closeFavoriteModal();
-                        push.success(response.data);
                     })
                     .catch((error) => {
-                        push.error(error.response.data);
+                        push.error(error.response.data.message);
                     })
                     .finally(() => {
                         this.dataLoading = false;
@@ -67,36 +67,39 @@ export default {
                 axios
                     .patch(`/api/doramas/${this.doramaId}/favorite`, { folder_id: this.folder_id })
                     .then((response) => {
-                        this.dataUserForDorama.favorite.id = this.folder_id;
+                        this.dataUserForDorama.favorite.folder_id = this.folder_id;
+                        push.success(response.data.message);
                         this.closeFavoriteModal();
-                        push.success(response.data);
                     })
                     .catch((error) => {
-                        push.error(error.response.data);
+                        push.error(error.response.data.message);
                     })
                     .finally(() => {
                         this.dataLoading = false;
                     });
             }
         },
-        removeDoramaFavorite() {
+        deleteDoramaFavorite() {
             this.dataLoading = true;
             axios
                 .delete(`/api/doramas/${this.doramaId}/favorite`)
                 .then((response) => {
-                    this.dataUserForDorama.favorite.id = 0;
+                    this.dataUserForDorama.favorite = {
+                        folder_id: 0,
+                        episode: 0,
+                    };
+                    push.success(response.data.message);
                     this.closeFavoriteModal();
-                    push.success(response.data);
                 })
                 .catch((error) => {
-                    push.error(error.response.data);
+                    push.error(error.response.data.message);
                 })
                 .finally(() => {
                     this.dataLoading = false;
                 });
         },
         openFavoriteModal() {
-            this.folder_id = this.dataUserForDorama.favorite.id;
+            this.folder_id = this.dataUserForDorama.favorite.folder_id;
             this.isFavoriteModalVisible = true;
         },
         closeFavoriteModal() {
@@ -137,7 +140,7 @@ export default {
                     </div>
 
                     <label
-                        v-for="dataFolder in dataUserFolders"
+                        v-for="dataFolder in dataFoldersUser"
                         class="flex cursor-pointer justify-start text-lg"
                     >
                         <input
@@ -157,13 +160,13 @@ export default {
                 <div class="flex justify-center border-t border-gray-400 p-2">
                     <WarningButton
                         v-if="isFavoriteUser"
-                        @click="removeDoramaFavorite"
+                        @click="deleteDoramaFavorite"
                         :disabledButton="dataLoading"
                         class="mx-2"
                     />
 
                     <SuccessButton
-                        @click="addDoramaFavorite"
+                        @click="addOrUpdateDoramaFavorite"
                         :disabledButton="dataLoading"
                         class="mx-2"
                     />

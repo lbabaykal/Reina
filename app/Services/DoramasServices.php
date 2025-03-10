@@ -4,12 +4,15 @@ namespace App\Services;
 
 use App\Enums\CacheEnum;
 use App\Models\Dorama;
-use App\Models\DoramaFolder;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\FavoriteDorama;
 
 class DoramasServices
 {
     private ?Dorama $dorama = null;
+
+    private ?int $ratingUser = null;
+
+    private FavoriteDorama $favoriteUser;
 
     public function dataInCacheBySlug(string $slug)
     {
@@ -22,41 +25,26 @@ class DoramasServices
         });
     }
 
-    public function ratingUserFor(Dorama|string|null $dorama = null)
+    public function ratingUserFor(Dorama|string|null $dorama = null): int
     {
         $this->checkModel($dorama);
 
-        return $this->dorama->ratings()
+        return $this->ratingUser = $this->dorama->ratings()
             ->where('user_id', auth()->id())
             ->value('assessment') ?? 0;
     }
 
-    public function favoriteUserFor(Dorama|string|null $dorama = null)
+    public function favoriteUserFor(Dorama|string|null $dorama = null): FavoriteDorama
     {
         $this->checkModel($dorama);
 
-        return $this->dorama->favorites()
-            ->where('user_id', auth()->id())
-            ->value('dorama_folder_id');
-    }
-
-    public function foldersUserFor(): Collection
-    {
-        return DoramaFolder::query()
-            ->select(['id', 'title'])
-            ->where('user_id', auth()->id())
-            ->orWhere('user_id', 0)
-            ->orderBy('id')
-            ->get();
-    }
-
-    public function userFolderFavorite()
-    {
-        return $this->foldersUserFor()->firstWhere('id', $this->favoriteUserFor())
-            ?? (object) [
-                'id' => 0,
-                'title' => '',
-            ];
+        return $this->favoriteUser = $this->dorama->favorites()
+            ->firstOrNew([
+                'user_id' => auth()->id(),
+            ], [
+                'dorama_folder_id' => 0,
+                'episode' => 0,
+            ]);
     }
 
     public function checkModel(Dorama|string|null $dorama): void

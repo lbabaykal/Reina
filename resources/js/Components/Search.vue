@@ -43,12 +43,6 @@ export default {
         };
     },
     methods: {
-        toggleFiltersMenu() {
-            this.isFiltersMenu = !this.isFiltersMenu;
-        },
-        toggleSorting() {
-            this.isSortingMenu = !this.isSortingMenu;
-        },
         async getSearchData() {
             await axios
                 .get('/api/search-data')
@@ -112,6 +106,12 @@ export default {
             // }
 
             this.$router.push({ query: this.selectedSearchData });
+        },
+        toggleFiltersMenu() {
+            this.isFiltersMenu = !this.isFiltersMenu;
+        },
+        toggleSorting() {
+            this.isSortingMenu = !this.isSortingMenu;
         },
         changeGenres() {
             this.selectedSearchData.genres_exclude = this.selectedSearchData.genres_exclude.filter((genre) => !this.selectedSearchData.genres.includes(genre));

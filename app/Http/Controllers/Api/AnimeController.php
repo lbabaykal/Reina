@@ -52,16 +52,14 @@ class AnimeController extends Controller
         $anime = $animesService->dataInCacheBySlug($slug);
         $ratingUser = $animesService->ratingUserFor();
         $favoriteUser = $animesService->favoriteUserFor();
-        $foldersUser = $animesService->foldersUserFor();
-        $userFolderFavorite = $animesService->userFolderFavorite();
 
         return response()->json([
             'dataAnime' => AnimesShowResource::make($anime),
             'dataUserForAnime' => [
                 'rating' => $ratingUser,
                 'favorite' => [
-                    'id' => $userFolderFavorite->id,
-                    'title' => $userFolderFavorite->title,
+                    'folder_id' => $favoriteUser->anime_folder_id,
+                    'episode' => $favoriteUser->episode,
                 ],
             ],
         ]);
@@ -72,8 +70,6 @@ class AnimeController extends Controller
         $anime = $animesService->dataInCacheBySlug($slug);
         $ratingUser = $animesService->ratingUserFor();
         $favoriteUser = $animesService->favoriteUserFor();
-        $foldersUser = $animesService->foldersUserFor();
-        $userFolderFavorite = $animesService->userFolderFavorite();
 
         /** @var Anime $anime */
         $episodes = $anime->episodes()
@@ -86,8 +82,8 @@ class AnimeController extends Controller
             'dataUserForAnime' => [
                 'rating' => $ratingUser,
                 'favorite' => [
-                    'id' => $userFolderFavorite->id,
-                    'title' => $userFolderFavorite->title,
+                    'folder_id' => $favoriteUser->anime_folder_id,
+                    'episode' => $favoriteUser->episode,
                 ],
             ],
             'dataEpisodes' => AnimeEpisodesResource::collection($episodes),

@@ -48,6 +48,6 @@ class AnimePolicy
     {
         return ($anime->is_rating)
             ? Response::allow()
-            : Response::deny(Lang::get('reina.anime.rating_forbidden'));
+            : Response::deny(['message' => Lang::get('reina.anime.rating_forbidden')]);
     }
 }

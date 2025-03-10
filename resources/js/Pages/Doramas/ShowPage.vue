@@ -62,8 +62,8 @@ export default {
             dataUserForDorama: {
                 rating: Number,
                 favorite: {
-                    id: Number,
-                    title: String,
+                    folder_id: Number,
+                    episode: Number,
                 },
             },
             dataLoading: false,
@@ -77,12 +77,10 @@ export default {
                 .then((response) => {
                     this.dataDorama = response.data.dataDorama;
                     this.dataUserForDorama = response.data.dataUserForDorama;
+                    this.dataLoading = true;
                 })
                 .catch((error) => {
                     push.error(error.response.data.message);
-                })
-                .finally(() => {
-                    this.dataLoading = true;
                 });
         },
         openRatingModal() {
@@ -100,7 +98,7 @@ export default {
             return this.dataUserForDorama.rating !== 0;
         },
         isFavoriteUser() {
-            return this.dataUserForDorama.favorite.id !== 0;
+            return this.dataUserForDorama.favorite.folder_id !== 0;
         },
     },
     mounted() {

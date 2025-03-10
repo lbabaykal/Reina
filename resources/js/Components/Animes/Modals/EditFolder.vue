@@ -32,7 +32,7 @@ export default {
                 })
                 .catch((error) => {
                     this.closeEditFolderModal();
-                    push.warning(error.response.data);
+                    push.warning(error.response.data.message);
                 })
                 .finally(() => {
                     this.dataLoading = false;
@@ -46,7 +46,7 @@ export default {
                     this.dataFolder = response.data.folder;
                 })
                 .catch((error) => {
-                    push.warning(error.response.data);
+                    push.warning(error.response.data.message);
                     this.closeEditFolderModal();
                 })
                 .finally(() => {
@@ -60,10 +60,10 @@ export default {
                 .then((response) => {
                     this.updateFolders();
                     this.closeEditFolderModal();
-                    push.success(response.data);
+                    push.success(response.data.message);
                 })
                 .catch((error) => {
-                    push.warning(error.response.data);
+                    push.warning(error.response.data.message);
                 })
                 .finally(() => {
                     this.dataLoading = false;
@@ -81,10 +81,10 @@ export default {
                             query: { ...this.$route.query, folder: 0 },
                         });
                     }
-                    push.success(response.data);
+                    push.success(response.data.message);
                 })
                 .catch((error) => {
-                    push.warning(error.response.data);
+                    push.warning(error.response.data.message);
                 })
                 .finally(() => {
                     this.dataLoading = false;

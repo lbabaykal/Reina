@@ -15,8 +15,8 @@ export default {
         dataUserForAnime: {
             rating: Number,
             favorite: {
-                id: Number,
-                title: String,
+                folder_id: Number,
+                episode: Number,
             },
         },
         isRatingUser: Boolean,
@@ -29,7 +29,7 @@ export default {
         };
     },
     methods: {
-        addAnimeRating() {
+        addOrUpdateAnimeRating() {
             this.dataLoading = true;
             if (!this.isRatingUser) {
                 axios
@@ -37,10 +37,10 @@ export default {
                     .then((response) => {
                         this.dataUserForAnime.rating = this.assessment;
                         this.closeRatingModal();
-                        push.success(response.data);
+                        push.success(response.data.message);
                     })
                     .catch((error) => {
-                        push.error(error.response.data);
+                        push.error(error.response.data.message);
                     })
                     .finally(() => {
                         this.dataLoading = false;
@@ -51,17 +51,17 @@ export default {
                     .then((response) => {
                         this.dataUserForAnime.rating = this.assessment;
                         this.closeRatingModal();
-                        push.success(response.data);
+                        push.success(response.data.message);
                     })
                     .catch((error) => {
-                        push.error(error.response.data);
+                        push.error(error.response.data.message);
                     })
                     .finally(() => {
                         this.dataLoading = false;
                     });
             }
         },
-        removeAnimeRating() {
+        deleteAnimeRating() {
             this.dataLoading = true;
             axios
                 .delete(`/api/animes/${this.animeId}/rating`)
@@ -69,10 +69,10 @@ export default {
                     this.dataUserForAnime.rating = 0;
                     this.assessment = 0;
                     this.closeRatingModal();
-                    push.success(response.data);
+                    push.success(response.data.message);
                 })
                 .catch((error) => {
-                    push.error(error.response.data);
+                    push.error(error.response.data.message);
                 })
                 .finally(() => {
                     this.dataLoading = false;
@@ -135,20 +135,16 @@ export default {
                             :key="i"
                             class="flex"
                         >
-                            <input
-                                :id="i"
-                                :value="i"
-                                v-model="assessment"
-                                type="radio"
-                                name="rating"
-                                class="peer hidden"
-                            />
-                            <label
-                                :for="i"
-                                class="mx-1.5 flex cursor-pointer flex-col items-center peer-checked:text-red-400 hover:text-yellow-300"
-                            >
-                                <StarSvg class="size-10 p-1" />
-                                <span> {{ i }} </span>
+                            <label class="mx-1.5 flex cursor-pointer flex-col items-center hover:text-yellow-300">
+                                <input
+                                    :value="i"
+                                    v-model="assessment"
+                                    type="radio"
+                                    name="rating"
+                                    class="peer hidden"
+                                />
+                                <StarSvg classes="size-10 p-1 peer-checked:text-red-400" />
+                                <span class="peer-checked:text-red-400"> {{ i }} </span>
                             </label>
                         </div>
                     </div>
@@ -158,14 +154,14 @@ export default {
                     <WarningButton
                         v-if="isRatingUser"
                         text="Удалить"
-                        @click="removeAnimeRating"
+                        @click="deleteAnimeRating"
                         :disabledButton="dataLoading"
                         class="mx-2"
                     />
 
                     <SuccessButton
                         :text="!isRatingUser ? 'Оценить' : 'Изменить'"
-                        @click="addAnimeRating"
+                        @click="addOrUpdateAnimeRating"
                         :disabledButton="dataLoading"
                         class="mx-2"
                     />

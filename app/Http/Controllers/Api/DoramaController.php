@@ -52,16 +52,14 @@ class DoramaController extends Controller
         $dorama = $doramasService->dataInCacheBySlug($slug);
         $ratingUser = $doramasService->ratingUserFor();
         $favoriteUser = $doramasService->favoriteUserFor();
-        $foldersUser = $doramasService->foldersUserFor();
-        $userFolderFavorite = $doramasService->userFolderFavorite();
 
         return response()->json([
             'dataDorama' => DoramasShowResource::make($dorama),
             'dataUserForDorama' => [
                 'rating' => $ratingUser,
                 'favorite' => [
-                    'id' => $userFolderFavorite->id,
-                    'title' => $userFolderFavorite->title,
+                    'folder_id' => $favoriteUser->dorama_folder_id,
+                    'episode' => $favoriteUser->episode,
                 ],
             ],
         ]);
@@ -72,8 +70,6 @@ class DoramaController extends Controller
         $dorama = $doramasService->dataInCacheBySlug($slug);
         $ratingUser = $doramasService->ratingUserFor();
         $favoriteUser = $doramasService->favoriteUserFor();
-        $foldersUser = $doramasService->foldersUserFor();
-        $userFolderFavorite = $doramasService->userFolderFavorite();
 
         /** @var Dorama $dorama */
         $episodes = $dorama->episodes()
@@ -86,12 +82,11 @@ class DoramaController extends Controller
             'dataUserForDorama' => [
                 'rating' => $ratingUser,
                 'favorite' => [
-                    'id' => $userFolderFavorite->id,
-                    'title' => $userFolderFavorite->title,
+                    'folder_id' => $favoriteUser->dorama_folder_id,
+                    'episode' => $favoriteUser->episode,
                 ],
             ],
             'dataEpisodes' => DoramaEpisodesResource::collection($episodes),
         ]);
     }
-
 }

@@ -28,7 +28,9 @@ class DoramaRatingController extends Controller
 
         $dorama->ratings()->save($doramaRating);
 
-        return response()->json(Lang::get('reina.dorama.rating_store'));
+        return response()->json([
+            'message' => Lang::get('reina.dorama.rating_store'),
+        ]);
     }
 
     public function update(RatingRequest $request, $doramaId): JsonResponse
@@ -44,7 +46,9 @@ class DoramaRatingController extends Controller
             ->where('user_id', auth()->id())
             ->update(['assessment' => $request->validated('assessment')]);
 
-        return response()->json(Lang::get('reina.dorama.rating_update'));
+        return response()->json([
+            'message' => Lang::get('reina.dorama.rating_update'),
+        ]);
     }
 
     public function destroy($doramaId): JsonResponse
@@ -58,6 +62,8 @@ class DoramaRatingController extends Controller
             ->where('user_id', auth()->id())
             ->delete();
 
-        return response()->json(Lang::get('reina.dorama.rating_destroy'));
+        return response()->json([
+            'message' => Lang::get('reina.dorama.rating_destroy'),
+        ]);
     }
 }

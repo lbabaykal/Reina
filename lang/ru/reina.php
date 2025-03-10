@@ -13,6 +13,7 @@ return [
         'favorite_store' => 'Аниме добавлено в избранное.',
         'favorite_update' => 'Аниме обновлено в избранном.',
         'favorite_destroy' => 'Аниме удалено из избранного.',
+        'favorite_change_episode' => 'Избранный эпизод обновлён.',
     ],
     'dorama' => [
         'rating_store' => 'Оценка к дораме добавлена.',
@@ -22,6 +23,7 @@ return [
         'favorite_store' => 'Дорама добавлена в избранное.',
         'favorite_update' => 'Дорама обновлена в избранном.',
         'favorite_destroy' => 'Дорама удалена из избранного.',
+        'favorite_change_episode' => 'Избранный эпизод обновлён.',
     ],
     'folder' => [
         'created' => 'Папка :title успешно создана.',
@@ -31,5 +33,4 @@ return [
         'is_not_yours' => 'Вы не являетесь владельцем этой папки.',
         'limit' => 'Нельзя создавать больше '.Reina::COUNT_FOLDERS.' папок.',
     ],
-
 ];

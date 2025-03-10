@@ -7,11 +7,12 @@ import Favorite from '../../Components/Animes/Modals/Favorite.vue';
 import FavoriteButton from '../../Components/ui/Buttons/FavoriteButton.vue';
 import RatingButton from '../../Components/ui/Buttons/RatingButton.vue';
 import EpisodesButton from '../../Components/ui/Buttons/EpisodesButton.vue';
+import CheckSvg from '../../Components/Svg/CheckSvg.vue';
 import { push } from 'notivue';
 
 export default {
     name: 'WatchPage',
-    components: { EpisodesButton, RatingButton, FavoriteButton, Favorite, FavoriteSvg, LoadingSvg, Rating, StarSvg },
+    components: { CheckSvg, EpisodesButton, RatingButton, FavoriteButton, Favorite, FavoriteSvg, LoadingSvg, Rating, StarSvg },
     props: {
         slug: String,
     },
@@ -46,16 +47,13 @@ export default {
             dataUserForAnime: {
                 rating: Number,
                 favorite: {
-                    id: Number,
-                    title: String,
+                    folder_id: 0,
+                    episode: 0,
                 },
             },
             dataEpisodes: [],
             dataLoading: false,
-            episodesMenu: {
-                type: Boolean,
-                default: true,
-            },
+            episodesMenu: true,
         };
     },
     methods: {
@@ -71,6 +69,17 @@ export default {
                 })
                 .catch((error) => {
                     push.error(error.response.data.message);
+                });
+        },
+        async changeFavoriteEpisode(episode) {
+            axios
+                .post(`/api/animes/${this.dataAnime.id}/favorite-change`, { folder_id: this.dataUserForAnime.favorite.folder_id, episode: episode })
+                .then((response) => {
+                    this.dataUserForAnime.favorite = response.data.favorite;
+                    push.success(response.data.message);
+                })
+                .catch((error) => {
+                    push.error(error.response.data);
                 });
         },
         openRatingModal() {
@@ -91,7 +100,22 @@ export default {
             return this.dataUserForAnime.rating !== 0;
         },
         isFavoriteUser() {
-            return this.dataUserForAnime.favorite.id !== 0;
+            return this.dataUserForAnime.favorite.folder_id !== 0;
+        },
+        isFavoriteEpisode() {
+            return (value) => {
+                return value === this.dataUserForAnime.favorite.episode;
+            };
+        },
+        isCheckedEpisode() {
+            return (value) => {
+                return value < this.dataUserForAnime.favorite.episode;
+            };
+        },
+        isUncheckedEpisode() {
+            return (value) => {
+                return value > this.dataUserForAnime.favorite.episode;
+            };
         },
     },
     mounted() {
@@ -185,11 +209,9 @@ export default {
 
         <div class="w-90% mx-auto mt-2.5 flex flex-row justify-center px-5">
             <div class="w-full max-w-360 min-w-120 overflow-hidden rounded-lg bg-lime-600">
-                <iframe
-                    class="aspect-16/9 w-full"
-                    src="https://www.youtube.com/embed/oEJVq2Cpg3k"
-                    allowfullscreen
-                ></iframe>
+
+                kek
+
             </div>
 
             <div
@@ -202,9 +224,31 @@ export default {
                 >
                     <div
                         v-for="(dataEpisode, index) in dataEpisodes"
-                        class="bg-blackSimple my-1.5 block cursor-pointer truncate rounded-md p-3 hover:bg-gray-100 hover:text-black"
+                        class="bg-blackSimple my-1.5 cursor-pointer rounded-md px-3 py-2 hover:bg-gray-100 hover:text-black"
                     >
-                        {{ dataEpisode.number + '. ' + dataEpisode.title_ru }}
+                        <div class="flex flex-row">
+                            <FavoriteSvg
+                                v-if="isFavoriteEpisode(dataEpisode.number)"
+                                classes="size-6 stroke-red-500 hover:fill-red-500 fill-red-500"
+                                @click="changeFavoriteEpisode(dataEpisode.number)"
+                            />
+
+                            <CheckSvg
+                                v-if="isCheckedEpisode(dataEpisode.number)"
+                                classes="size-6 stroke-lime-500 fill-lime-500 hover:stroke-rose-500 hover:fill-rose-500"
+                                @click="changeFavoriteEpisode(dataEpisode.number)"
+                            />
+
+                            <FavoriteSvg
+                                v-if="isUncheckedEpisode(dataEpisode.number)"
+                                classes="size-6 stroke-red-500 hover:fill-red-500 fill-transparent"
+                                @click="changeFavoriteEpisode(dataEpisode.number)"
+                            />
+
+                            <div class="ml-2 truncate">
+                                {{ dataEpisode.number + '. ' + dataEpisode.title_ru }}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div

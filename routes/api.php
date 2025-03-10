@@ -39,7 +39,7 @@ Route::domain(env('APP_URL'))->group(function () {
         Route::get('/{slug}', [AnimeController::class, 'show']);
         Route::get('/{slug}/watch', [AnimeController::class, 'watch']);
 
-        Route::middleware(['auth', 'throttle:10,1'])->group(function () {
+        Route::middleware(['auth', 'throttle:20,1'])->group(function () {
             // Rating
             Route::post('/{id}/rating', [AnimeRatingController::class, 'store']);
             Route::patch('/{id}/rating', [AnimeRatingController::class, 'update']);
@@ -49,6 +49,7 @@ Route::domain(env('APP_URL'))->group(function () {
             Route::post('/{id}/favorite', [FavoriteAnimeController::class, 'store']);
             Route::patch('/{id}/favorite', [FavoriteAnimeController::class, 'update']);
             Route::delete('/{id}/favorite', [FavoriteAnimeController::class, 'destroy']);
+            Route::post('/{id}/favorite-change', [FavoriteAnimeController::class, 'changeEpisode']);
         });
     });
 
@@ -68,6 +69,7 @@ Route::domain(env('APP_URL'))->group(function () {
             Route::post('/{id}/favorite', [FavoriteDoramaController::class, 'store']);
             Route::patch('/{id}/favorite', [FavoriteDoramaController::class, 'update']);
             Route::delete('/{id}/favorite', [FavoriteDoramaController::class, 'destroy']);
+            Route::post('/{id}/favorite-change', [FavoriteDoramaController::class, 'changeEpisode']);
         });
     });
 

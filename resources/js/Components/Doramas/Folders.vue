@@ -30,12 +30,10 @@ export default {
                 .then(response => {
                     this.dataAllUserFolders = response.data.allUserFolders;
                     this.totalFavorites = response.data.totalFavorites;
+                    this.dataFoldersLoading = false;
                 })
                 .catch(error => {
-                    console.log(error.response)
-                })
-                .finally(() => {
-                    this.dataFoldersLoading = false;
+                    console.log(error.response.message)
                 });
         },
         updateSelectedFolder() {

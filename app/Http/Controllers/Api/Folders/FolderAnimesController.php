@@ -78,7 +78,9 @@ class FolderAnimesController extends Controller
         $folder->is_private = $request->validated('is_private');
         $folder->save();
 
-        return response()->json(Lang::get('reina.folder.created', ['title' => $folder->title]));
+        return response()->json([
+            'message' => Lang::get('reina.folder.created', ['title' => $folder->title]),
+        ]);
     }
 
     public function edit(AnimeFolder $folder): JsonResponse
@@ -98,7 +100,9 @@ class FolderAnimesController extends Controller
         $folder->is_private = $request->validated('is_private');
         $folder->update();
 
-        return response()->json(Lang::get('reina.folder.updated', ['title' => $folder->title]));
+        return response()->json([
+            'message' => Lang::get('reina.folder.updated', ['title' => $folder->title]),
+        ]);
     }
 
     public function destroy(AnimeFolder $folder): JsonResponse
@@ -107,6 +111,8 @@ class FolderAnimesController extends Controller
 
         $folder->delete();
 
-        return response()->json(Lang::get('reina.folder.deleted', ['title' => $folder->title]));
+        return response()->json([
+            'message' => Lang::get('reina.folder.deleted', ['title' => $folder->title]),
+        ]);
     }
 }

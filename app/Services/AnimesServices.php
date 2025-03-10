@@ -4,12 +4,15 @@ namespace App\Services;
 
 use App\Enums\CacheEnum;
 use App\Models\Anime;
-use App\Models\AnimeFolder;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\FavoriteAnime;
 
 class AnimesServices
 {
     private ?Anime $anime = null;
+
+    private ?int $ratingUser = null;
+
+    private FavoriteAnime $favoriteUser;
 
     public function dataInCacheBySlug(string $slug)
     {
@@ -22,41 +25,26 @@ class AnimesServices
         });
     }
 
-    public function ratingUserFor(Anime|string|null $anime = null)
+    public function ratingUserFor(Anime|string|null $anime = null): int
     {
         $this->checkModel($anime);
 
-        return $this->anime->ratings()
+        return $this->ratingUser = $this->anime->ratings()
             ->where('user_id', auth()->id())
             ->value('assessment') ?? 0;
     }
 
-    public function favoriteUserFor(Anime|string|null $anime = null)
+    public function favoriteUserFor(Anime|string|null $anime = null): FavoriteAnime
     {
         $this->checkModel($anime);
 
-        return $this->anime->favorites()
-            ->where('user_id', auth()->id())
-            ->value('anime_folder_id');
-    }
-
-    public function foldersUserFor(): Collection
-    {
-        return AnimeFolder::query()
-            ->select(['id', 'title'])
-            ->where('user_id', auth()->id())
-            ->orWhere('user_id', 0)
-            ->orderBy('id')
-            ->get();
-    }
-
-    public function userFolderFavorite()
-    {
-        return $this->foldersUserFor()->firstWhere('id', $this->favoriteUserFor())
-            ?? (object) [
-                'id' => 0,
-                'title' => '',
-            ];
+        return $this->favoriteUser = $this->anime->favorites()
+            ->firstOrNew([
+                'user_id' => auth()->id(),
+            ], [
+                'anime_folder_id' => 0,
+                'episode' => 0,
+            ]);
     }
 
     public function checkModel(Anime|string|null $anime): void
