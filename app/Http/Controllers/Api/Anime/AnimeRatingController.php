@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Rating;
+namespace App\Http\Controllers\Api\Anime;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RatingRequest;
@@ -28,9 +28,7 @@ class AnimeRatingController extends Controller
 
         $anime->ratings()->save($animeRating);
 
-        return response()->json([
-            'message' => Lang::get('reina.anime.rating_store'),
-        ]);
+        return response()->json(Lang::get('reina.anime.rating_store'));
     }
 
     public function update(RatingRequest $request, $animeId): JsonResponse
@@ -46,9 +44,7 @@ class AnimeRatingController extends Controller
             ->where('user_id', auth()->id())
             ->update(['assessment' => $request->validated('assessment')]);
 
-        return response()->json([
-            'message' => Lang::get('reina.anime.rating_update'),
-        ]);
+        return response()->json(Lang::get('reina.anime.rating_update'));
     }
 
     public function destroy($animeId): JsonResponse
@@ -62,8 +58,6 @@ class AnimeRatingController extends Controller
             ->where('user_id', auth()->id())
             ->delete();
 
-        return response()->json([
-            'message' => Lang::get('reina.anime.rating_destroy'),
-        ]);
+        return response()->json(Lang::get('reina.anime.rating_destroy'));
     }
 }

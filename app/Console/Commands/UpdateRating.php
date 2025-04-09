@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\CacheEnum;
 use App\Models\Anime;
 use App\Models\Dorama;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 
 class UpdateRating extends Command
 {
@@ -42,8 +42,8 @@ class UpdateRating extends Command
         }
         echo 'Рейтинг Дорам обновлён.'.PHP_EOL;
 
-        Cache::store('redis_animes')->forget('main_animes');
-        Cache::store('redis_doramas')->forget('main_doramas');
+        cache()->store(CacheEnum::ANIMES_STORE->value)->forget(CacheEnum::MAIN_ANIMES->value);
+        cache()->store(CacheEnum::DORAMAS_STORE->value)->forget(CacheEnum::MAIN_DORAMAS->value);
 
         echo 'Кэш Аниме и Дорам сброшен.'.PHP_EOL;
 

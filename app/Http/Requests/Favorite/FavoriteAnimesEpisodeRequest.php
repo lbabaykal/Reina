@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\Rule;
 
-class FavoriteAnimesChangeEpisodeRequest extends FormRequest
+class FavoriteAnimesEpisodeRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -20,11 +20,6 @@ class FavoriteAnimesChangeEpisodeRequest extends FormRequest
         }
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -32,7 +27,7 @@ class FavoriteAnimesChangeEpisodeRequest extends FormRequest
                 Rule::exists('anime_folders', 'id')
                     ->whereIn('user_id', [0, auth()->id()]),
             ],
-            'episode' => ['required', 'integer'],
+            'episode_id' => ['required', 'exists:anime_episodes,id'],
         ];
     }
 
@@ -40,6 +35,7 @@ class FavoriteAnimesChangeEpisodeRequest extends FormRequest
     {
         return [
             'folder_id.exists' => Lang::get('reina.folder.is_not_yours'),
+            'episode_id.exists' => Lang::get('reina.episode.no_exists'),
         ];
     }
 }

@@ -15,14 +15,14 @@ export default {
         :class="classes"
         class="shrink-0"
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 16 16"
+        viewBox="0 0 18 18"
         fill="currentColor"
         stroke="currentColor"
     >
         <circle
-            cx="8"
-            cy="8"
-            r="4"
+            cx="9"
+            cy="9"
+            r="5"
         />
     </svg>
 </template>

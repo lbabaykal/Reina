@@ -21,3 +21,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/_docker/data_postgres/*
+/_docker/data_redis/*

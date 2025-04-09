@@ -6,6 +6,7 @@ import PenSvg from "../Svg/PenSvg.vue";
 import Favorite from "./Modals/Favorite.vue";
 import CreateFolder from "./Modals/CreateFolder.vue";
 import EditFolder from "./Modals/EditFolder.vue";
+import { push } from 'notivue';
 
 export default {
     name: "Folders",
@@ -33,7 +34,7 @@ export default {
                     this.dataFoldersLoading = false;
                 })
                 .catch(error => {
-                    console.log(error.response.message)
+                    push.warning(error.response.data);
                 });
         },
         updateSelectedFolder() {

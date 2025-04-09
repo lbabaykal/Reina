@@ -11,7 +11,6 @@ return new class extends Migration
     {
         Schema::create('anime_episodes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('number');
             $table->foreignIdFor(\App\Models\Anime::class)
                 ->constrained()
                 ->cascadeOnUpdate()

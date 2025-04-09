@@ -2,12 +2,15 @@
 
 namespace App\Traits;
 
+use App\Models\Franchise;
 use App\Models\Genre;
 use App\Models\Scopes\PublishedScope;
 use App\Models\Studio;
 use App\Models\Type;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -36,6 +39,11 @@ trait AnimeAndDoramaTrait
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(Genre::class);
+    }
+
+    public function franchise(): MorphToMany
+    {
+        return $this->morphToMany(Franchise::class, 'franchiseable');
     }
 
     public function getSlugOptions(): SlugOptions

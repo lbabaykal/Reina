@@ -1,64 +1,28 @@
 <script>
 import SubscribeSvg from '../Svg/SubscribeSvg.vue';
-import SubscribeBackgroundSvg from '../Svg/SubscribeBackgroundSvg.vue';
 import LoginLoading from './LoginLoading.vue';
 import SearchSvg from '../Svg/SearchSvg.vue';
 import LoginGuest from './LoginGuest.vue';
 import LoginAuth from './LoginAuth.vue';
 import { useAuthStore } from '../../Stores/authStore.js';
-import { push } from 'notivue';
+import SwitchTheme from '../SwitchTheme.vue';
 
 export default {
     name: 'LoginMenu',
-    components: { LoginAuth, LoginGuest, LoginLoading, SubscribeBackgroundSvg, SubscribeSvg, SearchSvg },
+    components: { SwitchTheme, LoginAuth, LoginGuest, LoginLoading, SubscribeSvg, SearchSvg },
     data() {
         return {
-            dataUser: {
-                id: null,
-                avatar: null,
-                name: null,
-            },
-            isLoaderDataUser: true,
             authStore: useAuthStore(),
         };
-    },
-    methods: {
-        getUser() {
-            axios
-                .get('/api/user-data')
-                .then((response) => {
-                    if (response.data.authenticated === true) {
-                        this.dataUser.id = response.data.user.id;
-                        this.dataUser.avatar = response.data.user.avatar;
-                        this.dataUser.name = response.data.user.name;
-
-                        const authData = {
-                            id: response.data.user.id,
-                            avatar: response.data.user.avatar,
-                            name: response.data.user.name,
-                        };
-                        this.authStore.storeUser(authData);
-                    } else {
-                        this.authStore.destroyUser();
-                    }
-                })
-                .catch((error) => {
-                    push.error(error.response.data);
-                })
-                .finally(() => {
-                    this.isLoaderDataUser = false;
-                });
-        },
     },
     computed: {
         isAuthenticated() {
             return this.authStore.isAuthenticated;
         },
+        isUserDataLoaded() {
+            return this.authStore.isUserDataLoaded;
+        },
     },
-    mounted() {
-        this.getUser();
-    },
-    watch: {},
 };
 </script>
 
@@ -67,28 +31,24 @@ export default {
         <div class="flex flex-row items-center">
             <router-link
                 :to="{ name: 'search' }"
-                class="mx-6 flex items-center justify-center duration-200 hover:text-red-500"
+                class="mx-4 flex items-center justify-center rounded-full bg-black/60 p-0.5 text-violet-400 shadow-sm shadow-violet-400 transition-all duration-300 hover:bg-violet-400 hover:text-white dark:hover:bg-violet-400 dark:hover:text-white"
             >
-                <SearchSvg classes="h-8 w-8 drop-shadow-[0_0_8px_rgba(0,0,0,1)] hover:drop-shadow-[0_0_8px_rgba(255,0,0,1)]" />
+                <SearchSvg classes="size-8" />
             </router-link>
+
             <router-link
                 :to="{ name: 'subscription' }"
-                class="mr-6 flex items-center justify-center drop-shadow-[0_0_6px_rgba(0,0,0,0.5)] duration-200 hover:text-red-500 hover:drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]"
+                class="mr-4 flex items-center justify-center rounded-full bg-black/60 px-2 py-1 text-amber-200 shadow-sm shadow-amber-200 duration-300 hover:bg-black dark:hover:bg-amber-200 dark:hover:text-black"
             >
-                <SubscribeSvg classes="w-9 h-9"></SubscribeSvg>
-
-                <div class="text-md flex h-full w-28 items-center justify-center text-white">
-                    <div class="z-10 text-white">Подписка</div>
-                    <SubscribeBackgroundSvg class="absolute w-28 text-[#ec6161]" />
-                </div>
+                <SubscribeSvg classes="size-7"></SubscribeSvg>
+                <div class="pr-3 pl-2 font-semibold">Подписка</div>
             </router-link>
 
-            <LoginLoading v-if="isLoaderDataUser" />
-            <LoginGuest v-if="!isLoaderDataUser && !isAuthenticated" />
-            <LoginAuth
-                v-if="!isLoaderDataUser && isAuthenticated"
-                :dataUser="dataUser"
-            />
+            <SwitchTheme class="mr-4" />
+
+            <LoginLoading v-if="!isUserDataLoaded" />
+            <LoginGuest v-if="isUserDataLoaded && !isAuthenticated" />
+            <LoginAuth v-if="isUserDataLoaded && isAuthenticated" />
         </div>
     </div>
 </template>

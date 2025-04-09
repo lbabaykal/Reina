@@ -14,7 +14,6 @@ class DoramaEpisode extends Model
     use HasFactory;
 
     protected $fillable = [
-        'number',
         'dorama_id',
         'title_org',
         'title_ru',

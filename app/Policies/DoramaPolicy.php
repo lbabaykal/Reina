@@ -49,6 +49,6 @@ class DoramaPolicy
     {
         return ($dorama->is_rating)
             ? Response::allow()
-            : Response::deny(['message' => Lang::get('reina.dorama.rating_forbidden')]);
+            : Response::deny(Lang::get('reina.dorama.rating_forbidden'));
     }
 }

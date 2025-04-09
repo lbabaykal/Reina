@@ -13,7 +13,8 @@ return [
         'favorite_store' => 'Аниме добавлено в избранное.',
         'favorite_update' => 'Аниме обновлено в избранном.',
         'favorite_destroy' => 'Аниме удалено из избранного.',
-        'favorite_change_episode' => 'Избранный эпизод обновлён.',
+        'favorite_remember_episode' => 'Эпизод обновлён в избранном.',
+        'favorite_forget_episode' => 'Эпизод удалён из избранного.',
     ],
     'dorama' => [
         'rating_store' => 'Оценка к дораме добавлена.',
@@ -23,7 +24,8 @@ return [
         'favorite_store' => 'Дорама добавлена в избранное.',
         'favorite_update' => 'Дорама обновлена в избранном.',
         'favorite_destroy' => 'Дорама удалена из избранного.',
-        'favorite_change_episode' => 'Избранный эпизод обновлён.',
+        'favorite_remember_episode' => 'Эпизод обновлён в избранном.',
+        'favorite_forget_episode' => 'Эпизод удалён из избранного.',
     ],
     'folder' => [
         'created' => 'Папка :title успешно создана.',
@@ -33,4 +35,16 @@ return [
         'is_not_yours' => 'Вы не являетесь владельцем этой папки.',
         'limit' => 'Нельзя создавать больше '.Reina::COUNT_FOLDERS.' папок.',
     ],
+    'episode' => [
+        'no_exists' => 'Такого эпизода не существует.',
+    ],
+    'sort' => [
+        'by_update_date' => 'По дате обновления',
+        'by_rating' => 'По рейтингу',
+        'by_release_date_as' => 'По дате выхода ▲',
+        'by_release_date_desc' => 'По дате выхода ▼',
+    ],
 ];
+
+
+

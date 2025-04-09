@@ -73,13 +73,20 @@ export default {
 
             this.selectedSearchData = {
                 page: Number(query.page) || 1,
-                types: Array.isArray(query.types) ? query.types : query.types != null ? [query.types] : [],
-                genres: Array.isArray(query.genres) ? query.genres : query.genres != null ? [query.genres] : [],
-                genres_exclude: Array.isArray(query.genres_exclude) ? query.genres_exclude : query.genres_exclude != null ? [query.genres_exclude] : [],
-                // genres: query.genres ? query.genres.split(',') : [],
-                // genres_exclude: query.genres_exclude ? query.genres_exclude.split(',') : [],
-                studios: Array.isArray(query.studios) ? query.studios : query.studios != null ? [query.studios] : [],
-                countries: Array.isArray(query.countries) ? query.countries : query.countries != null ? [query.countries] : [],
+
+                //  In string URL
+                types: query.types && typeof query.types === 'string' ? query.types.split(',') : [],
+                genres: query.genres && typeof query.genres === 'string' ? query.genres.split(',') : [],
+                genres_exclude: query.genres_exclude && typeof query.genres_exclude === 'string' ? query.genres_exclude.split(',') : [],
+                studios: query.studios && typeof query.studios === 'string' ? query.studios.split(',') : [],
+                countries: query.countries && typeof query.countries === 'string' ? query.countries.split(',') : [],
+
+                //  In Array URL
+                // types: Array.isArray(query.types) ? query.types : query.types != null ? [query.types] : [],
+                // genres: Array.isArray(query.genres) ? query.genres : query.genres != null ? [query.genres] : [],
+                // genres_exclude: Array.isArray(query.genres_exclude) ? query.genres_exclude : query.genres_exclude != null ? [query.genres_exclude] : [],
+                // studios: Array.isArray(query.studios) ? query.studios : query.studios != null ? [query.studios] : [],
+                // countries: Array.isArray(query.countries) ? query.countries : query.countries != null ? [query.countries] : [],
                 title: query.title || '',
                 strict_genre: query.strict_genre === 'true',
                 strict_studio: query.strict_studio === 'true',
@@ -97,15 +104,27 @@ export default {
                 this.selectedSearchData.page = 1;
             }
 
-            // const query = { ...this.selectedSearchData };
-            // if (Array.isArray(query.genres)) {
-            //     query.genres = query.genres.join(',');
-            // }
-            // if (Array.isArray(query.genres_exclude)) {
-            //     query.genres_exclude = query.genres_exclude.join(',');
-            // }
+            //  In string URL
+            const query = { ...this.selectedSearchData };
+            if (Array.isArray(query.types) && query.types.length !== 0) {
+                query.types = query.types.join(',');
+            }
+            if (Array.isArray(query.genres) && query.genres.length !== 0) {
+                query.genres = query.genres.join(',');
+            }
+            if (Array.isArray(query.genres_exclude) && query.genres_exclude.length !== 0) {
+                query.genres_exclude = query.genres_exclude.join(',');
+            }
+            if (Array.isArray(query.studios) && query.studios.length !== 0) {
+                query.studios = query.studios.join(',');
+            }
+            if (Array.isArray(query.countries) && query.countries.length !== 0) {
+                query.countries = query.countries.join(',');
+            }
+            this.$router.push({ query: query });
 
-            this.$router.push({ query: this.selectedSearchData });
+            //  In Array URL
+            // this.$router.push({ query: this.selectedSearchData });
         },
         toggleFiltersMenu() {
             this.isFiltersMenu = !this.isFiltersMenu;
@@ -138,7 +157,7 @@ export default {
 
 <template>
     <div class="w-full">
-        <nav class="flex flex-row justify-between px-4 py-2.5">
+        <nav class="flex flex-row justify-between m-4">
             <div class="relative">
                 <SortingButton
                     @click="toggleSorting"
@@ -148,13 +167,15 @@ export default {
 
                 <div
                     v-show="isSortingMenu"
-                    class="bg-blackSimple shadow-modals absolute z-20 mt-2 w-60 overflow-hidden rounded-sm text-white select-none"
+                    class="dark:bg-blackSimple bg-whiteSimple dark:border-blackActive border-whiteActive absolute z-20 mt-4 w-60 overflow-hidden rounded-md border-2 shadow-md select-none"
                 >
                     <div
                         v-for="dataSorting in dataSearch.sorting"
                         :key="dataSorting.id"
                     >
-                        <label class="hover:bg-blackActive flex items-center rounded-sm ps-2">
+                        <label
+                            class="bg-whiteSimple dark:bg-blackSimple hover:bg-whiteActive dark:hover:bg-blackActive flex items-center ps-2 text-black dark:text-white"
+                        >
                             <input
                                 type="radio"
                                 name="sorting"
@@ -182,12 +203,12 @@ export default {
                     placeholder="Поиск по ключевым словам..."
                     v-model="selectedSearchData.title"
                     @keydown.enter="routerPush"
-                    class="bg-blackSimple hover:bg-blackActive focus:bg-blackActive h-10 w-144 rounded-s-md border-b border-b-gray-600 px-3 text-center text-white transition duration-300 focus:border-b-red-400"
+                    class="dark:bg-blackSimple dark:hover:bg-blackActive dark:focus:bg-blackActive hover:bg-whiteActive focus:bg-whiteActive bg-whiteSimple h-10 w-144 rounded-s-md border-b border-b-gray-600 px-3 text-center text-black shadow-md transition duration-300 hover:text-black focus:border-b-red-400 focus:text-black dark:text-white dark:hover:text-white dark:focus:text-white"
                 />
 
                 <button
                     @click="routerPush"
-                    class="h-10 cursor-pointer rounded-e-md border border-red-400 px-5 text-red-400 hover:bg-red-400 hover:text-white"
+                    class="h-10 cursor-pointer rounded-e-md border border-red-400 bg-red-400 px-5 text-white"
                 >
                     <SearchSvg classes="h-7 w-7" />
                 </button>
@@ -202,17 +223,19 @@ export default {
 
         <div
             v-show="isFiltersMenu"
-            class="bg-blackSimple border-blackActive border-y"
+            class="dark:bg-blackSimple bg-whiteSimple text-black dark:text-white"
         >
             <div class="flex flex-row justify-center">
-                <div class="bg-blackSimple mx-5 w-60 text-white select-none">
+                <div class="mx-5 w-60 select-none">
                     <div class="py-2.5 text-center font-bold">Тип</div>
                     <ul class="max-h-64 min-h-20 overflow-y-auto px-2">
                         <li
                             v-for="dataType in dataSearch.types"
                             :key="dataType.id"
                         >
-                            <label class="hover:bg-blackActive flex items-center rounded-sm ps-2">
+                            <label
+                                class="hover:bg-whiteActive dark:hover:bg-blackActive flex items-center rounded-md ps-2 hover:text-black dark:hover:text-white"
+                            >
                                 <input
                                     type="checkbox"
                                     name="types[]"
@@ -236,7 +259,7 @@ export default {
                     </ul>
                 </div>
 
-                <div class="bg-blackSimple mx-5 w-64 text-white select-none">
+                <div class="mx-5 w-64 select-none">
                     <div class="flex flex-row items-center justify-center py-2.5 font-bold">
                         Жанр
                         <SwitchInput
@@ -256,7 +279,7 @@ export default {
                         <li
                             v-for="dataGenre in dataSearch.genres"
                             :key="dataGenre.id"
-                            class="hover:bg-blackActive flex h-9 items-center justify-between rounded-sm px-1"
+                            class="hover:bg-whiteActive dark:hover:bg-blackActive flex h-9 items-center justify-between rounded-md px-1 hover:text-black dark:hover:text-white"
                         >
                             <label class="group flex size-9 items-center justify-center">
                                 <input
@@ -293,7 +316,7 @@ export default {
                     </ul>
                 </div>
 
-                <div class="bg-blackSimple mx-5 w-60 text-white select-none">
+                <div class="mx-5 w-60 select-none">
                     <div class="flex flex-row items-center justify-center py-2.5 font-bold">
                         Студия
                         <SwitchInput
@@ -313,7 +336,9 @@ export default {
                             v-for="dataStudio in dataSearch.studios"
                             :key="dataStudio.id"
                         >
-                            <label class="hover:bg-blackActive flex items-center rounded-sm ps-2">
+                            <label
+                                class="hover:bg-whiteActive dark:hover:bg-blackActive flex items-center rounded-md ps-2 hover:text-black dark:hover:text-white"
+                            >
                                 <input
                                     type="checkbox"
                                     name="studios[]"
@@ -337,14 +362,16 @@ export default {
                     </ul>
                 </div>
 
-                <div class="bg-blackSimple mx-5 w-60 text-white select-none">
+                <div class="mx-5 w-60 select-none">
                     <div class="py-2.5 text-center font-bold">Страна</div>
                     <ul class="max-h-64 min-h-20 overflow-y-auto px-2">
                         <li
                             v-for="dataCountry in dataSearch.countries"
                             :key="dataCountry.id"
                         >
-                            <label class="hover:bg-blackActive flex items-center rounded-sm ps-2">
+                            <label
+                                class="hover:bg-whiteActive dark:hover:bg-blackActive flex items-center rounded-md ps-2 hover:text-black dark:hover:text-white"
+                            >
                                 <input
                                     type="checkbox"
                                     name="countries[]"
@@ -368,7 +395,7 @@ export default {
                     </ul>
                 </div>
 
-                <div class="bg-blackSimple mx-3 w-60 text-white select-none">
+                <div class="mx-3 w-60 select-none">
                     <div class="py-2.5 text-center font-bold">Год</div>
 
                     <div class="px-2 py-2">
@@ -378,12 +405,13 @@ export default {
                                 id="year_fromInput"
                                 name="year_from"
                                 v-model="selectedSearchData.year_from"
-                                type="number"
+                                type="text"
+                                inputmode="numeric"
                                 min="1970"
                                 max="2030"
                                 placeholder="Введите год"
                                 @change="routerPush"
-                                class="bg-blackActive w-full rounded-e-sm border-none py-1.5 text-center text-white focus:ring-0"
+                                class="dark:bg-blackActive bg-whiteActive w-full rounded-e-sm border-none py-1.5 text-center text-black focus:ring-0 dark:text-white"
                             />
                         </div>
                         <div class="relative">
@@ -412,12 +440,13 @@ export default {
                                 id="year_toInput"
                                 name="year_to"
                                 v-model="selectedSearchData.year_to"
-                                type="number"
+                                type="text"
+                                inputmode="numeric"
                                 min="1970"
                                 max="2030"
                                 placeholder="Введите год"
                                 @change="routerPush"
-                                class="bg-blackActive w-full rounded-e-sm border-none py-1.5 text-center text-white focus:ring-0"
+                                class="dark:bg-blackActive bg-whiteActive w-full rounded-e-sm border-none py-1.5 text-center text-black focus:ring-0 dark:text-white"
                             />
                         </div>
                         <div class="relative">

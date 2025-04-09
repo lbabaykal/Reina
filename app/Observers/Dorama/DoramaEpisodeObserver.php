@@ -2,6 +2,7 @@
 
 namespace App\Observers\Dorama;
 
+use App\Enums\CacheEnum;
 use App\Enums\StatusEnum;
 use App\Models\Dorama;
 use App\Models\DoramaEpisode;
@@ -9,7 +10,6 @@ use Illuminate\Support\Facades\Cache;
 
 class DoramaEpisodeObserver
 {
-
     public function created(DoramaEpisode $doramaEpisode): void
     {
         if ($doramaEpisode->status === StatusEnum::PUBLISHED->value) {
@@ -64,19 +64,17 @@ class DoramaEpisodeObserver
                 ->episodes()
                 ->where('status', StatusEnum::PUBLISHED)
                 ->count(),
-            'updated_at' => now()
+            'updated_at' => now(),
         ]);
     }
 
     public function forgetCacheMainDorama(): void
     {
-        Cache::store('redis_doramas')->forget('main_doramas');
+        cache()->store(CacheEnum::DORAMAS_STORE->value)->forget(CacheEnum::MAIN_DORAMAS->value);
     }
 
     public function forgetCacheDorama(DoramaEpisode $doramaEpisode): void
     {
-        Cache::store('redis_doramas')->forget('dorama:' . $doramaEpisode->dorama->slug);
-        Cache::store('redis_doramas')->forget('dorama_watch:' . $doramaEpisode->dorama->slug);
+        cache()->store(CacheEnum::DORAMAS_STORE->value)->forget(CacheEnum::DORAMA->value.$doramaEpisode->dorama->slug);
     }
 }
-

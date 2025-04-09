@@ -43,7 +43,7 @@ export default {
                     this.dataLoading = true;
                 })
                 .catch((error) => {
-                    push.error(error.response.data.message);
+                    push.error(error.response.data);
                 });
         },
         updateSelectFilters(filters) {
@@ -59,15 +59,15 @@ export default {
     <section>
         <Search @updateSelectFilters="updateSelectFilters" />
 
-        <div class="my-2 flex flex-row items-center justify-center py-1 select-none">
+        <div class="flex flex-row items-center justify-center py-3 select-none">
             <router-link
                 :to="{ name: 'animes.index', query: { ...$route.query } }"
                 class="group flex flex-row items-center justify-center text-3xl font-bold"
             >
                 <span class="text-red-500">❮</span>
-                <span class="px-3 duration-300 group-hover:pl-5 group-hover:text-red-500">НАЙДЕНО</span>
+                <span class="px-3 text-black duration-300 group-hover:pl-5 dark:text-white">НАЙДЕНО</span>
                 <span class="text-4xl text-red-500">{{ this.animesTotalFound }}</span>
-                <span class="px-3 duration-300 group-hover:pr-5 group-hover:text-red-500">АНИМЕ</span>
+                <span class="px-3 text-black duration-300 group-hover:pr-5 dark:text-white">АНИМЕ</span>
                 <span class="text-red-500">❯</span>
             </router-link>
         </div>
@@ -93,15 +93,15 @@ export default {
             />
         </div>
 
-        <div class="my-2 flex flex-row items-center justify-center py-1 select-none">
+        <div class="flex flex-row items-center justify-center py-3 select-none">
             <router-link
                 :to="{ name: 'doramas.index', query: { ...$route.query } }"
                 class="group flex flex-row items-center justify-center text-3xl font-bold"
             >
                 <span class="text-violet-500">❮</span>
-                <span class="px-3 duration-300 group-hover:pl-5 group-hover:text-violet-500">НАЙДЕНО</span>
+                <span class="px-3 text-black duration-300 group-hover:pl-5 dark:text-white">НАЙДЕНА</span>
                 <span class="text-4xl text-violet-500">{{ this.doramasTotalFound }}</span>
-                <span class="px-3 duration-300 group-hover:pr-5 group-hover:text-violet-500">ДОРАМА</span>
+                <span class="px-3 text-black duration-300 group-hover:pr-5 dark:text-white">ДОРАМА</span>
                 <span class="text-violet-500">❯</span>
             </router-link>
         </div>

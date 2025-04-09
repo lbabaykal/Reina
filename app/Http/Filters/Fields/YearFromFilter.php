@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class YearFromFilter extends AbstractFilter
 {
-    public function applyFilter(Builder $builder): void
+    public function applyFilter(Builder $builder, array $validatedData): void
     {
-        $builder->whereYear('release', '>=', request()->input('year_from'));
+        $builder->whereYear('release', '>=', $validatedData['year_from']);
     }
 }

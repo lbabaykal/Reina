@@ -38,11 +38,11 @@ const router = createRouter({
                     path: '', component: () => import('./Pages/Animes/IndexPage.vue'),
                     name: 'animes.index',
                 },
-               /* {
+                {
                     path: ':slug', component: () => import('./Pages/Animes/ShowPage.vue'),
                     name: 'animes.show',
                     props: true
-                },*/
+                },
                 {
                     path: ':slug/watch', component: () => import('./Pages/Animes/WatchPage.vue'),
                     name: 'animes.watch',
@@ -50,18 +50,18 @@ const router = createRouter({
                 },
             ],
         },
-        {
-            path: '/animes/:slug',
-            component: () => import('./Layouts/ShowLayout.vue'),
-            children: [
-                {
-                    path: '',
-                    component: () => import('./Pages/Animes/ShowPage.vue'),
-                    name: 'animes.show',
-                    props: true
-                }
-            ]
-        },
+        // {
+        //     path: '/animes/:slug',
+        //     component: () => import('./Layouts/ShowLayout.vue'),
+        //     children: [
+        //         {
+        //             path: '',
+        //             component: () => import('./Pages/Animes/ShowPage.vue'),
+        //             name: 'animes.show',
+        //             props: true
+        //         }
+        //     ]
+        // },
         //  Dorama
         {
             path: '/doramas',
@@ -71,11 +71,11 @@ const router = createRouter({
                     path: '', component: () => import('./Pages/Doramas/IndexPage.vue'),
                     name: 'doramas.index',
                 },
-/*                {
+                {
                     path: ':slug', component: () => import('./Pages/Doramas/ShowPage.vue'),
                     name: 'doramas.show',
                     props: true
-                },*/
+                },
                 {
                     path: ':slug/watch', component: () => import('./Pages/Doramas/WatchPage.vue'),
                     name: 'doramas.watch',
@@ -83,7 +83,7 @@ const router = createRouter({
                 },
             ],
         },
-        {
+        /*{
             path: '/doramas/:slug',
             component: () => import('./Layouts/ShowLayout.vue'),
             children: [
@@ -94,7 +94,7 @@ const router = createRouter({
                     props: true
                 }
             ]
-        },
+        },*/
         //  Account
         {
             path: '/account',

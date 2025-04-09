@@ -63,7 +63,7 @@ export default {
                 rating: Number,
                 favorite: {
                     folder_id: Number,
-                    episode: Number,
+                    episode_id: Number,
                 },
             },
             dataLoading: false,
@@ -80,7 +80,7 @@ export default {
                     this.dataLoading = true;
                 })
                 .catch((error) => {
-                    push.error(error.response.data.message);
+                    push.error(error.response.data);
                 });
         },
         openRatingModal() {
@@ -113,7 +113,7 @@ export default {
             <div
                 class="absolute bottom-24 left-24 z-20 flex max-w-200 min-w-120 flex-col items-center justify-end justify-items-stretch rounded-md bg-black/60 px-5 py-2.5 backdrop-blur-sm"
             >
-                <div class="my-1 w-full text-center text-2xl font-bold">
+                <div class="my-1 w-full text-center text-2xl font-bold text-white">
                     {{ dataAnime.title_ru }}
                 </div>
 
@@ -172,7 +172,7 @@ export default {
             </div>
 
             <div
-                class="absolute top-0 left-0 z-10 h-full w-full bg-cover bg-center shadow-[0px_-80px_100px_25px_rgba(0,0,0,1)_inset]"
+                class="shadow-cover-white dark:shadow-cover-black absolute top-0 left-0 z-10 h-full w-full bg-cover bg-center"
                 :style="{ backgroundImage: `url(${dataAnime.cover})` }"
             ></div>
         </div>

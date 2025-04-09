@@ -2,14 +2,14 @@
 
 use App\Http\Controllers\Api\AnimeController;
 use App\Http\Controllers\Api\DoramaController;
-use App\Http\Controllers\Api\Favorite\FavoriteAnimeController;
-use App\Http\Controllers\Api\Favorite\FavoriteDoramaController;
+use App\Http\Controllers\Api\Anime\FavoriteAnimeController;
+use App\Http\Controllers\Api\Dorama\FavoriteDoramaController;
 use App\Http\Controllers\Api\FavoriteController;
-use App\Http\Controllers\Api\Folders\FolderAnimesController;
-use App\Http\Controllers\Api\Folders\FolderDoramasController;
+use App\Http\Controllers\Api\Anime\AnimeFolderController;
+use App\Http\Controllers\Api\Dorama\DoramaFolderController;
 use App\Http\Controllers\Api\MainController;
-use App\Http\Controllers\Api\Rating\AnimeRatingController;
-use App\Http\Controllers\Api\Rating\DoramaRatingController;
+use App\Http\Controllers\Api\Anime\AnimeRatingController;
+use App\Http\Controllers\Api\Dorama\DoramaRatingController;
 use App\Http\Controllers\Api\SearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,7 +49,9 @@ Route::domain(env('APP_URL'))->group(function () {
             Route::post('/{id}/favorite', [FavoriteAnimeController::class, 'store']);
             Route::patch('/{id}/favorite', [FavoriteAnimeController::class, 'update']);
             Route::delete('/{id}/favorite', [FavoriteAnimeController::class, 'destroy']);
-            Route::post('/{id}/favorite-change', [FavoriteAnimeController::class, 'changeEpisode']);
+            // Favorite Episode
+            Route::post('/{id}/remember-episode', [FavoriteAnimeController::class, 'rememberEpisode']);
+            Route::delete('/{id}/forget-episode', [FavoriteAnimeController::class, 'forgetEpisode']);
         });
     });
 
@@ -69,7 +71,9 @@ Route::domain(env('APP_URL'))->group(function () {
             Route::post('/{id}/favorite', [FavoriteDoramaController::class, 'store']);
             Route::patch('/{id}/favorite', [FavoriteDoramaController::class, 'update']);
             Route::delete('/{id}/favorite', [FavoriteDoramaController::class, 'destroy']);
-            Route::post('/{id}/favorite-change', [FavoriteDoramaController::class, 'changeEpisode']);
+            // Favorite Episode
+            Route::post('/{id}/remember-episode', [FavoriteDoramaController::class, 'rememberEpisode']);
+            Route::delete('/{id}/forget-episode', [FavoriteDoramaController::class, 'forgetEpisode']);
         });
     });
 
@@ -82,23 +86,23 @@ Route::domain(env('APP_URL'))->group(function () {
     Route::prefix('folders')->group(function () {
         // Animes
         Route::prefix('animes')->group(function () {
-            Route::get('/all-user-folders', [FolderAnimesController::class, 'allUserFolders']);
-            Route::get('/only-user-folders', [FolderAnimesController::class, 'onlyUserFolders']);
-            Route::get('/show', [FolderAnimesController::class, 'show']);
-            Route::post('/', [FolderAnimesController::class, 'store']);
-            Route::get('/{folder}/edit', [FolderAnimesController::class, 'edit']);
-            Route::patch('/{folder}', [FolderAnimesController::class, 'update']);
-            Route::delete('/{folder}', [FolderAnimesController::class, 'destroy']);
+            Route::get('/all-user-folders', [AnimeFolderController::class, 'allUserFolders']);
+            Route::get('/only-user-folders', [AnimeFolderController::class, 'onlyUserFolders']);
+            Route::get('/show', [AnimeFolderController::class, 'show']);
+            Route::post('/', [AnimeFolderController::class, 'store']);
+            Route::get('/{folder}/edit', [AnimeFolderController::class, 'edit']);
+            Route::patch('/{folder}', [AnimeFolderController::class, 'update']);
+            Route::delete('/{folder}', [AnimeFolderController::class, 'destroy']);
         });
         // Doramas
         Route::prefix('doramas')->group(function () {
-            Route::get('/all-user-folders', [FolderDoramasController::class, 'allUserFolders']);
-            Route::get('/only-user-folders', [FolderDoramasController::class, 'onlyUserFolders']);
-            Route::get('/show', [FolderDoramasController::class, 'show']);
-            Route::post('/', [FolderDoramasController::class, 'store']);
-            Route::get('/{folder}/edit', [FolderDoramasController::class, 'edit']);
-            Route::patch('/{folder}', [FolderDoramasController::class, 'update']);
-            Route::delete('/{folder}', [FolderDoramasController::class, 'destroy']);
+            Route::get('/all-user-folders', [DoramaFolderController::class, 'allUserFolders']);
+            Route::get('/only-user-folders', [DoramaFolderController::class, 'onlyUserFolders']);
+            Route::get('/show', [DoramaFolderController::class, 'show']);
+            Route::post('/', [DoramaFolderController::class, 'store']);
+            Route::get('/{folder}/edit', [DoramaFolderController::class, 'edit']);
+            Route::patch('/{folder}', [DoramaFolderController::class, 'update']);
+            Route::delete('/{folder}', [DoramaFolderController::class, 'destroy']);
         });
     })->middleware(['auth']);
 });

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Rating;
+namespace App\Http\Controllers\Api\Dorama;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RatingRequest;
@@ -28,9 +28,7 @@ class DoramaRatingController extends Controller
 
         $dorama->ratings()->save($doramaRating);
 
-        return response()->json([
-            'message' => Lang::get('reina.dorama.rating_store'),
-        ]);
+        return response()->json(Lang::get('reina.dorama.rating_store'));
     }
 
     public function update(RatingRequest $request, $doramaId): JsonResponse
@@ -46,9 +44,7 @@ class DoramaRatingController extends Controller
             ->where('user_id', auth()->id())
             ->update(['assessment' => $request->validated('assessment')]);
 
-        return response()->json([
-            'message' => Lang::get('reina.dorama.rating_update'),
-        ]);
+        return response()->json(Lang::get('reina.dorama.rating_update'));
     }
 
     public function destroy($doramaId): JsonResponse
@@ -62,8 +58,6 @@ class DoramaRatingController extends Controller
             ->where('user_id', auth()->id())
             ->delete();
 
-        return response()->json([
-            'message' => Lang::get('reina.dorama.rating_destroy'),
-        ]);
+        return response()->json(Lang::get('reina.dorama.rating_destroy'));
     }
 }

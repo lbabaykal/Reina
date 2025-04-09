@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Builder;
 
 interface FilterInterface
 {
-    public function applyFilter(Builder $builder);
+    public function applyFilter(Builder $builder, array $validatedData);
 }

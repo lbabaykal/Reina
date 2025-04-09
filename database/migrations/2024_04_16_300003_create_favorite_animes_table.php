@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Anime;
+use App\Models\AnimeEpisode;
 use App\Models\AnimeFolder;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -23,7 +24,11 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->unsignedSmallInteger('episode')->default(0);
+            $table->foreignIdFor(AnimeEpisode::class)
+                ->nullable()
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->timestamps();
         });
     }

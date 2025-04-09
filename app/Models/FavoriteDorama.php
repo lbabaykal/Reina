@@ -11,7 +11,7 @@ class FavoriteDorama extends Model
         'user_id',
         'dorama_id',
         'dorama_folder_id',
-        'episode',
+        'dorama_episode_id',
     ];
 
     public function user(): BelongsTo

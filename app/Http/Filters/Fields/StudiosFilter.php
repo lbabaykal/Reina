@@ -7,18 +7,17 @@ use Illuminate\Database\Eloquent\Builder;
 
 class StudiosFilter extends AbstractFilter
 {
-    public function applyFilter(Builder $builder): void
+    public function applyFilter(Builder $builder, array $validatedData): void
     {
-        if (request()->boolean('strict_studio')) {
-            // Поиск с сужением
-            $studioIds = request()->collect('studios');
+        $studioIds = $validatedData['studios'];
+
+        if ($validatedData['strict_studio'] === 'true') {
             $builder->whereHas('studios', function (Builder $query) use ($studioIds) {
                 $query->whereIn('slug', $studioIds);
             }, count($studioIds));
         } else {
-            // Поиск обычный
-            $builder->whereHas('studios', function (Builder $query) {
-                $query->whereIn('slug', request()->collect('studios'));
+            $builder->whereHas('studios', function (Builder $query) use ($studioIds) {
+                $query->whereIn('slug', $studioIds);
             });
         }
     }

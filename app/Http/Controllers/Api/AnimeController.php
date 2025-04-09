@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Fields\CountriesFilter;
 use App\Http\Filters\Fields\GenresExcludeFilter;
@@ -30,7 +29,7 @@ class AnimeController extends Controller
     public function index(SearchRequest $request): AnonymousResourceCollection
     {
         $query = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating']);
-        $animes = Pipeline::send($query)
+        $animesPipeline = Pipeline::send(['query' => $query, 'validatedData' => $request->validated()])
             ->through([
                 TitleFilter::class,
                 TypesFilter::class,
@@ -43,13 +42,14 @@ class AnimeController extends Controller
                 SortingFilter::class,
             ])
             ->thenReturn();
+        $animesFiltered = $animesPipeline['query'];
 
-        return AnimesIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', request()->input('page', 1)));
+        return AnimesIndexResource::collection($animesFiltered->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', $request->validated('page', 1)));
     }
 
     public function show($slug, AnimesServices $animesService): JsonResponse
     {
-        $anime = $animesService->dataInCacheBySlug($slug);
+        $anime = $animesService->getDataFromCacheBySlug($slug);
         $ratingUser = $animesService->ratingUserFor();
         $favoriteUser = $animesService->favoriteUserFor();
 
@@ -59,7 +59,7 @@ class AnimeController extends Controller
                 'rating' => $ratingUser,
                 'favorite' => [
                     'folder_id' => $favoriteUser->anime_folder_id,
-                    'episode' => $favoriteUser->episode,
+                    'episode_id' => $favoriteUser->anime_episode_id,
                 ],
             ],
         ]);
@@ -67,15 +67,10 @@ class AnimeController extends Controller
 
     public function watch($slug, AnimesServices $animesService): JsonResponse
     {
-        $anime = $animesService->dataInCacheBySlug($slug);
+        $anime = $animesService->getDataFromCacheBySlug($slug);
         $ratingUser = $animesService->ratingUserFor();
         $favoriteUser = $animesService->favoriteUserFor();
-
-        /** @var Anime $anime */
-        $episodes = $anime->episodes()
-            ->where('status', StatusEnum::PUBLISHED)
-            ->orderBy('number')
-            ->get();
+        $episodes = $animesService->episodesFor();
 
         return response()->json([
             'dataAnime' => AnimesWatchResource::make($anime),
@@ -83,7 +78,7 @@ class AnimeController extends Controller
                 'rating' => $ratingUser,
                 'favorite' => [
                     'folder_id' => $favoriteUser->anime_folder_id,
-                    'episode' => $favoriteUser->episode,
+                    'episode_id' => $favoriteUser->anime_episode_id,
                 ],
             ],
             'dataEpisodes' => AnimeEpisodesResource::collection($episodes),

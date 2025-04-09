@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Builder;
 
 class GenresExcludeFilter extends AbstractFilter
 {
-    public function applyFilter(Builder $builder): void
+    public function applyFilter(Builder $builder, array $validatedData): void
     {
-        $builder->whereDoesntHave('genres', function (Builder $query) {
-            $query->whereIn('slug', request()->collect('genres_exclude'));
+        $builder->whereDoesntHave('genres', function (Builder $query) use ($validatedData) {
+            $query->whereIn('slug', $validatedData['genres_exclude']);
         });
     }
 }

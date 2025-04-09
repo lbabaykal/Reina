@@ -46,8 +46,8 @@ class DoramaStoreRequest extends FormRequest
             'release' => ['required', 'date', 'after:1980-01-01|', 'before:2100-01-01'],
             'description' => ['nullable', 'string'],
             'status' => ['required', Rule::in(\App\Enums\StatusEnum::cases())],
-            'is_comment' => ['nullable', 'string'],
-            'is_rating' => ['nullable', 'string'],
+            'is_comment' => ['nullable', 'in:on,1'],
+            'is_rating' => ['nullable', 'in:on,1'],
         ];
     }
 

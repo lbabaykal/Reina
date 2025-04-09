@@ -32,6 +32,7 @@ export default {
                         password: this.password
                     })
                         .then(response => {
+                            this.authStore.getUser(); //TODO должно возвращать данные пользователя сразу
                             router.push({name: "main"});
                         })
                         .catch(error => {

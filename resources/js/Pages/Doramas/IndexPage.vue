@@ -48,7 +48,7 @@ export default {
                     this.dataLoading = true;
                 })
                 .catch((error) => {
-                    push.error(error.response.data.message);
+                    push.error(error.response.data);
                 });
         },
         updateSelectFilters(filters) {
@@ -71,7 +71,7 @@ export default {
             ref="searchRef"
         />
 
-        <div class="mt-2 grid w-full grid-flow-row grid-cols-8 place-items-center gap-3 px-2.5">
+        <div class="mt-4 grid w-full grid-flow-row grid-cols-8 place-items-center gap-3 px-2.5">
             <CardDorama
                 v-if="dataLoading"
                 v-for="dataDorama in dataDoramas"

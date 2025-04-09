@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Folders;
+namespace App\Http\Controllers\Api\Dorama;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FolderRequest;
+use App\Http\Requests\Folder\FolderCreateRequest;
+use App\Http\Requests\Folder\FolderUpdateRequest;
 use App\Http\Resources\Doramas\DoramasIndexResource;
 use App\Http\Resources\Folders\FolderResource;
 use App\Http\Resources\Folders\FoldersDoramasResource;
@@ -14,7 +15,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 
-class FolderDoramasController extends Controller
+class DoramaFolderController extends Controller
 {
     public function allUserFolders(): JsonResponse
     {
@@ -68,7 +69,7 @@ class FolderDoramasController extends Controller
         return DoramasIndexResource::collection($doramas->paginate(Reina::COUNT_ARTICLES_FOLDERS, ['*'], 'page', request()->input('page', 1)));
     }
 
-    public function store(FolderRequest $request): JsonResponse
+    public function store(FolderCreateRequest $request): JsonResponse
     {
         Gate::authorize('create', DoramaFolder::class);
 
@@ -78,9 +79,7 @@ class FolderDoramasController extends Controller
         $folder->is_private = $request->validated('is_private');
         $folder->save();
 
-        return response()->json([
-            'message' => Lang::get('reina.folder.created', ['title' => $folder->title]),
-        ]);
+        return response()->json(Lang::get('reina.folder.created', ['title' => $folder->title]));
     }
 
     public function edit(DoramaFolder $folder): JsonResponse
@@ -92,7 +91,7 @@ class FolderDoramasController extends Controller
         ]);
     }
 
-    public function update(FolderRequest $request, DoramaFolder $folder): JsonResponse
+    public function update(FolderUpdateRequest $request, DoramaFolder $folder): JsonResponse
     {
         Gate::authorize('update', $folder);
 
@@ -100,9 +99,7 @@ class FolderDoramasController extends Controller
         $folder->is_private = $request->validated('is_private');
         $folder->update();
 
-        return response()->json([
-            'message' => Lang::get('reina.folder.updated', ['title' => $folder->title]),
-        ]);
+        return response()->json(Lang::get('reina.folder.updated', ['title' => $folder->title]));
     }
 
     public function destroy(DoramaFolder $folder): JsonResponse
@@ -111,8 +108,6 @@ class FolderDoramasController extends Controller
 
         $folder->delete();
 
-        return response()->json([
-            'message' => Lang::get('reina.folder.deleted', ['title' => $folder->title]),
-        ]);
+        return response()->json(Lang::get('reina.folder.deleted', ['title' => $folder->title]));
     }
 }

@@ -14,8 +14,8 @@ export default {
 
 <template>
     <button
-        class="bg-blackSimple hover:bg-blackActive flex w-56 cursor-pointer items-center justify-between rounded-sm border-b border-red-400 px-3 py-2 font-medium text-white transition-all duration-200"
-        :class="[isFiltersMenu ? '!bg-blackActive' : '']"
+        class="bg-whiteSimple dark:bg-blackSimple hover:bg-whiteActive dark:hover:bg-blackActive flex w-56 cursor-pointer items-center justify-between rounded-md border-b border-red-400 px-3 py-2 font-medium text-black shadow-md transition-all duration-200 dark:text-white"
+        :class="[isFiltersMenu ? 'dark:!bg-blackActive !bg-whiteActive' : '']"
         type="button"
     >
         <FilterSvg classes="w-6 h-6" />

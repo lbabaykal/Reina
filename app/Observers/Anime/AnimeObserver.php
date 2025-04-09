@@ -2,13 +2,14 @@
 
 namespace App\Observers\Anime;
 
+use App\Enums\CacheEnum;
 use App\Enums\StatusEnum;
 use App\Models\Anime;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class AnimeObserver
 {
-
     public function created(Anime $anime): void
     {
         if ($anime->status === StatusEnum::PUBLISHED->value) {
@@ -33,8 +34,7 @@ class AnimeObserver
         }
 
         if ($anime->isDirty('slug')) {
-            cache()->store('redis_animes')->forget('anime:' . $anime->getOriginal('slug'));
-            cache()->store('redis_animes')->forget('anime_watch:' . $anime->getOriginal('slug'));
+            cache()->store('redis_animes')->forget('anime:'.$anime->getOriginal('slug'));
         }
     }
 
@@ -100,12 +100,11 @@ class AnimeObserver
 
     public function forgetCacheMainAnime(): void
     {
-        cache()->store('redis_animes')->forget('main_animes');
+        cache()->store(CacheEnum::ANIMES_STORE->value)->forget(CacheEnum::MAIN_ANIMES->value);
     }
 
     public function forgetCacheAnime(Anime $anime): void
     {
-        cache()->store('redis_animes')->forget('anime:' . $anime->slug);
-        cache()->store('redis_animes')->forget('anime_watch:' . $anime->slug);
+        cache()->store(CacheEnum::ANIMES_STORE->value)->forget(CacheEnum::ANIME->value.$anime->slug);
     }
 }

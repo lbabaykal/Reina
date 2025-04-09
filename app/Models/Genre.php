@@ -16,8 +16,8 @@ use Spatie\Sluggable\SlugOptions;
 class Genre extends Model
 {
     use HasFactory;
-    use SoftDeletes;
     use HasSlug;
+    use SoftDeletes;
 
     public $timestamps = false;
 
@@ -51,7 +51,11 @@ class Genre extends Model
 
     public function cache(): Collection
     {
-        return cache()->remember($this->getTable(), 14400, function () {
+        if (cache()->has($this->getTable())) {
+            return cache()->get($this->getTable());
+        }
+
+        return cache()->rememberForever($this->getTable(), function () {
             return self::query()->orderBy('id')->get();
         });
     }

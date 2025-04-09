@@ -2,6 +2,7 @@
 
 namespace App\Observers\Anime;
 
+use App\Enums\CacheEnum;
 use App\Enums\StatusEnum;
 use App\Models\Anime;
 use App\Models\AnimeEpisode;
@@ -9,7 +10,6 @@ use Illuminate\Support\Facades\Cache;
 
 class AnimeEpisodeObserver
 {
-
     public function created(AnimeEpisode $animeEpisode): void
     {
         if ($animeEpisode->status === StatusEnum::PUBLISHED->value) {
@@ -64,18 +64,17 @@ class AnimeEpisodeObserver
                 ->episodes()
                 ->where('status', StatusEnum::PUBLISHED)
                 ->count(),
-            'updated_at' => now()
+            'updated_at' => now(),
         ]);
     }
 
     public function forgetCacheMainAnime(): void
     {
-        Cache::store('redis_animes')->forget('main_animes');
+        cache()->store(CacheEnum::ANIMES_STORE->value)->forget(CacheEnum::MAIN_ANIMES->value);
     }
 
     public function forgetCacheAnime(AnimeEpisode $animeEpisode): void
     {
-        Cache::store('redis_animes')->forget('anime:' . $animeEpisode->anime->slug);
-        Cache::store('redis_animes')->forget('anime_watch:' . $animeEpisode->anime->slug);
+        cache()->store(CacheEnum::ANIMES_STORE->value)->forget(CacheEnum::ANIME->value.$animeEpisode->anime->slug);
     }
 }

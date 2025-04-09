@@ -9,8 +9,6 @@ export default {
 
 <template>
     <Header/>
-
-    <div class="mt-14">
-        <RouterView/>
-    </div>
+    <div class="h-14"></div>
+    <RouterView/>
 </template>

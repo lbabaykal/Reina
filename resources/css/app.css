@@ -1,11 +1,12 @@
 @import 'tailwindcss';
-/*@plugin '@tailwindcss/forms';*/
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source "../**/*.blade.php";
 @source "../**/*.js";
 @source "../**/*.vue";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
     --font-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
@@ -24,25 +25,43 @@
     --breakpoint-xl: 1280px;
     --breakpoint-2xl: 1536px;
 
-    --shadow-modals: 0 0 20px 0 rgba(0, 0, 0, 1);
-    --shadow-modals-white: 0 0 20px 0 rgba(255, 255, 255, 0.6);
+    --shadow-modals-black: 0 0 10px 0 rgba(0, 0, 0, 1);
+    --shadow-modals-white: 0 0 10px 0 rgba(255, 255, 255, 0.8);
+    --shadow-cover-black: inset 0 -80px 100px 25px rgba(0, 0, 0, 1);
+    --shadow-cover-white: inset 0 -80px 100px 25px rgba(232, 232, 232, 1);
 
-    --color-love: #ec6161;
-    --color-blackSimple: #24282f;
-    --color-blackActive: rgba(53, 56, 91, 1);
-    --color-blackBack: #1e1e24;
-    --color-blackBack2: #252626;
+    --color-white11: #edebe9;
+
+    /*--color-blackFon: rgba(16, 18, 20, 1);*/
+    /*--color-blackActive: rgba(53, 56, 91, 1);*/
+    --color-blackFon: rgba(20, 22, 28, 1);
+    --color-blackSimple: rgba(36, 40, 48, 1);
+    --color-blackActive: rgba(54, 58, 70, 1);
+
+    /*--color-whiteSimple: rgb(255, 255, 255);*/
+    /*--color-whiteActive: rgb(230, 230, 235);*/
+    /*--color-whiteFon: rgb(220, 220, 225);*/
+
+    --color-whiteFon: rgb(238, 238, 238);
+    --color-whiteSimple: rgb(255, 255, 255);
+    --color-whiteActive: rgb(230, 230, 230);
+
+    --color-blackBack: rgba(30, 30, 36, 1);
+    --color-blackBack2: rgba(38, 38, 38, 1);
     --color-google1: #202124;
     --color-google2: #303134;
     --color-google3: #4d5156;
     --color-google4: #252527;
-    --color-white1: rgb(242, 242, 242);
-    --color-white2: rgb(232, 232, 232);
-    --color-white3: rgb(250, 250, 250);
+    --color-white1: rgb(250, 250, 250);
+    --color-white2: rgb(242, 242, 242);
+    --color-white3: rgb(220, 220, 220);
+
+
 
     --spacing-4\.5: 1.125rem;   /* 18px */
     --spacing-15: 3.75rem; /* 60px */
     --spacing-16: 4rem;    /* 64px */
+    --spacing-16\.5: 4.125rem;    /* 66px */
     --spacing-17: 4.25rem; /* 68px */
     --spacing-18: 4.5rem;  /* 72px */
     --spacing-50: 12.5rem;  /* 200px */
@@ -51,6 +70,7 @@
     --spacing-80: 20rem;   /* 320px */
     --spacing-84: 21rem;   /* 336px */
     --spacing-88: 22rem;   /* 352px */
+    --spacing-90: 22.5rem;   /* 360px */
     --spacing-92: 23rem;   /* 368px */
     --spacing-96: 24rem;   /* 384px */
     --spacing-100: 25rem;  /* 400px */
@@ -60,6 +80,8 @@
     --spacing-128: 32rem;  /* 512px */
     --spacing-136: 34rem;  /* 544px */
     --spacing-144: 36rem;  /* 576px */
+    --spacing-148: 37rem;  /* 592px */
+    --spacing-150: 37.5rem;  /* 600px */
     --spacing-152: 38rem;  /* 608px */
     --spacing-160: 40rem;  /* 640px */
     --spacing-168: 42rem;  /* 672px */
@@ -156,9 +178,13 @@
     background: #ff0073;
 }
 
-.header-change {
-    @apply shadow-md shadow-red-600/50 bg-black;
-}
+/*.header-change {
+    @apply bg-transparent backdrop-blur-none;
+}*/
+
+/*.header-change {
+    @apply shadow-sm shadow-red-600/50 bg-white/80 text-black dark:bg-black/80 dark:text-white;
+}*/
 
 [type='text'],
 input:where(:not([type])),

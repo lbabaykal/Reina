@@ -27,17 +27,12 @@ class SearchRequest extends FormRequest
         }
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
             'title' => ['nullable', 'string', 'max:255'],
-            'strict_genre' => ['nullable', 'in:1,0,true,false'],
-            'strict_studio' => ['nullable', 'in:1,0,true,false'],
+            'strict_genre' => ['nullable', 'in:true,false'],
+            'strict_studio' => ['nullable', 'in:true,false'],
 
             'types' => ['nullable', 'array'],
             'types.*' => ['nullable', 'string', Rule::in(new Type()->cache()->pluck('slug')->toArray())],
@@ -60,6 +55,13 @@ class SearchRequest extends FormRequest
             'sorting' => ['nullable', 'string', 'in:date_updated,rating,premiere_asc,premiere_desc'],
 
             'page' => ['nullable', 'integer'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'genres.*.in' => 'Введён недопустимый жанр.',
         ];
     }
 }

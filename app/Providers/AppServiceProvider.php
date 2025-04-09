@@ -4,10 +4,6 @@ namespace App\Providers;
 
 use App\Models\AnimeFolder;
 use App\Models\DoramaFolder;
-use App\Models\FavoriteAnime;
-use App\Models\FavoriteDorama;
-use App\Policies\Favorite\FavoriteAnimePolicy;
-use App\Policies\Favorite\FavoriteDoramaPolicy;
 use App\Policies\Folders\AnimeFolderPolicy;
 use App\Policies\Folders\DoramaFolderPolicy;
 use Illuminate\Database\Eloquent\Model;
@@ -20,9 +16,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        if (env('APP_ENV') == 'local') {
-            url()->forceScheme('https');
-        }
+        //
     }
 
     public function boot(): void
@@ -33,8 +27,9 @@ class AppServiceProvider extends ServiceProvider
         Model::preventLazyLoading(! $this->app->isProduction());
 
         Relation::morphMap([
-            'Anime' => 'App\Models\Anime',
-            'Dorama' => 'App\Models\Dorama',
+            'anime' => 'App\Models\Anime',
+            'dorama' => 'App\Models\Dorama',
+            'manga' => 'App\Models\Manga',
         ]);
 
         Paginator::defaultView('pagination');

@@ -1,34 +1,63 @@
-import {defineStore} from "pinia";
-import axios from "axios";
-import router from "../router.js";
+import { defineStore } from 'pinia';
+import axios from 'axios';
+import router from '../router.js';
+import { push } from 'notivue';
 
-export const useAuthStore = defineStore("auth", {
+export const useAuthStore = defineStore('auth', {
     state: () => ({
-        authUser: null,
-        authAuthenticated: false
+        userState: null,
+        isAuthenticatedState: false,
+        isUserDataLoadedState: false,
     }),
     actions: {
+        async getUser() {
+            this.isUserDataLoadedState = false;
+            await axios
+                .get('/api/user-data')
+                .then((response) => {
+                    if (response.data.authenticated === true) {
+                        const authData = {
+                            id: response.data.user.id,
+                            avatar: response.data.user.avatar,
+                            name: response.data.user.name,
+                        };
+
+                        this.storeUser(authData);
+                    } else {
+                        this.destroyUser();
+                    }
+                })
+                .catch((error) => {
+                    push.error(error.response.data);
+                })
+                .finally(() => {
+                    this.isUserDataLoadedState = true;
+                });
+        },
         storeUser(user) {
-            this.authUser = user;
-            this.authAuthenticated = true;
+            this.userState = user;
+            this.isAuthenticatedState = true;
         },
         destroyUser() {
-            this.authUser = null;
-            this.authAuthenticated = false;
+            this.userState = null;
+            this.isAuthenticatedState = false;
         },
         logout() {
             axios.post('/logout');
             this.destroyUser();
-            router.push({name: 'main'});
+            router.push({ name: 'main' });
         },
     },
     getters: {
         isAuthenticated(state) {
-            return state.authAuthenticated
+            return state.isAuthenticatedState;
+        },
+        isUserDataLoaded(state) {
+            return state.isUserDataLoadedState;
         },
         user(state) {
-            return state.authUser;
+            return state.userState;
         },
     },
     persist: true,
-})
+});

@@ -2,33 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\CacheEnum;
+use App\Actions\MainAnimesAction;
+use App\Actions\MainDoramasAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MainResource;
-use App\Models\Anime;
-use App\Models\Dorama;
-use App\Reina;
 use Illuminate\Http\JsonResponse;
 
 class MainController extends Controller
 {
-    public function __invoke(): JsonResponse
+    public function __invoke(MainAnimesAction $mainAnimesAction, MainDoramasAction $mainDoramasAction): JsonResponse
     {
-        $animes = cache()->store('redis_animes')->flexible(CacheEnum::MAIN_ANIMES->value, [1200, 1800], function () {
-            return Anime::query()
-                ->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating'])
-                ->limit(Reina::COUNT_ARTICLES_MAIN)
-                ->latest('updated_at')
-                ->get();
-        });
-
-        $doramas = cache()->store('redis_doramas')->flexible(CacheEnum::MAIN_DORAMAS->value, [1200, 1800], function () {
-            return Dorama::query()
-                ->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating'])
-                ->limit(Reina::COUNT_ARTICLES_MAIN)
-                ->latest('updated_at')
-                ->get();
-        });
+        $animes = $mainAnimesAction->execute();
+        $doramas = $mainDoramasAction->execute();
 
         return response()->json([
             'animes' => MainResource::collection($animes),

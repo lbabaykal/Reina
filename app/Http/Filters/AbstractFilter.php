@@ -7,16 +7,21 @@ use Illuminate\Support\Str;
 
 abstract class AbstractFilter implements FilterInterface
 {
-    public function handle(Builder $builder, \Closure $next)
+    public function handle(array $data, \Closure $next)
     {
-        if (array_key_exists($this->getName(), request()->toArray())) {
-            $this->applyFilter($builder);
+        /** @var Builder $builder */
+        $builder = $data['query'];
+        /** @var array $validatedData */
+        $validatedData = $data['validatedData'];
+
+        if (array_key_exists($this->getName(), $validatedData)) {
+            $this->applyFilter($builder, $validatedData);
         }
 
-        return $next($builder);
+        return $next($data);
     }
 
-    public function getName(): string
+    protected function getName(): string
     {
         return Str::snake(Str::before(class_basename($this), 'Filter'));
     }

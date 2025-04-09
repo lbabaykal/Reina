@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Folders;
+namespace App\Http\Controllers\Api\Anime;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FolderRequest;
+use App\Http\Requests\Folder\FolderCreateRequest;
+use App\Http\Requests\Folder\FolderUpdateRequest;
 use App\Http\Resources\Animes\AnimesIndexResource;
 use App\Http\Resources\Folders\FolderResource;
 use App\Http\Resources\Folders\FoldersAnimesResource;
@@ -14,7 +15,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 
-class FolderAnimesController extends Controller
+class AnimeFolderController extends Controller
 {
     public function allUserFolders(): JsonResponse
     {
@@ -46,6 +47,8 @@ class FolderAnimesController extends Controller
 
     public function show(): AnonymousResourceCollection
     {
+        //TODO Сделать FolderShowRequest
+
         $validatedFolderId = request()->validate([
             'folder' => ['nullable', 'integer', 'min:0'],
         ]);
@@ -68,7 +71,7 @@ class FolderAnimesController extends Controller
         return AnimesIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FOLDERS, ['*'], 'page', request()->input('page', 1)));
     }
 
-    public function store(FolderRequest $request): JsonResponse
+    public function store(FolderCreateRequest $request): JsonResponse
     {
         Gate::authorize('create', AnimeFolder::class);
 
@@ -78,9 +81,7 @@ class FolderAnimesController extends Controller
         $folder->is_private = $request->validated('is_private');
         $folder->save();
 
-        return response()->json([
-            'message' => Lang::get('reina.folder.created', ['title' => $folder->title]),
-        ]);
+        return response()->json(Lang::get('reina.folder.created', ['title' => $folder->title]));
     }
 
     public function edit(AnimeFolder $folder): JsonResponse
@@ -92,7 +93,7 @@ class FolderAnimesController extends Controller
         ]);
     }
 
-    public function update(FolderRequest $request, AnimeFolder $folder): JsonResponse
+    public function update(FolderUpdateRequest $request, AnimeFolder $folder): JsonResponse
     {
         Gate::authorize('update', $folder);
 
@@ -100,9 +101,7 @@ class FolderAnimesController extends Controller
         $folder->is_private = $request->validated('is_private');
         $folder->update();
 
-        return response()->json([
-            'message' => Lang::get('reina.folder.updated', ['title' => $folder->title]),
-        ]);
+        return response()->json(Lang::get('reina.folder.updated', ['title' => $folder->title]));
     }
 
     public function destroy(AnimeFolder $folder): JsonResponse
@@ -111,8 +110,6 @@ class FolderAnimesController extends Controller
 
         $folder->delete();
 
-        return response()->json([
-            'message' => Lang::get('reina.folder.deleted', ['title' => $folder->title]),
-        ]);
+        return response()->json(Lang::get('reina.folder.deleted', ['title' => $folder->title]));
     }
 }

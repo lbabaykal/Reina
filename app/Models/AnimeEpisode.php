@@ -14,7 +14,6 @@ class AnimeEpisode extends Model
     use HasFactory;
 
     protected $fillable = [
-        'number',
         'anime_id',
         'title_org',
         'title_ru',

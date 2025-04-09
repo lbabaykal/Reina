@@ -16,7 +16,7 @@ export default {
             rating: Number,
             favorite: {
                 folder_id: Number,
-                episode: Number,
+                episode_id: Number,
             },
         },
         isFavoriteUser: Boolean,
@@ -24,8 +24,8 @@ export default {
     data() {
         return {
             dataFoldersUser: {
-                folder_id: Number,
-                episode: Number,
+                id: Number,
+                title: String,
             },
             folder_id: 0,
             dataLoading: false,
@@ -41,7 +41,7 @@ export default {
                     this.dataFoldersUser = response.data.folders;
                 })
                 .catch((error) => {
-                    push.error(error.response.data.message);
+                    push.error(error.response.data);
                 })
                 .finally(() => {
                     this.dataLoading = false;
@@ -54,11 +54,11 @@ export default {
                     .post(`/api/doramas/${this.doramaId}/favorite`, { folder_id: this.folder_id })
                     .then((response) => {
                         this.dataUserForDorama.favorite = response.data.favorite;
-                        push.success(response.data.message);
+                        push.success(response.data);
                         this.closeFavoriteModal();
                     })
                     .catch((error) => {
-                        push.error(error.response.data.message);
+                        push.error(error.response.data);
                     })
                     .finally(() => {
                         this.dataLoading = false;
@@ -67,12 +67,12 @@ export default {
                 axios
                     .patch(`/api/doramas/${this.doramaId}/favorite`, { folder_id: this.folder_id })
                     .then((response) => {
-                        this.dataUserForDorama.favorite.folder_id = this.folder_id;
-                        push.success(response.data.message);
+                        this.dataUserForDorama.favorite = response.data.favorite;
+                        push.success(response.data);
                         this.closeFavoriteModal();
                     })
                     .catch((error) => {
-                        push.error(error.response.data.message);
+                        push.error(error.response.data);
                     })
                     .finally(() => {
                         this.dataLoading = false;
@@ -86,13 +86,13 @@ export default {
                 .then((response) => {
                     this.dataUserForDorama.favorite = {
                         folder_id: 0,
-                        episode: 0,
+                        episode_id: 0,
                     };
-                    push.success(response.data.message);
+                    push.success(response.data);
                     this.closeFavoriteModal();
                 })
                 .catch((error) => {
-                    push.error(error.response.data.message);
+                    push.error(error.response.data);
                 })
                 .finally(() => {
                     this.dataLoading = false;
@@ -125,9 +125,9 @@ export default {
             v-if="isFavoriteModalVisible"
             class="fixed top-0 left-0 z-40 flex h-full w-full items-center justify-center overflow-x-hidden overflow-y-auto"
         >
-            <div class="shadow-modals max-w-96 min-w-80 rounded-md bg-black/80 select-none">
+            <div class="shadow-xl max-w-96 min-w-80 rounded-md bg-white select-none dark:bg-black">
                 <div class="flex items-center justify-between border-b border-gray-400 p-2">
-                    <div class="mx-auto truncate pl-8 text-xl text-white">Избранное</div>
+                    <div class="mx-auto truncate pl-8 text-xl font-semibold text-black dark:text-white">Избранное</div>
                     <ModalCloseButton @click="closeFavoriteModal" />
                 </div>
 
@@ -150,7 +150,12 @@ export default {
                             class="peer hidden"
                         />
                         <span
-                            class="bg-blackActive/70 flex-grow truncate rounded-md px-3 py-1 font-medium peer-checked:bg-white peer-checked:text-black hover:bg-violet-500/80 hover:text-white"
+                            class="flex-grow truncate rounded-md px-3 py-1 font-medium
+                            bg-whiteActive dark:bg-blackActive
+                            peer-checked:bg-violet-400 peer-checked:text-white
+                            text-black dark:text-white
+                            hover:bg-black dark:hover:bg-white
+                            hover:text-white dark:hover:text-black"
                         >
                             {{ dataFolder.title }}
                         </span>

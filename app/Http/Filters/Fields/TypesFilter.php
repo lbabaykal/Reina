@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TypesFilter extends AbstractFilter
 {
-    public function applyFilter(Builder $builder): void
+    public function applyFilter(Builder $builder, array $validatedData): void
     {
-        $builder->whereHas('type', function (Builder $query) {
-            $query->whereIn('slug', request()->collect('types'));
+        $builder->whereHas('type', function (Builder $query) use ($validatedData) {
+            $query->whereIn('slug', $validatedData['types']);
         });
     }
 }

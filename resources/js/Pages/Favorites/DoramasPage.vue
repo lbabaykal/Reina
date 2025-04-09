@@ -37,7 +37,7 @@ export default {
                     this.dataPagination = response.data.meta;
                 })
                 .catch((error) => {
-                    push.error(error.response.data.message);
+                    push.error(error.response.data);
                 })
                 .finally(() => {
                     this.dataLoading = true;

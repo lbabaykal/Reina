@@ -26,6 +26,7 @@ use App\Models\Genre;
 use App\Models\Studio;
 use App\Models\Type;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Pipeline;
 
 class SearchController extends Controller
@@ -33,7 +34,7 @@ class SearchController extends Controller
     public function index(SearchRequest $request): JsonResponse
     {
         $queryAnime = Anime::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating'])->limit(8);
-        $animesFiltered = Pipeline::send($queryAnime)
+        $animesFiltered = Pipeline::send(['query' => $queryAnime, 'validatedData' => $request->validated()])
             ->through([
                 TitleFilter::class,
                 TypesFilter::class,
@@ -46,11 +47,12 @@ class SearchController extends Controller
                 SortingFilter::class,
             ])
             ->thenReturn();
-        $dataAnimes = $animesFiltered->get();
-        $animesTotalFound = $animesFiltered->count();
+
+        $dataAnimes = $animesFiltered['query']->get();
+        $animesTotalFound = $animesFiltered['query']->count();
 
         $queryDorama = Dorama::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating'])->limit(8);
-        $doramasFiltered = Pipeline::send($queryDorama)
+        $doramasFiltered = Pipeline::send(['query' => $queryDorama, 'validatedData' => $request->validated()])
             ->through([
                 TitleFilter::class,
                 TypesFilter::class,
@@ -62,8 +64,8 @@ class SearchController extends Controller
                 SortingFilter::class,
             ])
             ->thenReturn();
-        $dataDoramas = $doramasFiltered->get();
-        $doramasTotalFound = $doramasFiltered->count();
+        $dataDoramas = $doramasFiltered['query']->get();
+        $doramasTotalFound = $doramasFiltered['query']->count();
 
         return response()->json([
             'dataAnimes' => AnimesIndexResource::collection($dataAnimes),
@@ -81,10 +83,10 @@ class SearchController extends Controller
             'studios' => StudiosResource::collection((new Studio)->cache()),
             'countries' => CountriesResource::collection((new Country)->cache()),
             'sorting' => [
-                ['id' => 1, 'title' => 'По дате обновления', 'slug' => 'date_updated'],
-                ['id' => 2, 'title' => 'По рейтингу', 'slug' => 'rating'],
-                ['id' => 3, 'title' => 'По дате выхода ▲', 'slug' => 'premiere_asc'],
-                ['id' => 4, 'title' => 'По дате выхода ▼', 'slug' => 'premiere_desc'],
+                ['id' => 1, 'title' => Lang::get('reina.sort.by_update_date'), 'slug' => 'date_updated'],
+                ['id' => 2, 'title' => Lang::get('reina.sort.by_rating'), 'slug' => 'rating'],
+                ['id' => 3, 'title' => Lang::get('reina.sort.by_release_date_as'), 'slug' => 'premiere_asc'],
+                ['id' => 4, 'title' => Lang::get('reina.sort.by_release_date_desc'), 'slug' => 'premiere_desc'],
             ],
         ]);
     }

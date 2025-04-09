@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Fields\CountriesFilter;
 use App\Http\Filters\Fields\GenresExcludeFilter;
@@ -30,7 +29,7 @@ class DoramaController extends Controller
     public function index(SearchRequest $request): AnonymousResourceCollection
     {
         $query = Dorama::query()->select(['id', 'slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'is_rating']);
-        $doramas = Pipeline::send($query)
+        $doramasPipeLine = Pipeline::send(['query' => $query, 'validatedData' => $request->validated()])
             ->through([
                 TitleFilter::class,
                 TypesFilter::class,
@@ -43,13 +42,14 @@ class DoramaController extends Controller
                 SortingFilter::class,
             ])
             ->thenReturn();
+        $doramasFiltered = $doramasPipeLine['query'];
 
-        return DoramasIndexResource::collection($doramas->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', request()->input('page', 1)));
+        return DoramasIndexResource::collection($doramasFiltered->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', $request->validated('page', 1)));
     }
 
     public function show($slug, DoramasServices $doramasService): JsonResponse
     {
-        $dorama = $doramasService->dataInCacheBySlug($slug);
+        $dorama = $doramasService->getDataFromCacheBySlug($slug);
         $ratingUser = $doramasService->ratingUserFor();
         $favoriteUser = $doramasService->favoriteUserFor();
 
@@ -59,7 +59,7 @@ class DoramaController extends Controller
                 'rating' => $ratingUser,
                 'favorite' => [
                     'folder_id' => $favoriteUser->dorama_folder_id,
-                    'episode' => $favoriteUser->episode,
+                    'episode_id' => $favoriteUser->dorama_episode_id,
                 ],
             ],
         ]);
@@ -67,15 +67,10 @@ class DoramaController extends Controller
 
     public function watch($slug, DoramasServices $doramasService): JsonResponse
     {
-        $dorama = $doramasService->dataInCacheBySlug($slug);
+        $dorama = $doramasService->getDataFromCacheBySlug($slug);
         $ratingUser = $doramasService->ratingUserFor();
         $favoriteUser = $doramasService->favoriteUserFor();
-
-        /** @var Dorama $dorama */
-        $episodes = $dorama->episodes()
-            ->where('status', StatusEnum::PUBLISHED)
-            ->orderBy('number')
-            ->get();
+        $episodes = $doramasService->episodesFor();
 
         return response()->json([
             'dataDorama' => DoramasWatchResource::make($dorama),
@@ -83,7 +78,7 @@ class DoramaController extends Controller
                 'rating' => $ratingUser,
                 'favorite' => [
                     'folder_id' => $favoriteUser->dorama_folder_id,
-                    'episode' => $favoriteUser->episode,
+                    'episode_id' => $favoriteUser->dorama_episode_id,
                 ],
             ],
             'dataEpisodes' => DoramaEpisodesResource::collection($episodes),

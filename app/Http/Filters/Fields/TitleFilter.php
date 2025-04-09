@@ -7,13 +7,15 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TitleFilter extends AbstractFilter
 {
-    public function applyFilter(Builder $builder): void
+    public function applyFilter(Builder $builder, array $validatedData): void
     {
-        if (! empty(request('title'))) {
-            $builder->where(function (Builder $query) {
-                $query->where('title_org', 'ILIKE', '%'.request()->input('title').'%')
-                    ->orWhere('title_ru', 'ILIKE', '%'.request()->input('title').'%')
-                    ->orWhere('title_en', 'ILIKE', '%'.request()->input('title').'%');
+        $title = $validatedData['title'];
+
+        if (! empty($title)) {
+            $builder->where(function (Builder $query) use ($title) {
+                $query->where('title_org', 'ILIKE', '%'.$title.'%')
+                    ->orWhere('title_ru', 'ILIKE', '%'.$title.'%')
+                    ->orWhere('title_en', 'ILIKE', '%'.$title.'%');
             });
         }
     }

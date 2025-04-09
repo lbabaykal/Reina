@@ -5,27 +5,20 @@ import LoginMenu from './Login/LoginMenu.vue';
 export default {
     name: 'Header',
     components: { LoginMenu, LogoSvg },
-    data() {
-        return {
-            isScrolledHeader: false,
-        };
-    },
     methods: {
-        handleScroll() {
-            const header = document.getElementById('header');
-
-            if (window.scrollY > 10) {
-                header.classList.add('header-change');
-                this.isScrolledHeader = true;
-            } else {
-                header.classList.remove('header-change');
-                this.isScrolledHeader = false;
-            }
-        },
+        // handleScroll() {
+        //     if (window.scrollY > 5) {
+        //         this.$refs.header.classList.remove('header-change');
+        //     } else {
+        //         this.$refs.header.classList.add('header-change');
+        //     }
+        // },
     },
-    computed: {},
     mounted() {
-        window.addEventListener('scroll', this.handleScroll);
+        // window.addEventListener('scroll', this.handleScroll);
+    },
+    unmounted() {
+        // window.removeEventListener('scroll', this.handleScroll);
     },
 };
 </script>
@@ -33,18 +26,19 @@ export default {
 <template>
     <div>
         <header
-            id="header"
-            class="fixed top-0 z-50 w-full bg-transparent transition-all duration-300 ease-linear"
+            ref="header"
+            class="fixed top-0 z-50 w-full bg-white text-black dark:bg-black dark:text-white"
         >
             <nav class="mx-auto flex h-14 items-center justify-between px-15">
                 <RouterLink
                     :to="{ name: 'main' }"
-                    class="flex flex-row content-center items-center text-3xl font-bold text-white select-none"
+                    class="flex flex-row content-center items-center text-3xl font-bold select-none"
                 >
                     Reina
                     <LogoSvg classes="w-10 ml-2" />
                 </RouterLink>
-                <LoginMenu :isScrolledHeader />
+
+                <LoginMenu />
             </nav>
         </header>
     </div>

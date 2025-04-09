@@ -21,7 +21,7 @@ class AnimeFolderPolicy
             || $folderAnime->user_id === $user->id
             || $folderAnime->is_private)
             ? Response::allow()
-            : Response::deny(['message' => Lang::get('reina.folder.not_permission_view')]);
+            : Response::deny(Lang::get('reina.folder.not_permission_view'));
     }
 
     public function create(User $user): Response
@@ -30,20 +30,20 @@ class AnimeFolderPolicy
 
         return ($countFolders < Reina::COUNT_FOLDERS)
             ? Response::allow()
-            : Response::deny(['message' => Lang::get('reina.folder.limit')]);
+            : Response::deny(Lang::get('reina.folder.limit'));
     }
 
     public function update(User $user, AnimeFolder $folderAnime): Response
     {
         return ($folderAnime->user_id === $user->id)
             ? Response::allow()
-            : Response::deny(['message' => Lang::get('reina.folder.is_not_yours')]);
+            : Response::deny(Lang::get('reina.folder.is_not_yours'));
     }
 
     public function delete(User $user, AnimeFolder $folderAnime): Response
     {
         return ($folderAnime->user_id === $user->id)
             ? Response::allow()
-            : Response::deny(['message' => Lang::get('reina.folder.is_not_yours')]);
+            : Response::deny(Lang::get('reina.folder.is_not_yours'));
     }
 }
