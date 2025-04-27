@@ -50,18 +50,6 @@ const router = createRouter({
                 },
             ],
         },
-        // {
-        //     path: '/animes/:slug',
-        //     component: () => import('./Layouts/ShowLayout.vue'),
-        //     children: [
-        //         {
-        //             path: '',
-        //             component: () => import('./Pages/Animes/ShowPage.vue'),
-        //             name: 'animes.show',
-        //             props: true
-        //         }
-        //     ]
-        // },
         //  Dorama
         {
             path: '/doramas',
@@ -83,18 +71,6 @@ const router = createRouter({
                 },
             ],
         },
-        /*{
-            path: '/doramas/:slug',
-            component: () => import('./Layouts/ShowLayout.vue'),
-            children: [
-                {
-                    path: '',
-                    component: () => import('./Pages/Doramas/ShowPage.vue'),
-                    name: 'doramas.show',
-                    props: true
-                }
-            ]
-        },*/
         //  Account
         {
             path: '/account',
@@ -183,7 +159,14 @@ const router = createRouter({
         {   path: '/admin', component: () => { window.location.href = 'https://admin.reina.online' },
             name: 'admin'
         },
-    ]
+    ],
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition;
+        }
+
+        return { top: 0, behavior: 'smooth' };
+    }
 });
 
 router.beforeEach((to, from, next) => {

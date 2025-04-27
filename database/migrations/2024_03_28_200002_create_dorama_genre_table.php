@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Dorama;
+use App\Models\Genre;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('dorama_genre', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Dorama::class)
+            $table->foreignIdFor(Dorama::class)
                 ->constrained()
-                ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Genre::class)
+            $table->foreignIdFor(Genre::class)
                 ->constrained()
-                ->cascadeOnUpdate()
                 ->cascadeOnDelete();
         });
     }

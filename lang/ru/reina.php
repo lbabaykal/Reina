@@ -12,7 +12,9 @@ return [
         'rating_forbidden' => 'Нельзя оценивать аниме.',
         'favorite_store' => 'Аниме добавлено в избранное.',
         'favorite_update' => 'Аниме обновлено в избранном.',
+        'favorite_update_error' => 'Ошибка обновления Аниме в избранном.',
         'favorite_destroy' => 'Аниме удалено из избранного.',
+        'favorite_destroy_error' => 'Ошибка удаления Аниме из избранного.',
         'favorite_remember_episode' => 'Эпизод обновлён в избранном.',
         'favorite_forget_episode' => 'Эпизод удалён из избранного.',
     ],
@@ -43,6 +45,21 @@ return [
         'by_rating' => 'По рейтингу',
         'by_release_date_as' => 'По дате выхода ▲',
         'by_release_date_desc' => 'По дате выхода ▼',
+    ],
+    'enum' => [
+        'status' => [
+            'published' => 'Опубликовано',
+            'draft' => 'Черновик',
+            'in_archive' => 'В архиве',
+            'on_moderation' => 'На модерации',
+            'not_found' => 'Такого статуса нет!',
+        ],
+        'types_episode' => [
+            'voiceover' => 'Озвучка',
+            'dubbing' => 'Дубляж',
+            'subtitles' => 'Субтитры',
+            'not_found' => 'Такого типа эпизодов нет!',
+        ],
     ],
 ];
 

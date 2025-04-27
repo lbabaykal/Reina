@@ -12,7 +12,6 @@ use Illuminate\View\View;
 
 class TypeAdminController extends Controller
 {
-
     public function index(): View
     {
         $types = Type::query()->select(['slug', 'title_ru', 'title_en'])
@@ -32,6 +31,7 @@ class TypeAdminController extends Controller
     public function store(TypeStoreRequest $request): RedirectResponse
     {
         $type = Type::query()->create($request->validated());
+
         return redirect()
             ->route('admin.types.index')
             ->with('message', "Тип {$type->title_ru} добавлен.");
@@ -46,9 +46,9 @@ class TypeAdminController extends Controller
     public function update(TypeUpdateRequest $request, Type $type): RedirectResponse
     {
         $type->update($request->validated());
+
         return redirect()
             ->route('admin.types.index')
             ->with('message', "Тип {$type->title_ru} обновлен.");
     }
-
 }

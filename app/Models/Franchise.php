@@ -2,27 +2,37 @@
 
 namespace App\Models;
 
+use App\Observers\FranchisesObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy([FranchisesObserver::class])]
 class Franchise extends Model
 {
+    use SoftDeletes;
+
     public $timestamps = false;
 
-    public function franchiseables(): HasMany
+    protected $fillable = [
+        'slug',
+        'title_ru',
+        'title_en',
+    ];
+
+    public function getRouteKeyName(): string
     {
-        return $this->hasMany(Franchiseable::class);
+        return 'slug';
     }
 
-    public function animes(): MorphToMany
+    public function animes(): HasMany
     {
-        return $this->morphedByMany(Anime::class, 'franchiseable');
+        return $this->hasMany(Anime::class);
     }
 
-    public function doramas(): MorphToMany
+    public function doramas(): HasMany
     {
-        return $this->morphedByMany(Dorama::class, 'franchiseable');
+        return $this->hasMany(Dorama::class);
     }
-
 }

@@ -6,7 +6,6 @@ use App\Enums\CacheEnum;
 use App\Enums\StatusEnum;
 use App\Models\Dorama;
 use App\Models\DoramaEpisode;
-use Illuminate\Support\Facades\Cache;
 
 class DoramaEpisodeObserver
 {

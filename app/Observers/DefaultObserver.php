@@ -4,49 +4,27 @@ namespace App\Observers;
 
 class DefaultObserver
 {
+    public function creating() {}
 
-    public function created(): void
-    {
-        //
-    }
+    public function created() {}
 
-    public function updating(): void
-    {
-        //
-    }
+    public function updating() {}
 
-    public function updated(): void
-    {
-        //
-    }
+    public function updated() {}
 
-    public function saving(): void
-    {
-        //
-    }
+    public function saving() {}
 
-    public function saved(): void
-    {
-        //
-    }
+    public function saved() {}
 
-    public function deleted(): void
-    {
-        //
-    }
+    public function deleting() {}
 
-    public function restored(): void
-    {
-        //
-    }
+    public function deleted() {}
 
-    public function forceDeleted(): void
-    {
-        //
-    }
+    public function restoring() {}
 
-    public function retrieved(): void
-    {
-        //
-    }
+    public function restored() {}
+
+    public function retrieved() {}
+
+    public function forceDeleted() {}
 }

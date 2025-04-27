@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import router from '../router.js';
 import { push } from 'notivue';
+import { useFoldersStore } from './foldersStore.js';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -41,6 +42,8 @@ export const useAuthStore = defineStore('auth', {
         destroyUser() {
             this.userState = null;
             this.isAuthenticatedState = false;
+
+            useFoldersStore().destroyFolders();
         },
         logout() {
             axios.post('/logout');

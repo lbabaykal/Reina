@@ -11,12 +11,11 @@ class DoramaEpisodesResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'dorama_id' => $this->dorama_id,
-            'title_org' => $this->title_org,
-            'title_ru' => $this->title_ru,
-            'title_en' => $this->title_en,
+            'name_org' => $this->name_org,
+            'name_ru' => $this->name_ru,
+            'name_en' => $this->name_en,
             'release_date' => $this->release_date,
-            'voices' => [],
+            'teams' => TeamDoramaEpisodeResource::collection($this->whenLoaded('teamDoramaEpisodes')),
         ];
     }
 }

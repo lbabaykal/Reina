@@ -12,7 +12,6 @@ use Illuminate\View\View;
 
 class GenreAdminController extends Controller
 {
-
     public function index(): View
     {
         $genres = Genre::query()->select(['slug', 'title_ru', 'title_en'])
@@ -32,6 +31,7 @@ class GenreAdminController extends Controller
     public function store(GenreStoreRequest $request): RedirectResponse
     {
         $genre = Genre::query()->create($request->validated());
+
         return redirect()
             ->route('admin.genres.index')
             ->with('message', "Жанр {$genre->title_ru} добавлен.");
@@ -46,9 +46,9 @@ class GenreAdminController extends Controller
     public function update(GenreUpdateRequest $request, Genre $genre): RedirectResponse
     {
         $genre->update($request->validated());
+
         return redirect()
             ->route('admin.genres.index')
             ->with('message', "Жанр {$genre->title_ru} обновлен.");
     }
-
 }

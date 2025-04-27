@@ -8,13 +8,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
     public function up(): void
     {
         Schema::create('dorama_ratings', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Dorama::class)->constrained()->cascadeOnDelete();;
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();;
+            $table->foreignIdFor(Dorama::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->unsignedTinyInteger('assessment');
         });
     }

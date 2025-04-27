@@ -34,10 +34,10 @@ class AnimeAdminController extends Controller
 
     public function create(): View
     {
-        $types = Type::all();
-        $genres = Genre::all();
-        $studios = Studio::all();
-        $countries = Country::all();
+        $types = new Type()->cache();
+        $genres = new Genre()->cache();
+        $studios = new Studio()->cache();
+        $countries = new Country()->cache();
         $age_ratings = AgeRatingEnum::cases();
         $statuses = StatusEnum::cases();
 
@@ -61,10 +61,10 @@ class AnimeAdminController extends Controller
             ->withoutGlobalScopes()
             ->findOrFail(getIdFromSlug($slug));
 
-        $types = Type::all();
-        $genres = Genre::all();
-        $studios = Studio::all();
-        $countries = Country::all();
+        $types = new Type()->cache();
+        $genres = new Genre()->cache();
+        $studios = new Studio()->cache();
+        $countries = new Country()->cache();
         $age_ratings = AgeRatingEnum::cases();
         $statuses = StatusEnum::cases();
 
@@ -126,18 +126,32 @@ class AnimeAdminController extends Controller
         return view('admin.anime.index')->with('animes', $animes);
     }
 
-    public function archive(): View
+    public function inArchive(): View
     {
         $animes = Anime::query()
             ->withoutGlobalScopes()
             ->select(['id', 'slug', 'title_ru', 'status', 'rating', 'type_id', 'status'])
             ->with('type')
-            ->where('status', StatusEnum::ARCHIVE)
+            ->where('status', StatusEnum::IN_ARCHIVE)
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
             ->withQueryString();
 
         return view('admin.anime.index')->with('animes', $animes);
+    }
+
+    public function onModeration(): View
+    {
+        $doramas = Anime::query()
+            ->withoutGlobalScopes()
+            ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
+            ->with('type')
+            ->where('status', StatusEnum::ON_MODERATION)
+            ->latest('updated_at')
+            ->paginate(Reina::COUNT_ADMIN_ITEMS)
+            ->withQueryString();
+
+        return view('admin.anime.index')->with('animes', $doramas);
     }
 
     public function deleted(): View

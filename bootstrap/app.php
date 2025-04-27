@@ -31,4 +31,5 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
             return response()->json(Lang::get('http-statuses.404'), 404);
         });
-    })->create();
+    })
+    ->create();

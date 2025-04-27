@@ -6,183 +6,175 @@ import WarningButton from '../../ui/Buttons/WarningButton.vue';
 import SuccessButton from '../../ui/Buttons/SuccessButton.vue';
 import { push } from 'notivue';
 import ModalCloseButton from '../../ui/Buttons/ModalCloseButton.vue';
+import ToolTip from '../../ToolTip.vue';
+import FavoriteSvg from '../../Svg/FavoriteSvg.vue';
+import { useAuthStore } from '../../../Stores/authStore.js';
+import { useFoldersStore } from '../../../Stores/foldersStore.js';
+import { useFavoriteAnimeStore } from '../../../Stores/favoriteAnimeStore.js';
+import SpinnerSvg from '../../Svg/SpinnerSvg.vue';
 
 export default {
     name: 'Favorite',
-    components: { ModalCloseButton, SuccessButton, WarningButton, DangerButton, StarSvg, LoadingSvg },
+    components: { SpinnerSvg, FavoriteSvg, ToolTip, ModalCloseButton, SuccessButton, WarningButton, DangerButton, StarSvg, LoadingSvg },
     props: {
-        animeId: Number,
-        dataUserForAnime: {
-            rating: Number,
-            favorite: {
-                folder_id: Number,
-                episode_id: Number,
-            },
-        },
-        isFavoriteUser: Boolean,
+        slug: String,
     },
     data() {
         return {
-            dataFoldersUser: {
-                id: Number,
-                title: String,
-            },
-            folder_id: 0,
-            dataLoading: false,
+            authStore: useAuthStore(),
+            foldersStore: useFoldersStore().animeFolders,
+            favoriteAnimeStore: useFavoriteAnimeStore,
+            selectedFolderId: null,
             isFavoriteModalVisible: false,
         };
     },
     methods: {
-        getAnimeFavorite() {
-            this.dataLoading = true;
+        createOrUpdateAnimeFavorite() {
+            this.favoriteAnimeStore.dataFavoriteLoading = true;
             axios
-                .post('/api/animes/favorite')
+                .post(`/api/animes/favorite`, {
+                    slug: this.slug,
+                    folder_id: this.selectedFolderId,
+                })
                 .then((response) => {
-                    this.dataFoldersUser = response.data.folders;
+                    this.favoriteAnimeStore.dataFavorite = response.data.data;
+                    this.toggleFavoriteModal();
                 })
                 .catch((error) => {
                     push.error(error.response.data);
                 })
                 .finally(() => {
-                    this.dataLoading = false;
+                    this.favoriteAnimeStore.dataFavoriteLoading = false;
                 });
-        },
-        addOrUpdateAnimeFavorite() {
-            this.dataLoading = true;
-            if (!this.isFavoriteUser) {
-                axios
-                    .post(`/api/animes/${this.animeId}/favorite`, { folder_id: this.folder_id })
-                    .then((response) => {
-                        this.dataUserForAnime.favorite = response.data.favorite;
-                        push.success(response.data);
-                        this.closeFavoriteModal();
-                    })
-                    .catch((error) => {
-                        push.error(error.response.data);
-                    })
-                    .finally(() => {
-                        this.dataLoading = false;
-                    });
-            } else {
-                axios
-                    .patch(`/api/animes/${this.animeId}/favorite`, { folder_id: this.folder_id })
-                    .then((response) => {
-                        this.dataUserForAnime.favorite = response.data.favorite;
-                        push.success(response.data);
-                        this.closeFavoriteModal();
-                    })
-                    .catch((error) => {
-                        push.error(error.response.data);
-                    })
-                    .finally(() => {
-                        this.dataLoading = false;
-                    });
-            }
         },
         deleteAnimeFavorite() {
-            this.dataLoading = true;
+            this.favoriteAnimeStore.dataFavoriteLoading = true;
             axios
-                .delete(`/api/animes/${this.animeId}/favorite`)
+                .delete(`/api/animes/favorite/${this.favoriteAnimeStore.dataFavorite.id}`)
                 .then((response) => {
-                    this.dataUserForAnime.favorite = {
-                        folder_id: 0,
-                        episode_id: 0,
-                    };
-                    push.success(response.data);
-                    this.closeFavoriteModal();
+                    this.favoriteAnimeStore.resetDataFavorite();
+                    this.selectedFolderId = null;
+                    this.toggleFavoriteModal();
                 })
                 .catch((error) => {
                     push.error(error.response.data);
                 })
                 .finally(() => {
-                    this.dataLoading = false;
+                    this.favoriteAnimeStore.dataFavoriteLoading = false;
                 });
         },
-        openFavoriteModal() {
-            this.folder_id = this.dataUserForAnime.favorite.folder_id;
-            this.isFavoriteModalVisible = true;
+        toggleFavoriteModal() {
+            if (this.authStore.isAuthenticated) {
+                this.isFavoriteModalVisible = !this.isFavoriteModalVisible;
+                this.selectedFolderId = this.favoriteAnimeStore.dataFavorite.folder_id;
+            } else {
+                push.error('Необходимо авторизоваться!');
+            }
         },
-        closeFavoriteModal() {
-            this.isFavoriteModalVisible = false;
+    },
+    computed: {
+        isFavoriteDataLoading() {
+            return this.favoriteAnimeStore.dataFavoriteLoading;
+        },
+        isFavoriteUser() {
+            return this.favoriteAnimeStore.dataFavorite.folder_id !== null;
         },
     },
     mounted() {
-        this.getAnimeFavorite();
+        this.favoriteAnimeStore.getAnimeFavorite(this.slug);
     },
 };
 </script>
 
 <template>
-    <transition
-        enter-active-class="transition-all ease-in-out duration-300"
-        enter-from-class="opacity-0 translate-y-10 scale-95"
-        enter-to-class="opacity-100 translate-y-0 scale-100"
-        leave-active-class="transition-all ease-in-out duration-300"
-        leave-from-class="opacity-100 translate-y-0 scale-100"
-        leave-to-class="opacity-0 translate-y-10 scale-95"
+    <ToolTip
+        message="В избранное"
+        classes="py-2 px-4 bg-gray-600 text-red-500"
     >
-        <div
-            v-if="isFavoriteModalVisible"
-            class="fixed top-0 left-0 z-40 flex h-full w-full items-center justify-center overflow-x-hidden overflow-y-auto"
+        <button
+            type="button"
+            class="group flex cursor-pointer flex-row items-center rounded-sm bg-gray-600/80 p-2 text-red-500 hover:bg-gray-500"
+            @click="toggleFavoriteModal"
+            :disabled="isFavoriteDataLoading"
         >
-            <div class="shadow-xl max-w-96 min-w-80 rounded-md bg-white dark:bg-black select-none">
-                <div class="flex items-center justify-between border-b border-gray-400 p-2">
-                    <div class="mx-auto truncate pl-8 text-xl text-black dark:text-white font-semibold">Избранное</div>
-                    <ModalCloseButton @click="closeFavoriteModal" />
-                </div>
+            <SpinnerSvg
+                v-if="isFavoriteDataLoading"
+                classes="size-7 text-red-500"
+            />
+            <FavoriteSvg
+                v-else
+                :classes="['size-7 stroke-red-500 group-hover:fill-red-500', isFavoriteUser ? 'fill-red-500' : 'fill-transparent']"
+            />
+        </button>
+    </ToolTip>
 
-                <div class="relative space-y-1.5 p-3">
-                    <div
-                        class="absolute top-0 left-0 flex h-full w-full items-center justify-center bg-black/60"
-                        v-if="dataLoading"
-                    >
-                        <LoadingSvg classes="w-20 fill-red-500" />
+    <teleport to="#modals">
+        <transition
+            enter-active-class="transition-all ease-in-out duration-300"
+            enter-from-class="opacity-0 translate-y-10 scale-95"
+            enter-to-class="opacity-100 translate-y-0 scale-100"
+            leave-active-class="transition-all ease-in-out duration-300"
+            leave-from-class="opacity-100 translate-y-0 scale-100"
+            leave-to-class="opacity-0 translate-y-10 scale-95"
+        >
+            <div
+                v-if="isFavoriteModalVisible"
+                class="fixed top-0 left-0 z-40 flex h-full w-full items-center justify-center overflow-x-hidden overflow-y-auto"
+            >
+                <div class="max-w-96 min-w-80 rounded-md bg-white shadow-lg select-none dark:bg-black">
+                    <div class="flex items-center justify-between border-b border-gray-400 p-2">
+                        <div class="mx-auto truncate pl-8 text-xl font-semibold text-black dark:text-white">Избранное</div>
+                        <ModalCloseButton @click="toggleFavoriteModal" />
                     </div>
 
-                    <label
-                        v-for="dataFolder in dataFoldersUser"
-                        class="flex cursor-pointer justify-start text-lg"
-                    >
-                        <input
-                            :value="dataFolder.id"
-                            v-model="folder_id"
-                            type="radio"
-                            class="peer hidden"
-                        />
-                        <span
-                            class="flex-grow truncate rounded-md px-3 py-1 font-medium
-                            bg-whiteActive dark:bg-blackActive
-                            peer-checked:bg-red-400 peer-checked:text-white
-                            text-black dark:text-white
-                            hover:bg-black dark:hover:bg-white
-                            hover:text-white dark:hover:text-black"
+                    <div class="relative space-y-1.5 p-3">
+                        <div
+                            class="absolute top-0 left-0 flex h-full w-full items-center justify-center bg-black/60"
+                            v-if="isFavoriteDataLoading"
                         >
-                            {{ dataFolder.title }}
-                        </span>
-                    </label>
-                </div>
+                            <LoadingSvg classes="w-20 fill-red-500" />
+                        </div>
 
-                <div class="flex justify-center border-t border-gray-400 p-2">
-                    <WarningButton
-                        v-if="isFavoriteUser"
-                        @click="deleteAnimeFavorite"
-                        :disabledButton="dataLoading"
-                        class="mx-2"
-                    />
+                        <label
+                            v-for="folder in foldersStore"
+                            class="flex cursor-pointer justify-start text-lg"
+                        >
+                            <input
+                                :value="folder.id"
+                                v-model="selectedFolderId"
+                                type="radio"
+                                class="peer hidden"
+                            />
+                            <span
+                                class="bg-whiteActive dark:bg-blackActive flex-grow truncate rounded-md px-3 py-1 font-medium text-black peer-checked:bg-red-400 peer-checked:text-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black"
+                            >
+                                {{ folder.name }}
+                            </span>
+                        </label>
+                    </div>
 
-                    <SuccessButton
-                        @click="addOrUpdateAnimeFavorite"
-                        :disabledButton="dataLoading"
-                        class="mx-2"
-                    />
+                    <div class="flex justify-center border-t border-gray-400 p-2">
+                        <WarningButton
+                            v-if="isFavoriteUser"
+                            @click="deleteAnimeFavorite"
+                            :disabledButton="isFavoriteDataLoading"
+                            class="mx-2"
+                        />
 
-                    <DangerButton
-                        @click="closeFavoriteModal"
-                        :disabledButton="dataLoading"
-                        class="mx-2"
-                    />
+                        <SuccessButton
+                            @click="createOrUpdateAnimeFavorite"
+                            :disabledButton="isFavoriteDataLoading"
+                            class="mx-2"
+                        />
+
+                        <DangerButton
+                            @click="toggleFavoriteModal"
+                            :disabledButton="isFavoriteDataLoading"
+                            class="mx-2"
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
-    </transition>
+        </transition>
+    </teleport>
 </template>

@@ -34,10 +34,10 @@ class DoramaAdminController extends Controller
 
     public function create(): View
     {
-        $types = Type::all();
-        $genres = Genre::all();
-        $studios = Studio::all();
-        $countries = Country::all();
+        $types = new Type()->cache();
+        $genres = new Genre()->cache();
+        $studios = new Studio()->cache();
+        $countries = new Country()->cache();
         $age_ratings = AgeRatingEnum::cases();
         $statuses = StatusEnum::cases();
 
@@ -61,10 +61,10 @@ class DoramaAdminController extends Controller
             ->withoutGlobalScopes()
             ->findOrFail(getIdFromSlug($slug));
 
-        $types = Type::all();
-        $genres = Genre::all();
-        $studios = Studio::all();
-        $countries = Country::all();
+        $types = new Type()->cache();
+        $genres = new Genre()->cache();
+        $studios = new Studio()->cache();
+        $countries = new Country()->cache();
         $age_ratings = AgeRatingEnum::cases();
         $statuses = StatusEnum::cases();
 
@@ -126,13 +126,27 @@ class DoramaAdminController extends Controller
         return view('admin.dorama.index')->with('doramas', $doramas);
     }
 
-    public function archive(): View
+    public function inArchive(): View
     {
         $doramas = Dorama::query()
             ->withoutGlobalScopes()
             ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
             ->with('type')
-            ->where('status', StatusEnum::ARCHIVE)
+            ->where('status', StatusEnum::IN_ARCHIVE)
+            ->latest('updated_at')
+            ->paginate(Reina::COUNT_ADMIN_ITEMS)
+            ->withQueryString();
+
+        return view('admin.dorama.index')->with('doramas', $doramas);
+    }
+
+    public function onModeration(): View
+    {
+        $doramas = Dorama::query()
+            ->withoutGlobalScopes()
+            ->select(['slug', 'title_ru', 'status', 'rating', 'type_id', 'country_id', 'status'])
+            ->with('type')
+            ->where('status', StatusEnum::ON_MODERATION)
             ->latest('updated_at')
             ->paginate(Reina::COUNT_ADMIN_ITEMS)
             ->withQueryString();

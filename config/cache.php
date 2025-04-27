@@ -102,6 +102,12 @@ return [
             'connection' => env('REDIS_CACHE_CONNECTION', 'doramas'),
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
         ],
+
+        'redis_different' => [
+            'driver' => 'redis',
+            'connection' => env('REDIS_CACHE_CONNECTION', 'different'),
+            'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
+        ],
     ],
 
     /*

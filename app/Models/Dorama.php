@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\AgeRatingEnum;
+use App\Enums\StatusEnum;
 use App\Observers\Dorama\DoramaObserver;
 use App\Traits\AnimeAndDoramaTrait;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -29,6 +31,7 @@ class Dorama extends Model
         'genre_id',
         'studio_id',
         'country_id',
+        'franchise_id',
         'age_rating',
         'episodes_released',
         'episodes_total',
@@ -38,11 +41,25 @@ class Dorama extends Model
         'status',
         'rating',
         'count_assessments',
+        'views',
         'is_comment',
         'is_rating',
     ];
 
-    public $timestamps = true;
+    protected $casts = [
+        'age_rating' => AgeRatingEnum::class,
+        'episodes_released' => 'integer',
+        'episodes_total' => 'integer',
+        'duration' => 'integer',
+        'release' => 'date',
+        'description' => 'string',
+        'status' => StatusEnum::class,
+        'rating' => 'float',
+        'count_assessments' => 'integer',
+        'views' => 'integer',
+        'is_comment' => 'boolean',
+        'is_rating' => 'boolean',
+    ];
 
     public function countries(): BelongsToMany
     {

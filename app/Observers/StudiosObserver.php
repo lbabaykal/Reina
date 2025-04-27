@@ -2,26 +2,20 @@
 
 namespace App\Observers;
 
+use App\Models\Studio;
+
 class StudiosObserver
 {
-    public function created(): void
+    public function creating(Studio $studio): void
     {
-        //
+        $studio->slug = str()->slug($studio->title);
     }
 
-    public function updating(): void
+    public function updating(Studio $studio): void
     {
-        //
-    }
-
-    public function updated(): void
-    {
-        //
-    }
-
-    public function saving(): void
-    {
-        //
+        if ($studio->isDirty('title')) {
+            $studio->slug = str()->slug($studio->title);
+        }
     }
 
     public function saved(): void
@@ -32,20 +26,5 @@ class StudiosObserver
     public function deleted(): void
     {
         cache()->forget('studios');
-    }
-
-    public function restored(): void
-    {
-        //
-    }
-
-    public function forceDeleted(): void
-    {
-        //
-    }
-
-    public function retrieved(): void
-    {
-        //
     }
 }

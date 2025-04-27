@@ -9,16 +9,10 @@ use App\Models\Studio;
 use App\Models\Type;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Storage;
-use Spatie\Sluggable\HasSlug;
-use Spatie\Sluggable\SlugOptions;
 
 trait AnimeAndDoramaTrait
 {
-    use HasSlug;
-
     protected static function boot()
     {
         parent::boot();
@@ -41,21 +35,14 @@ trait AnimeAndDoramaTrait
         return $this->belongsToMany(Genre::class);
     }
 
-    public function franchise(): MorphToMany
+    public function franchise(): BelongsTo
     {
-        return $this->morphToMany(Franchise::class, 'franchiseable');
-    }
-
-    public function getSlugOptions(): SlugOptions
-    {
-        return SlugOptions::create()
-            ->generateSlugsFrom(['id', 'title_ru'])
-            ->saveSlugsTo('slug')
-            ->doNotGenerateSlugsOnCreate();
+        return $this->belongsTo(Franchise::class);
     }
 
     public function findBySlugId(string $slug, array $columns = ['*'])
     {
+        // TODO Проверить мб куда пригодиться
         preg_match('/^\d+/', $slug, $matches);
 
         if (empty($matches[0])) {
@@ -80,6 +67,6 @@ trait AnimeAndDoramaTrait
 
         return $this->cover
             ? Storage::disk('s3_'.$table)->url($this->cover)
-            : Storage::disk('s3_'.$table)->url('no_cover.png');
+            : Storage::disk('s3_'.$table)->url('no_cover.jpg');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\AgeRatingEnum;
+use App\Enums\StatusEnum;
 use App\Observers\Anime\AnimeObserver;
 use App\Traits\AnimeAndDoramaTrait;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -14,9 +16,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[ObservedBy([AnimeObserver::class])]
 class Anime extends Model
 {
+    use AnimeAndDoramaTrait;
     use HasFactory;
     use SoftDeletes;
-    use AnimeAndDoramaTrait;
 
     protected $fillable = [
         'slug',
@@ -29,6 +31,7 @@ class Anime extends Model
         'genre_id',
         'studio_id',
         'country_id',
+        'franchise_id',
         'age_rating',
         'episodes_released',
         'episodes_total',
@@ -38,11 +41,25 @@ class Anime extends Model
         'status',
         'rating',
         'count_assessments',
+        'views',
         'is_comment',
         'is_rating',
     ];
 
-    public $timestamps = true;
+    protected $casts = [
+        'age_rating' => AgeRatingEnum::class,
+        'episodes_released' => 'integer',
+        'episodes_total' => 'integer',
+        'duration' => 'integer',
+        'release' => 'date',
+        'description' => 'string',
+        'status' => StatusEnum::class,
+        'rating' => 'float',
+        'count_assessments' => 'integer',
+        'views' => 'integer',
+        'is_comment' => 'boolean',
+        'is_rating' => 'boolean',
+    ];
 
     public function countries(): BelongsToMany
     {
@@ -63,5 +80,4 @@ class Anime extends Model
     {
         return $this->hasMany(AnimeEpisode::class);
     }
-
 }

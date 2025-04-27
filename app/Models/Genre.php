@@ -9,14 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Sluggable\HasSlug;
-use Spatie\Sluggable\SlugOptions;
 
 #[ObservedBy([GenresObserver::class])]
 class Genre extends Model
 {
     use HasFactory;
-    use HasSlug;
     use SoftDeletes;
 
     public $timestamps = false;
@@ -26,13 +23,6 @@ class Genre extends Model
         'title_ru',
         'title_en',
     ];
-
-    public function getSlugOptions(): SlugOptions
-    {
-        return SlugOptions::create()
-            ->generateSlugsFrom(['title_en'])
-            ->saveSlugsTo('slug');
-    }
 
     public function getRouteKeyName(): string
     {

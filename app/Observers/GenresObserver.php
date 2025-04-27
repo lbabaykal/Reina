@@ -2,26 +2,20 @@
 
 namespace App\Observers;
 
+use App\Models\Genre;
+
 class GenresObserver
 {
-    public function created(): void
+    public function creating(Genre $genre): void
     {
-        //
+        $genre->slug = str()->slug($genre->title_en);
     }
 
-    public function updating(): void
+    public function updating(Genre $genre): void
     {
-        //
-    }
-
-    public function updated(): void
-    {
-        //
-    }
-
-    public function saving(): void
-    {
-        //
+        if ($genre->isDirty('title_en')) {
+            $genre->slug = str()->slug($genre->title_en);
+        }
     }
 
     public function saved(): void
@@ -34,18 +28,4 @@ class GenresObserver
         cache()->forget('genres');
     }
 
-    public function restored(): void
-    {
-        //
-    }
-
-    public function forceDeleted(): void
-    {
-        //
-    }
-
-    public function retrieved(): void
-    {
-        //
-    }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Requests\AdminPanel;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class TypeStoreRequest extends FormRequest
 {
@@ -12,11 +11,6 @@ class TypeStoreRequest extends FormRequest
         return auth()->check();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -24,12 +18,4 @@ class TypeStoreRequest extends FormRequest
             'title_en' => ['required', 'min:2', 'max:255', 'unique:types,title_en', 'regex:/^[\p{Latin}\s]+$/u'],
         ];
     }
-
-//    public function withValidator($validator): void
-//    {
-//        $validator->sometimes('code', 'uppercase', function ($input) {
-//            return $input->has('title_en');
-//        });
-//    }
-
 }

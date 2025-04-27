@@ -15,6 +15,9 @@ export default {
         isRating() {
             return this.is_rating;
         },
+        displayEpisodes() {
+            return this.episodes_released === this.episodes_total ? this.episodes_total : `${this.episodes_released} / ${this.episodes_total}` ;
+        }
     },
 };
 </script>
@@ -38,9 +41,9 @@ export default {
 
             <div
                 v-if="episodes_total !== 1"
-                class="absolute bottom-2 left-2 bg-violet-600/80 px-2 py-1.5 transition-all duration-500 group-hover:invisible group-hover:opacity-0"
+                class="absolute bottom-2 left-2 rounded-sm bg-violet-600/90 px-1.5 py-1 text-sm transition-all duration-500 group-hover:invisible group-hover:opacity-0"
             >
-                EPS: {{ episodes_released + ' / ' + episodes_total }}
+                EPS: {{ displayEpisodes }}
             </div>
 
             <div

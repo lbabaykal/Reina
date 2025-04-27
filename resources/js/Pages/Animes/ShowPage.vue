@@ -1,16 +1,14 @@
 <script>
 import LoadingSvg from '../../Components/Svg/LoadingSvg.vue';
-import Description from '../../Components/Animes/Description.vue';
+import Tabs from '../../Components/Animes/Tabs.vue';
 import Rating from '../../Components/Animes/Modals/Rating.vue';
 import Favorite from '../../Components/Animes/Modals/Favorite.vue';
-import RatingButton from '../../Components/ui/Buttons/RatingButton.vue';
-import FavoriteButton from '../../Components/ui/Buttons/FavoriteButton.vue';
 import WatchOnlineButton from '../../Components/ui/Buttons/WatchOnlineButton.vue';
 import { push } from 'notivue';
 
 export default {
     name: 'ShowPage',
-    components: { WatchOnlineButton, FavoriteButton, RatingButton, Favorite, Rating, Description, LoadingSvg },
+    components: { Tabs, WatchOnlineButton, Favorite, Rating, LoadingSvg },
     props: {
         slug: String,
     },
@@ -24,7 +22,7 @@ export default {
                 title_org: String,
                 title_ru: String,
                 title_en: String,
-                types: {
+                type: {
                     id: Number,
                     slug: String,
                     title_ru: String,
@@ -53,17 +51,16 @@ export default {
                 duration: String,
                 release: String,
                 year: Number,
-                description: Text,
+                description: String,
                 rating: Number,
                 count_assessments: Number,
                 is_comment: Boolean,
                 is_rating: Boolean,
-            },
-            dataUserForAnime: {
-                rating: Number,
-                favorite: {
-                    folder_id: Number,
-                    episode_id: Number,
+                franchise: {
+                    id: Number,
+                    slug: String,
+                    title_ru: String,
+                    title_en: String,
                 },
             },
             dataLoading: false,
@@ -75,34 +72,26 @@ export default {
             axios
                 .get(`/api/animes/${this.slug}`)
                 .then((response) => {
-                    this.dataAnime = response.data.dataAnime;
-                    this.dataUserForAnime = response.data.dataUserForAnime;
+                    this.dataAnime = response.data.data;
                     this.dataLoading = true;
                 })
                 .catch((error) => {
                     push.error(error.response.data);
                 });
         },
-        openRatingModal() {
-            this.$refs.ratingRef.openRatingModal();
-        },
-        openFavoriteModal() {
-            this.$refs.favoriteRef.openFavoriteModal();
-        },
     },
     computed: {
         isEpisodes() {
             return this.dataAnime.episodes_total !== 1;
         },
-        isRatingUser() {
-            return this.dataUserForAnime.rating !== 0;
-        },
-        isFavoriteUser() {
-            return this.dataUserForAnime.favorite.folder_id !== 0;
-        },
     },
     mounted() {
         this.getAnimeData();
+    },
+    watch: {
+        slug() {
+            this.getAnimeData();
+        },
     },
 };
 </script>
@@ -158,16 +147,8 @@ export default {
                         <WatchOnlineButton />
                     </router-link>
 
-                    <RatingButton
-                        :is_rating="dataAnime.is_rating"
-                        :isRatingUser="isRatingUser"
-                        @clickMethod="openRatingModal"
-                    />
-
-                    <FavoriteButton
-                        :isFavoriteUser="isFavoriteUser"
-                        @click="openFavoriteModal"
-                    />
+                    <Rating :slug="dataAnime.slug" />
+                    <Favorite :slug="dataAnime.slug" />
                 </div>
             </div>
 
@@ -177,23 +158,9 @@ export default {
             ></div>
         </div>
 
-        <Description
+        <Tabs
             :dataAnime="this.dataAnime"
             :isEpisodes="isEpisodes"
-        />
-
-        <Rating
-            ref="ratingRef"
-            :animeId="dataAnime.id"
-            :dataUserForAnime="dataUserForAnime"
-            :isRatingUser="isRatingUser"
-        />
-
-        <Favorite
-            ref="favoriteRef"
-            :animeId="dataAnime.id"
-            :dataUserForAnime="dataUserForAnime"
-            :isFavoriteUser="isFavoriteUser"
         />
     </section>
 

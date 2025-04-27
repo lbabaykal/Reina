@@ -15,6 +15,10 @@ class DoramaRating extends Model
         'assessment',
     ];
 
+    protected $casts = [
+        'assessment' => 'integer',
+    ];
+
     public function dorama(): BelongsTo
     {
         return $this->belongsTo(Dorama::class);

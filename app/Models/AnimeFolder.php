@@ -2,19 +2,27 @@
 
 namespace App\Models;
 
+use App\Observers\Anime\AnimeFolderObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[ObservedBy([AnimeFolderObserver::class])]
 class AnimeFolder extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
+        'name',
         'user_id',
         'is_private',
+        'number',
+    ];
+
+    protected $casts = [
+        'is_private' => 'boolean',
     ];
 
     public function user(): BelongsTo

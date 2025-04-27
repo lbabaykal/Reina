@@ -21,6 +21,11 @@
                             >
                                 Опубликованные
                             </a>
+                            <a href="{{ route('admin.animes.moderation') }}"
+                               class="my-10"
+                            >
+                                На модерации
+                            </a>
                             <a href="{{ route('admin.animes.draft') }}"
                                class="my-10"
                             >
@@ -91,7 +96,7 @@
                                 <a href="{{ route('admin.animes.edit', $anime->slug) }}"
                                    class="hover:text-love"
                                 >
-                                    Реадактировать
+                                    Редактировать
                                 </a>
                             </td>
                         </tr>

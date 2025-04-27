@@ -64,10 +64,12 @@
     --spacing-16\.5: 4.125rem;    /* 66px */
     --spacing-17: 4.25rem; /* 68px */
     --spacing-18: 4.5rem;  /* 72px */
+    --spacing-22: 5.5rem;  /* 88px */
     --spacing-50: 12.5rem;  /* 200px */
     --spacing-68: 17rem;   /* 272px */
     --spacing-76: 19rem;   /* 304px */
     --spacing-80: 20rem;   /* 320px */
+    --spacing-82: 20.5rem;   /* 328px */
     --spacing-84: 21rem;   /* 336px */
     --spacing-88: 22rem;   /* 352px */
     --spacing-90: 22.5rem;   /* 360px */

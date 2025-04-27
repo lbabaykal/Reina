@@ -15,6 +15,10 @@ class AnimeRating extends Model
         'assessment',
     ];
 
+    protected $casts = [
+        'assessment' => 'integer',
+    ];
+
     public function anime(): BelongsTo
     {
         return $this->belongsTo(Anime::class);

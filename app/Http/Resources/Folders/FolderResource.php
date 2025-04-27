@@ -16,7 +16,7 @@ class FolderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'name' => $this->name,
             'user_id' => $this->user_id,
             'is_private' => $this->is_private,
         ];

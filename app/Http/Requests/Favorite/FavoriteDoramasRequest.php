@@ -13,18 +13,31 @@ class FavoriteDoramasRequest extends FormRequest
         return auth()->check();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'id' => getIdFromSlug($this->slug),
+        ]);
+
+        if ($this->input('folder_id') === null) {
+            $this->offsetUnset('folder_id');
+        }
+
+        if ($this->input('episode_id') === null) {
+            $this->offsetUnset('episode_id');
+        }
+    }
+
     public function rules(): array
     {
         return [
-            'folder_id' => ['required', 'integer',
+            'slug' => ['required', 'string'],
+            'id' => ['required', 'integer', 'exists:doramas,id'],
+            'folder_id' => ['nullable', 'integer',
                 Rule::exists('dorama_folders', 'id')
                     ->whereIn('user_id', [0, auth()->id()]),
             ],
+            'episode_id' => ['nullable', 'integer', 'exists:dorama_episodes,id'],
         ];
     }
 

@@ -112,6 +112,22 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        /* Custom DataBase */
+        'timescale' => [
+            'driver' => env('DB_TIMESCALE_CONNECTION', 'pgsql'),
+            'url' => env('DB_TIMESCALE_URL'),
+            'host' => env('DB_TIMESCALE_HOST', '127.0.0.1'),
+            'port' => env('DB_TIMESCALE_PORT', '5432'),
+            'database' => env('DB_TIMESCALE_DATABASE', 'laravel'),
+            'username' => env('DB_TIMESCALE_USERNAME', 'root'),
+            'password' => env('DB_TIMESCALE_PASSWORD', ''),
+            'charset' => env('DB_TIMESCALE_CHARSET', 'utf8'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
     ],
 
     /*
@@ -186,6 +202,15 @@ return [
             'password' => env('REDIS_PASSWORD'),
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_CACHE_DB', '3'),
+        ],
+
+        'different' => [
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'username' => env('REDIS_USERNAME'),
+            'password' => env('REDIS_PASSWORD'),
+            'port' => env('REDIS_PORT', '6379'),
+            'database' => env('REDIS_CACHE_DB', '4'),
         ],
 
     ],

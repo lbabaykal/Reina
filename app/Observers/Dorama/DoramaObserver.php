@@ -3,37 +3,48 @@
 namespace App\Observers\Dorama;
 
 use App\Enums\CacheEnum;
+use App\Enums\S3Enum;
 use App\Enums\StatusEnum;
 use App\Models\Dorama;
 use Illuminate\Support\Facades\Storage;
 
 class DoramaObserver
 {
+    public function creating(Dorama $dorama): void
+    {
+        $dorama->slug = str()->slug($dorama->title_ru);
+    }
+
     public function created(Dorama $dorama): void
     {
         if ($dorama->status === StatusEnum::PUBLISHED->value) {
             $this->forgetCacheMainDorama();
         }
+
+        $dorama->slug = str()->slug($dorama->title_ru).'-'.$dorama->id;
+        $dorama->saveQuietly();
     }
 
     public function updating(Dorama $dorama): void
     {
         if ($dorama->isDirty('poster') && $dorama->getOriginal('poster')) {
-            Storage::disk('dorama_posters')->delete($dorama->getOriginal('poster'));
+            Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->getOriginal('poster'));
 
             $this->forgetCacheDorama($dorama);
             $this->forgetCacheMainDorama();
         }
 
         if ($dorama->isDirty('cover') && $dorama->getOriginal('cover')) {
-            Storage::disk('dorama_covers')->delete($dorama->getOriginal('cover'));
+            Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->getOriginal('cover'));
 
             $this->forgetCacheDorama($dorama);
             $this->forgetCacheMainDorama();
         }
 
-        if ($dorama->isDirty('slug')) {
-            cache()->store('redis_doramas')->forget('dorama:'.$dorama->getOriginal('slug'));
+        if ($dorama->isDirty('title_ru')) {
+            $dorama->slug = str()->slug($dorama->title_ru).'-'.$dorama->id;
+
+            cache()->store(CacheEnum::DORAMAS_STORE->value)->forget(CacheEnum::DORAMA->value.$dorama->getOriginal('id'));
         }
     }
 
@@ -72,20 +83,20 @@ class DoramaObserver
 
     public function forceDeleted(Dorama $dorama): void
     {
+        $dorama->genres()->detach();
+        $dorama->studios()->detach();
+
         $dorama->ratings()->delete();
         $dorama->favorites()->delete();
 
         $dorama->episodes()->delete();
 
-        $dorama->genres()->detach();
-        $dorama->studios()->detach();
-
         if ($dorama->getOriginal('poster') !== null) {
-            Storage::disk('dorama_posters')->delete($dorama->getOriginal('poster'));
+            Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->getOriginal('poster'));
         }
 
         if ($dorama->getOriginal('cover') !== null) {
-            Storage::disk('dorama_covers')->delete($dorama->getOriginal('cover'));
+            Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->getOriginal('cover'));
         }
 
         $this->forgetCacheDorama($dorama);
@@ -104,6 +115,6 @@ class DoramaObserver
 
     public function forgetCacheDorama(Dorama $dorama): void
     {
-        cache()->store(CacheEnum::DORAMAS_STORE->value)->forget(CacheEnum::DORAMA->value.$dorama->slug);
+        cache()->store(CacheEnum::DORAMAS_STORE->value)->forget(CacheEnum::DORAMA->value.$dorama->id);
     }
 }

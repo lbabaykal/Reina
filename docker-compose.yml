@@ -3,7 +3,7 @@ name: reina
 services:
   nginx:
     container_name: nginx
-    image: "nginx:bookworm"
+    image: "nginx:alpine"
     ports:
       - "80:80"
       - "443:443"
@@ -26,26 +26,46 @@ services:
       context: .
       dockerfile: _docker/php/php.Dockerfile
     volumes:
+      - ./_docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./_docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - .:/var/www/reina
     restart: unless-stopped
     networks:
       - reina_network
 # docker exec -it php /bin/sh -c "chmod -R 755 /var/www/reina/public && chown -R www-data:www-data /var/www/reina/public"
 
-  postgres:
-    container_name: postgres
-    image: postgres:bookworm
+  timescale:
+    container_name: timescale
+    image: timescale/timescaledb:latest-pg17
     ports:
-      - "5432:5432"
+      - "5433:5433"
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_TIMESCALE_HOST}
+      DB_PORT: ${DB_TIMESCALE_PORT}
+      POSTGRES_DB: ${DB_TIMESCALE_DATABASE}
+      POSTGRES_USER: ${DB_TIMESCALE_USERNAME}
+      POSTGRES_PASSWORD: ${DB_TIMESCALE_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - timescale_data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
       - reina_network
+    command: ["postgres", "-p", "5433"]
+
+  postgres:
+      container_name: postgres
+      image: postgres:bookworm
+      ports:
+          - "5432:5432"
+      environment:
+          POSTGRES_DB: ${DB_DATABASE}
+          POSTGRES_USER: ${DB_USERNAME}
+          POSTGRES_PASSWORD: ${DB_PASSWORD}
+      volumes:
+          - postgres_data:/var/lib/postgresql/data
+      restart: unless-stopped
+      networks:
+          - reina_network
 
   redis:
     container_name: redis
@@ -64,15 +84,14 @@ services:
 
   node:
     container_name: node
-    build:
-      context: .
-      dockerfile: _docker/dockerfiles/node.Dockerfile
+    image: node:lts-alpine
     ports:
       - "5173:5173"
     volumes:
       - ./:/var/www/reina
       - ./_docker/cert/Certificate.crt:/etc/ssl/certs/reina.online/Certificate.crt:ro
       - ./_docker/cert/PrivateKey.key:/etc/ssl/private/reina.online/PrivateKey.key:ro
+    working_dir: /var/www/reina
     tty: true
     networks:
       - reina_network
@@ -82,6 +101,7 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  timescale_data:
 
 networks:
   reina_network:

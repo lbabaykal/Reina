@@ -42,7 +42,7 @@
                                 <a href="{{ route('admin.types.edit', $type->slug) }}"
                                    class="hover:text-love"
                                 >
-                                    Реадактировать
+                                    Редактировать
                                 </a>
                             </td>
                         </tr>

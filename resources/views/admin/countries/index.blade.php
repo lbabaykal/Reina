@@ -42,7 +42,7 @@
                                 <a href="{{ route('admin.countries.edit', $county->slug) }}"
                                    class="hover:text-love"
                                 >
-                                    Реадактировать
+                                    Редактировать
                                 </a>
                             </td>
                         </tr>

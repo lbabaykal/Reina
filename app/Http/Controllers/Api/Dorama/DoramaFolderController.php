@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api\Dorama;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Folder\FolderCreateRequest;
+use App\Http\Requests\Folder\FolderShowRequest;
 use App\Http\Requests\Folder\FolderUpdateRequest;
-use App\Http\Resources\Doramas\DoramasIndexResource;
+use App\Http\Resources\Doramas\DoramaIndexResource;
 use App\Http\Resources\Folders\FolderResource;
-use App\Http\Resources\Folders\FoldersDoramasResource;
+use App\Http\Resources\Folders\FolderDoramaResource;
 use App\Models\DoramaFolder;
 use App\Reina;
+use App\Services\DoramaFolderServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
@@ -28,7 +30,7 @@ class DoramaFolderController extends Controller
         $totalFavorites = $folders->sum('favorites_doramas_user_count');
 
         return response()->json([
-            'allUserFolders' => FoldersDoramasResource::collection($folders),
+            'allUserFolders' => FolderDoramaResource::collection($folders),
             'totalFavorites' => $totalFavorites,
         ]);
     }
@@ -41,17 +43,13 @@ class DoramaFolderController extends Controller
             ->get();
 
         return response()->json([
-            'OnlyUserFolders' => FoldersDoramasResource::collection($folders),
+            'OnlyUserFolders' => FolderDoramaResource::collection($folders),
         ]);
     }
 
-    public function show(): AnonymousResourceCollection
+    public function show(FolderShowRequest $request): AnonymousResourceCollection
     {
-        $validatedFolderId = request()->validate([
-            'folder' => ['nullable', 'integer', 'min:0'],
-        ]);
-
-        $folderId = $validatedFolderId['folder'] ?? 0;
+        $folderId = $request->validated('folder', 0);
 
         if ($folderId > 0) {
             $folderDorama = DoramaFolder::query()->findOrFail($folderId);
@@ -66,7 +64,7 @@ class DoramaFolderController extends Controller
             ->select(['slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'favorite_doramas.updated_at'])
             ->latest('favorite_doramas.updated_at');
 
-        return DoramasIndexResource::collection($doramas->paginate(Reina::COUNT_ARTICLES_FOLDERS, ['*'], 'page', request()->input('page', 1)));
+        return DoramaIndexResource::collection($doramas->paginate(Reina::COUNT_ARTICLES_FOLDERS, ['*'], 'page', request()->input('page', 1)));
     }
 
     public function store(FolderCreateRequest $request): JsonResponse
@@ -74,12 +72,12 @@ class DoramaFolderController extends Controller
         Gate::authorize('create', DoramaFolder::class);
 
         $folder = new DoramaFolder;
-        $folder->title = $request->validated('title');
+        $folder->name = $request->validated('name');
         $folder->user_id = auth()->id();
         $folder->is_private = $request->validated('is_private');
         $folder->save();
 
-        return response()->json(Lang::get('reina.folder.created', ['title' => $folder->title]));
+        return response()->json(Lang::get('reina.folder.created', ['name' => $folder->name]));
     }
 
     public function edit(DoramaFolder $folder): JsonResponse
@@ -95,11 +93,11 @@ class DoramaFolderController extends Controller
     {
         Gate::authorize('update', $folder);
 
-        $folder->title = $request->validated('title');
+        $folder->name = $request->validated('name');
         $folder->is_private = $request->validated('is_private');
         $folder->update();
 
-        return response()->json(Lang::get('reina.folder.updated', ['title' => $folder->title]));
+        return response()->json(Lang::get('reina.folder.updated', ['name' => $folder->name]));
     }
 
     public function destroy(DoramaFolder $folder): JsonResponse
@@ -108,6 +106,11 @@ class DoramaFolderController extends Controller
 
         $folder->delete();
 
-        return response()->json(Lang::get('reina.folder.deleted', ['title' => $folder->title]));
+        return response()->json(Lang::get('reina.folder.deleted', ['name' => $folder->name]));
+    }
+
+    public function folders(DoramaFolderServices $doramaFolderServices): AnonymousResourceCollection
+    {
+        return FolderResource::collection($doramaFolderServices->foldersUserFor());
     }
 }

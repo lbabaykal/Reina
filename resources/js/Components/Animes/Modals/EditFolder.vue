@@ -15,7 +15,7 @@ export default {
             dataOnlyUserFolders: [Array, Object],
             dataFolder: {
                 id: 0,
-                title: '',
+                name: '',
                 is_private: false,
             },
             isEditFolderModalVisible: false,
@@ -94,7 +94,7 @@ export default {
             this.getFolder(id);
             this.dataFolder = {
                 id: 0,
-                title: '',
+                name: '',
                 is_private: false,
             };
             this.isEditFolderModalVisible = true;
@@ -140,17 +140,17 @@ export default {
                         <div class="flex flex-row">
                             <div class="w-full">
                                 <label
-                                    for="title"
+                                    for="name"
                                     class="mb-2 block text-white"
                                 >
                                     Название
                                 </label>
                                 <input
                                     type="text"
-                                    id="title"
-                                    name="title"
+                                    id="name"
+                                    name="name"
                                     maxlength="32"
-                                    v-model="dataFolder.title"
+                                    v-model="dataFolder.name"
                                     class="bg-blackSimple hover:bg-blackActive focus:bg-blackActive w-full rounded px-3 py-1.5 text-center text-white transition duration-300"
                                 />
                             </div>

@@ -71,7 +71,7 @@ export default {
 
     <div
         v-show="isDropdownUserMenu"
-        class="dark:shadow-modals-black shadow-modals-white bg-whiteSimple dark:bg-blackSimple absolute top-15 right-14 w-72 overflow-hidden rounded-md select-none"
+        class="bg-whiteSimple dark:bg-blackSimple absolute top-15 right-14 w-72 overflow-hidden rounded-md select-none shadow-lg"
     >
         <div class="flex items-center border-b-2 border-b-blue-600">
             <img

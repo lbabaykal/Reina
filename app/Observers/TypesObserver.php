@@ -2,26 +2,20 @@
 
 namespace App\Observers;
 
+use App\Models\Type;
+
 class TypesObserver
 {
-    public function created(): void
+    public function creating(Type $type): void
     {
-        //
+        $type->slug = str()->slug($type->title_en);
     }
 
-    public function updating(): void
+    public function updating(Type $type): void
     {
-        //
-    }
-
-    public function updated(): void
-    {
-        //
-    }
-
-    public function saving(): void
-    {
-        //
+        if ($type->isDirty('title_en')) {
+            $type->slug = str()->slug($type->title_en);
+        }
     }
 
     public function saved(): void
@@ -32,20 +26,5 @@ class TypesObserver
     public function deleted(): void
     {
         cache()->forget('types');
-    }
-
-    public function restored(): void
-    {
-        //
-    }
-
-    public function forceDeleted(): void
-    {
-        //
-    }
-
-    public function retrieved(): void
-    {
-        //
     }
 }

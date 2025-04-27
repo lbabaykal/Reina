@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api\Dorama;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RatingRequest;
+use App\Http\Requests\Rating\RatingDoramaRequest;
+use App\Http\Resources\RatingResource;
 use App\Models\Dorama;
 use App\Models\DoramaRating;
 use Illuminate\Http\JsonResponse;
@@ -12,47 +13,43 @@ use Illuminate\Support\Facades\Lang;
 
 class DoramaRatingController extends Controller
 {
-    public function store(RatingRequest $request, $doramaId): JsonResponse
+    public function show($slug): RatingResource|JsonResponse
+    {
+        $ratingUser = DoramaRating::query()
+            ->where('user_id', auth()->id())
+            ->where('dorama_id', getIdFromSlug($slug))
+            ->first();
+
+        if (! $ratingUser) {
+            return response()->json(['data' => null]);
+        }
+
+        return RatingResource::make($ratingUser);
+    }
+
+    public function store(RatingDoramaRequest $request): RatingResource
     {
         $dorama = Dorama::query()
             ->select(['id', 'slug', 'is_rating'])
-            ->where('id', $doramaId)
-            ->firstOrFail();
+            ->findOrFail($request->validated('id'));
 
         Gate::authorize('isRating', $dorama);
 
-        $doramaRating = new DoramaRating([
+        $ratingUser = DoramaRating::query()->updateOrCreate([
             'user_id' => auth()->id(),
+            'dorama_id' => $dorama->id,
+        ], [
             'assessment' => $request->validated('assessment'),
         ]);
 
-        $dorama->ratings()->save($doramaRating);
-
-        return response()->json(Lang::get('reina.dorama.rating_store'));
+        return RatingResource::make($ratingUser);
     }
 
-    public function update(RatingRequest $request, $doramaId): JsonResponse
-    {
-        $dorama = Dorama::query()
-            ->select(['id', 'slug', 'is_rating'])
-            ->where('id', $doramaId)
-            ->firstOrFail();
-
-        Gate::authorize('isRating', $dorama);
-
-        $dorama->ratings()
-            ->where('user_id', auth()->id())
-            ->update(['assessment' => $request->validated('assessment')]);
-
-        return response()->json(Lang::get('reina.dorama.rating_update'));
-    }
-
-    public function destroy($doramaId): JsonResponse
+    public function destroy($slug): JsonResponse
     {
         $dorama = Dorama::query()
             ->select(['id', 'slug'])
-            ->where('id', $doramaId)
-            ->firstOrFail();
+            ->findOrFail(getIdFromSlug($slug));
 
         $dorama->ratings()
             ->where('user_id', auth()->id())

@@ -9,39 +9,23 @@ class DoramaFolderSeeder extends Seeder
 {
     public function run(): void
     {
-        DoramaFolder::query()->create([
-            'title' => 'Смотрю',
-            'user_id' => 0,
-            'is_private' => true,
-            'number' => 1,
-        ]);
+        $folders = [
+            ['name' => 'Смотрю'],
+            ['name' => 'В планах'],
+            ['name' => 'Просмотрено'],
+            ['name' => 'Любимое'],
+            ['name' => 'Отложено'],
+            ['name' => 'Брошено'],
+        ];
 
-        DoramaFolder::query()->create([
-            'title' => 'В планах',
-            'user_id' => 0,
-            'is_private' => true,
-            'number' => 2,
-        ]);
+        foreach ($folders as $folder) {
+            DoramaFolder::query()->create([
+                'name' => $folder['name'],
+                'user_id' => 0,
+                'is_private' => true,
+            ]);
 
-        DoramaFolder::query()->create([
-            'title' => 'Просмотрено',
-            'user_id' => 0,
-            'is_private' => true,
-            'number' => 3,
-        ]);
-
-        DoramaFolder::query()->create([
-            'title' => 'Любимое',
-            'user_id' => 0,
-            'is_private' => true,
-            'number' => 4,
-        ]);
-
-        DoramaFolder::query()->create([
-            'title' => 'Брошено',
-            'user_id' => 0,
-            'is_private' => true,
-            'number' => 5,
-        ]);
+            sleep(1);
+        }
     }
 }

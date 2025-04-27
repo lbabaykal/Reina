@@ -1,16 +1,14 @@
 <script>
-import Description from '../../Components/Doramas/Description.vue';
 import LoadingSvg from '../../Components/Svg/LoadingSvg.vue';
 import Rating from '../../Components/Doramas/Modals/Rating.vue';
 import Favorite from '../../Components/Doramas/Modals/Favorite.vue';
-import FavoriteButton from '../../Components/ui/Buttons/FavoriteButton.vue';
-import RatingButton from '../../Components/ui/Buttons/RatingButton.vue';
 import WatchOnlineButton from '../../Components/ui/Buttons/WatchOnlineButton.vue';
 import { push } from 'notivue';
+import Tabs from '../../Components/Doramas/Tabs.vue';
 
 export default {
     name: 'ShowPage',
-    components: { WatchOnlineButton, RatingButton, FavoriteButton, Rating, Favorite, LoadingSvg, Description },
+    components: { Tabs, WatchOnlineButton, Rating, Favorite, LoadingSvg },
     props: {
         slug: String,
     },
@@ -24,7 +22,7 @@ export default {
                 title_org: String,
                 title_ru: String,
                 title_en: String,
-                types: {
+                type: {
                     id: Number,
                     slug: String,
                     title_ru: String,
@@ -58,12 +56,11 @@ export default {
                 count_assessments: Number,
                 is_comment: Boolean,
                 is_rating: Boolean,
-            },
-            dataUserForDorama: {
-                rating: Number,
-                favorite: {
-                    folder_id: Number,
-                    episode_id: Number,
+                franchise: {
+                    id: Number,
+                    slug: String,
+                    title_ru: String,
+                    title_en: String,
                 },
             },
             dataLoading: false,
@@ -75,34 +72,26 @@ export default {
             axios
                 .get(`/api/doramas/${this.slug}`)
                 .then((response) => {
-                    this.dataDorama = response.data.dataDorama;
-                    this.dataUserForDorama = response.data.dataUserForDorama;
+                    this.dataDorama = response.data.data;
                     this.dataLoading = true;
                 })
                 .catch((error) => {
                     push.error(error.response.data);
                 });
         },
-        openRatingModal() {
-            this.$refs.ratingRef.openRatingModal();
-        },
-        openFavoriteModal() {
-            this.$refs.favoriteRef.openFavoriteModal();
-        },
     },
     computed: {
         isEpisodes() {
             return this.dataDorama.episodes_total !== 1;
         },
-        isRatingUser() {
-            return this.dataUserForDorama.rating !== 0;
-        },
-        isFavoriteUser() {
-            return this.dataUserForDorama.favorite.folder_id !== 0;
-        },
     },
     mounted() {
         this.getDoramaData();
+    },
+    watch: {
+        slug() {
+            this.getDoramaData();
+        },
     },
 };
 </script>
@@ -158,42 +147,20 @@ export default {
                         <WatchOnlineButton />
                     </router-link>
 
-                    <RatingButton
-                        :is_rating="dataDorama.is_rating"
-                        :isRatingUser="isRatingUser"
-                        @clickMethod="openRatingModal"
-                    />
-
-                    <FavoriteButton
-                        :isFavoriteUser="isFavoriteUser"
-                        @click="openFavoriteModal"
-                    />
+                    <Rating :slug="dataDorama.slug" />
+                    <Favorite :slug="dataDorama.slug" />
                 </div>
             </div>
 
             <div
-                class="absolute top-0 left-0 z-10 h-full w-full bg-cover bg-center shadow-cover-white dark:shadow-cover-black"
+                class="shadow-cover-white dark:shadow-cover-black absolute top-0 left-0 z-10 h-full w-full bg-cover bg-center"
                 :style="{ backgroundImage: `url(${dataDorama.cover})` }"
             ></div>
         </div>
 
-        <Description
+        <Tabs
             :dataDorama="this.dataDorama"
             :isEpisodes="isEpisodes"
-        />
-
-        <Rating
-            ref="ratingRef"
-            :doramaId="dataDorama.id"
-            :dataUserForDorama="dataUserForDorama"
-            :isRatingUser="isRatingUser"
-        />
-
-        <Favorite
-            ref="favoriteRef"
-            :doramaId="dataDorama.id"
-            :dataUserForDorama="dataUserForDorama"
-            :isFavoriteUser="isFavoriteUser"
         />
     </section>
 

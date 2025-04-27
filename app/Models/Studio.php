@@ -9,14 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Sluggable\HasSlug;
-use Spatie\Sluggable\SlugOptions;
 
 #[ObservedBy([StudiosObserver::class])]
 class Studio extends Model
 {
     use HasFactory;
-    use HasSlug;
     use SoftDeletes;
 
     public $timestamps = false;
@@ -25,13 +22,6 @@ class Studio extends Model
         'slug',
         'title',
     ];
-
-    public function getSlugOptions(): SlugOptions
-    {
-        return SlugOptions::create()
-            ->generateSlugsFrom(['title'])
-            ->saveSlugsTo('slug');
-    }
 
     public function getRouteKeyName(): string
     {

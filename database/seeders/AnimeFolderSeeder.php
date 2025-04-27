@@ -9,39 +9,23 @@ class AnimeFolderSeeder extends Seeder
 {
     public function run(): void
     {
-        AnimeFolder::query()->create([
-            'title' => 'Смотрю',
-            'user_id' => 0,
-            'is_private' => true,
-            'number' => 1,
-        ]);
+        $folders = [
+            ['name' => 'Смотрю'],
+            ['name' => 'В планах'],
+            ['name' => 'Просмотрено'],
+            ['name' => 'Любимое'],
+            ['name' => 'Отложено'],
+            ['name' => 'Брошено'],
+        ];
 
-        AnimeFolder::query()->create([
-            'title' => 'В планах',
-            'user_id' => 0,
-            'is_private' => true,
-            'number' => 2,
-        ]);
+        foreach ($folders as $folder) {
+            AnimeFolder::query()->create([
+                'name' => $folder['name'],
+                'user_id' => 0,
+                'is_private' => true,
+            ]);
 
-        AnimeFolder::query()->create([
-            'title' => 'Просмотрено',
-            'user_id' => 0,
-            'is_private' => true,
-            'number' => 3,
-        ]);
-
-        AnimeFolder::query()->create([
-            'title' => 'Любимое',
-            'user_id' => 0,
-            'is_private' => true,
-            'number' => 4,
-        ]);
-
-        AnimeFolder::query()->create([
-            'title' => 'Брошено',
-            'user_id' => 0,
-            'is_private' => true,
-            'number' => 5,
-        ]);
+            sleep(1);
+        }
     }
 }

@@ -2,19 +2,23 @@
 
 namespace App\Enums;
 
+use Illuminate\Support\Facades\Lang;
+
 enum StatusEnum: string
 {
     case DRAFT = 'DRAFT';
     case PUBLISHED = 'PUBLISHED';
-    case ARCHIVE = 'ARCHIVE';
+    case IN_ARCHIVE = 'IN_ARCHIVE';
+    case ON_MODERATION = 'ON_MODERATION';
 
     public static function getName(StatusEnum $status): string
     {
         return match ($status) {
-            self::PUBLISHED => 'Опубликовано',
-            self::DRAFT => 'Черновик',
-            self::ARCHIVE => 'В архиве',
-            default => 'Такого статуса нет!'
+            self::PUBLISHED => Lang::get('enum.status.published'),
+            self::DRAFT => Lang::get('enum.status.draft'),
+            self::IN_ARCHIVE => Lang::get('enum.status.in_archive'),
+            self::ON_MODERATION => Lang::get('enum.status.on_moderation'),
+            default => Lang::get('enum.status.not_found'),
         };
     }
 
@@ -32,5 +36,4 @@ enum StatusEnum: string
     {
         return array_column(self::cases(), 'value');
     }
-
 }

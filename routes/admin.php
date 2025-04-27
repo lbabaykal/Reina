@@ -3,11 +3,12 @@
 use App\Http\Controllers\AdminPanel\AdminPanelController;
 use App\Http\Controllers\AdminPanel\AnimeAdminController;
 use App\Http\Controllers\AdminPanel\AnimeEpisodesAdminController;
-use App\Http\Controllers\AdminPanel\CountriesAdminController;
+use App\Http\Controllers\AdminPanel\CountryAdminController;
 use App\Http\Controllers\AdminPanel\DoramaAdminController;
 use App\Http\Controllers\AdminPanel\DoramaEpisodesAdminController;
+use App\Http\Controllers\AdminPanel\FranchiseAdminController;
 use App\Http\Controllers\AdminPanel\GenreAdminController;
-use App\Http\Controllers\AdminPanel\StudiosAdminController;
+use App\Http\Controllers\AdminPanel\StudioAdminController;
 use App\Http\Controllers\AdminPanel\TypeAdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +27,8 @@ Route::domain('admin.'.env('APP_URL'))
 
             Route::get('/draft', [AnimeAdminController::class, 'draft'])->name('draft');
             Route::get('/published', [AnimeAdminController::class, 'published'])->name('published');
-            Route::get('/archive', [AnimeAdminController::class, 'archive'])->name('archive');
+            Route::get('/in-archive', [AnimeAdminController::class, 'inArchive'])->name('archive');
+            Route::get('/on-moderation', [AnimeAdminController::class, 'onModeration'])->name('moderation');
             Route::get('/deleted', [AnimeAdminController::class, 'deleted'])->name('deleted');
             Route::get('/{slug}/restore', [AnimeAdminController::class, 'restore'])->name('restore');
 
@@ -44,7 +46,8 @@ Route::domain('admin.'.env('APP_URL'))
 
             Route::get('/draft', [DoramaAdminController::class, 'draft'])->name('draft');
             Route::get('/published', [DoramaAdminController::class, 'published'])->name('published');
-            Route::get('/archive', [DoramaAdminController::class, 'archive'])->name('archive');
+            Route::get('/in-archive', [DoramaAdminController::class, 'archive'])->name('archive');
+            Route::get('/on-moderation', [DoramaAdminController::class, 'onModeration'])->name('moderation');
             Route::get('/deleted', [DoramaAdminController::class, 'deleted'])->name('deleted');
             Route::get('/{slug}/restore', [DoramaAdminController::class, 'restore'])->name('restore');
 
@@ -55,6 +58,7 @@ Route::domain('admin.'.env('APP_URL'))
 
         Route::resource('/types', TypeAdminController::class)->except(['show', 'destroy']);
         Route::resource('/genres', GenreAdminController::class)->except(['show', 'destroy']);
-        Route::resource('/studios', StudiosAdminController::class)->except(['show', 'destroy']);
-        Route::resource('/countries', CountriesAdminController::class)->except(['show', 'destroy']);
+        Route::resource('/studios', StudioAdminController::class)->except(['show', 'destroy']);
+        Route::resource('/countries', CountryAdminController::class)->except(['show', 'destroy']);
+        Route::resource('/franchises', FranchiseAdminController::class)->except(['show', 'destroy']);
     });

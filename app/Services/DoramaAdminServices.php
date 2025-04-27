@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\S3Enum;
 use App\Http\Requests\AdminPanel\DoramaUpdateRequest;
 use App\Models\Dorama;
 use App\Services\Image\CoverService;
@@ -18,8 +19,8 @@ class DoramaAdminServices
     {
         $dorama = new Dorama;
 
-        $dorama->poster = (new PosterService)->setStorage('s3_doramas')->save();
-        $dorama->cover = (new CoverService)->setStorage('s3_doramas')->save();
+        $dorama->poster = (new PosterService)->setStorage(S3Enum::DORAMAS->value)->save();
+        $dorama->cover = (new CoverService)->setStorage(S3Enum::DORAMAS->value)->save();
 
         $dorama->slug = str()->slug($request->safe()->input('title_ru'));
         $dorama->title_org = $request->safe()->input('title_org');
@@ -60,18 +61,15 @@ class DoramaAdminServices
                 $dorama->studios()->attach($studios);
             });
 
-            $dorama->generateSlug();
-            $dorama->saveQuietly();
-
             return redirect()->route('admin.doramas.index')->with('message', "Дорама {$dorama->title_ru} добавлена.");
         } catch (\Exception $e) {
 
             if (! is_null($dorama->poster)) {
-                Storage::disk('dorama_posters')->delete($dorama->poster);
+                Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->poster);
             }
 
             if (! is_null($dorama->cover)) {
-                Storage::disk('dorama_covers')->delete($dorama->cover);
+                Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->cover);
             }
 
             return redirect()->back()->with('message', 'Ошибка выполнения транзакции.'.$e->getMessage());
@@ -81,11 +79,11 @@ class DoramaAdminServices
     public function update(DoramaUpdateRequest $request, Model $dorama): RedirectResponse
     {
         if (request()->has('poster')) {
-            $dorama->poster = (new PosterService)->setStorage('s3_doramas')->save() ?? $dorama->poster;
+            $dorama->poster = (new PosterService)->setStorage(S3Enum::DORAMAS->value)->save() ?? $dorama->poster;
         }
 
         if (request()->has('cover')) {
-            $dorama->cover = (new CoverService)->setStorage('s3_doramas')->save() ?? $dorama->cover;
+            $dorama->cover = (new CoverService)->setStorage(S3Enum::DORAMAS->value)->save() ?? $dorama->cover;
         }
 
         $dorama->title_org = $request->safe()->input('title_org');

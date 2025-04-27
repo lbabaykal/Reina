@@ -2,26 +2,20 @@
 
 namespace App\Observers;
 
+use App\Models\Country;
+
 class CountriesObserver
 {
-    public function created(): void
+    public function creating(Country $country): void
     {
-        //
+        $country->slug = str()->slug($country->title_en);
     }
 
-    public function updating(): void
+    public function updating(Country $country): void
     {
-        //
-    }
-
-    public function updated(): void
-    {
-        //
-    }
-
-    public function saving(): void
-    {
-        //
+        if ($country->isDirty('title_en')) {
+            $country->slug = str()->slug($country->title_en);
+        }
     }
 
     public function saved(): void
@@ -34,18 +28,4 @@ class CountriesObserver
         cache()->forget('countries');
     }
 
-    public function restored(): void
-    {
-        //
-    }
-
-    public function forceDeleted(): void
-    {
-        //
-    }
-
-    public function retrieved(): void
-    {
-        //
-    }
 }

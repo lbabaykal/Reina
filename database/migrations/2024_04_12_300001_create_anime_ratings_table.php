@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('anime_ratings', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Anime::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();;
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->unsignedTinyInteger('assessment');
         });
     }

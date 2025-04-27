@@ -10,9 +10,10 @@ return new class extends Migration
     {
         Schema::create('anime_folders', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 32);
+            $table->string('name', 32);
             $table->unsignedBigInteger('user_id');
             $table->boolean('is_private')->default(true);
+            $table->unsignedBigInteger('number')->nullable();
             $table->timestamps();
         });
     }

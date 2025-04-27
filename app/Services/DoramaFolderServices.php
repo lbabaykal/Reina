@@ -10,7 +10,7 @@ class DoramaFolderServices
     public function foldersUserFor(): Collection
     {
         return DoramaFolder::query()
-            ->select(['id', 'title'])
+            ->select(['id', 'name'])
             ->where('user_id', auth()->id())
             ->orWhere('user_id', 0)
             ->orderBy('id')

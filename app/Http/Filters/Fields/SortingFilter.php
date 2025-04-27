@@ -12,8 +12,8 @@ class SortingFilter extends AbstractFilter
         match ($validatedData['sorting']) {
             'date_updated' => $builder->orderByDesc('updated_at'),
             'rating' => $builder->orderByDesc('rating'),
-            'premiere_asc' => $builder->orderBy('release', 'ASC'),
-            'premiere_desc' => $builder->orderBy('release', 'DESC'),
+            'premiere_asc' => $builder->orderBy('release'),
+            'premiere_desc' => $builder->orderByDesc('release'),
             default => $builder->orderByDesc('updated_at'),
         };
     }

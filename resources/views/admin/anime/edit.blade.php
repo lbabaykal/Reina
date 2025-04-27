@@ -197,7 +197,7 @@
                                 <option selected>Пусто</option>
                                 @foreach($age_ratings as $age_rating)
                                     <option value="{{ $age_rating->value }}"
-                                        @selected((old('age_rating') ?? $anime->age_rating) == $age_rating->value)
+                                        @selected((old('age_rating') ?? $anime->age_rating->value) === $age_rating->value)
                                     >
                                         {{ $age_rating->value }}
                                     </option>
@@ -212,7 +212,7 @@
                             <input id="release"
                                    type="date"
                                    name="release"
-                                   value="{{ old('release') ?? $anime->release }}"
+                                   value="{{ old('release') ?? $anime->release->format('Y-m-d') }}"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             />
                         </div>
@@ -263,7 +263,7 @@
                             >
                                 @foreach($statuses as $status)
                                     <option value="{{ $status->value }}"
-                                        @selected((old('status') ?? $anime->status) == $status->value)
+                                        @selected((old('status') ?? $anime->status->value) == $status->value)
                                     >
                                         {{ $status->value }}
                                     </option>

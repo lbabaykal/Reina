@@ -24,6 +24,8 @@ class AnimeUpdateRequest extends FormRequest
 
     public function rules(): array
     {
+//        dd(request()->all());
+
         return [
             'id' => ['required', 'integer', 'exists:animes,id'],
             'poster' => ['nullable', 'file', 'mimes:png,jpg', File::image()->min('1kb')->max('4mb')],

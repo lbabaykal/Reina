@@ -3,8 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::pattern('slug', '[a-zA-Z0-9_-]+');
-
 Route::domain(env('APP_URL'))->get('/{page?}', function () {
     return view('app');
 })->where('page', '.*')->name('index');

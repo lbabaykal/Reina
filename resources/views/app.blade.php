@@ -10,6 +10,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wdth,wght@0,75..100,300..800;1,75..100,300..800&display=swap" rel="stylesheet">
 </head>
-<body id="app" class="w-full bg-whiteFon dark:bg-blackFon antialiased leading-none overflow-x-hidden overflow-y-auto">
+<body class="w-full bg-whiteFon dark:bg-blackFon antialiased leading-none overflow-x-hidden overflow-y-auto">
+<div id="app"></div>
+<div id="modals"></div>
 </body>
 </html>

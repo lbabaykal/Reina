@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api\Anime;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Folder\FolderCreateRequest;
+use App\Http\Requests\Folder\FolderShowRequest;
 use App\Http\Requests\Folder\FolderUpdateRequest;
-use App\Http\Resources\Animes\AnimesIndexResource;
+use App\Http\Resources\Animes\AnimeIndexResource;
+use App\Http\Resources\Folders\FolderAnimeResource;
 use App\Http\Resources\Folders\FolderResource;
-use App\Http\Resources\Folders\FoldersAnimesResource;
 use App\Models\AnimeFolder;
 use App\Reina;
+use App\Services\AnimeFolderServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
@@ -28,7 +30,7 @@ class AnimeFolderController extends Controller
         $totalFavorites = $folders->sum('favorites_animes_user_count');
 
         return response()->json([
-            'allUserFolders' => FoldersAnimesResource::collection($folders),
+            'allUserFolders' => FolderAnimeResource::collection($folders),
             'totalFavorites' => $totalFavorites,
         ]);
     }
@@ -41,19 +43,13 @@ class AnimeFolderController extends Controller
             ->get();
 
         return response()->json([
-            'OnlyUserFolders' => FoldersAnimesResource::collection($folders),
+            'OnlyUserFolders' => FolderAnimeResource::collection($folders),
         ]);
     }
 
-    public function show(): AnonymousResourceCollection
+    public function show(FolderShowRequest $request): AnonymousResourceCollection
     {
-        //TODO Сделать FolderShowRequest
-
-        $validatedFolderId = request()->validate([
-            'folder' => ['nullable', 'integer', 'min:0'],
-        ]);
-
-        $folderId = $validatedFolderId['folder'] ?? 0;
+        $folderId = $request->validated('folder', 0);
 
         if ($folderId > 0) {
             $folderAnime = AnimeFolder::query()->findOrFail($folderId);
@@ -68,7 +64,7 @@ class AnimeFolderController extends Controller
             ->select(['slug', 'poster', 'title_ru', 'rating', 'episodes_released', 'episodes_total', 'favorite_animes.updated_at'])
             ->latest('favorite_animes.updated_at');
 
-        return AnimesIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FOLDERS, ['*'], 'page', request()->input('page', 1)));
+        return AnimeIndexResource::collection($animes->paginate(Reina::COUNT_ARTICLES_FOLDERS, ['*'], 'page', request()->input('page', 1)));
     }
 
     public function store(FolderCreateRequest $request): JsonResponse
@@ -76,12 +72,12 @@ class AnimeFolderController extends Controller
         Gate::authorize('create', AnimeFolder::class);
 
         $folder = new AnimeFolder;
-        $folder->title = $request->validated('title');
+        $folder->name = $request->validated('name');
         $folder->user_id = auth()->id();
         $folder->is_private = $request->validated('is_private');
         $folder->save();
 
-        return response()->json(Lang::get('reina.folder.created', ['title' => $folder->title]));
+        return response()->json(Lang::get('reina.folder.created', ['name' => $folder->name]));
     }
 
     public function edit(AnimeFolder $folder): JsonResponse
@@ -97,11 +93,11 @@ class AnimeFolderController extends Controller
     {
         Gate::authorize('update', $folder);
 
-        $folder->title = $request->validated('title');
+        $folder->name = $request->validated('name');
         $folder->is_private = $request->validated('is_private');
         $folder->update();
 
-        return response()->json(Lang::get('reina.folder.updated', ['title' => $folder->title]));
+        return response()->json(Lang::get('reina.folder.updated', ['name' => $folder->name]));
     }
 
     public function destroy(AnimeFolder $folder): JsonResponse
@@ -110,6 +106,11 @@ class AnimeFolderController extends Controller
 
         $folder->delete();
 
-        return response()->json(Lang::get('reina.folder.deleted', ['title' => $folder->title]));
+        return response()->json(Lang::get('reina.folder.deleted', ['name' => $folder->name]));
+    }
+
+    public function folders(AnimeFolderServices $animeFolderServices): AnonymousResourceCollection
+    {
+        return FolderResource::collection($animeFolderServices->foldersUserFor());
     }
 }

@@ -36,44 +36,42 @@ Route::domain(env('APP_URL'))->group(function () {
     Route::prefix('animes')->name('animes.')->group(function () {
         Route::get('/', [AnimeController::class, 'index']);
 
+        Route::get('/folders', [AnimeFolderController::class, 'folders']);
         Route::get('/{slug}', [AnimeController::class, 'show']);
         Route::get('/{slug}/watch', [AnimeController::class, 'watch']);
+        Route::get('/{slug}/relations', [AnimeController::class, 'relations']);
+        Route::get('/{slug}/episodes', [AnimeController::class, 'episodes']);
 
         Route::middleware(['auth', 'throttle:20,1'])->group(function () {
             // Rating
-            Route::post('/{id}/rating', [AnimeRatingController::class, 'store']);
-            Route::patch('/{id}/rating', [AnimeRatingController::class, 'update']);
-            Route::delete('/{id}/rating', [AnimeRatingController::class, 'destroy']);
+            Route::get('/{slug}/rating', [AnimeRatingController::class, 'show'])->withoutMiddleware('auth');
+            Route::post('/rating', [AnimeRatingController::class, 'store']);
+            Route::delete('/{slug}/rating', [AnimeRatingController::class, 'destroy']);
             // Favorite
-            Route::post('/favorite', [FavoriteAnimeController::class, 'show'])->withoutMiddleware('auth');
-            Route::post('/{id}/favorite', [FavoriteAnimeController::class, 'store']);
-            Route::patch('/{id}/favorite', [FavoriteAnimeController::class, 'update']);
-            Route::delete('/{id}/favorite', [FavoriteAnimeController::class, 'destroy']);
-            // Favorite Episode
-            Route::post('/{id}/remember-episode', [FavoriteAnimeController::class, 'rememberEpisode']);
-            Route::delete('/{id}/forget-episode', [FavoriteAnimeController::class, 'forgetEpisode']);
+            Route::get('/{slug}/favorite', [FavoriteAnimeController::class, 'show'])->withoutMiddleware('auth');
+            Route::post('/favorite', [FavoriteAnimeController::class, 'store']);
+            Route::delete('/favorite/{id}', [FavoriteAnimeController::class, 'destroy']);
         });
     });
 
     Route::prefix('doramas')->name('doramas.')->group(function () {
         Route::get('/', [DoramaController::class, 'index']);
 
+        Route::get('/folders', [DoramaFolderController::class, 'folders']);
         Route::get('/{slug}', [DoramaController::class, 'show']);
         Route::get('/{slug}/watch', [DoramaController::class, 'watch']);
+        Route::get('/{slug}/relations', [DoramaController::class, 'relations']);
+        Route::get('/{slug}/episodes', [DoramaController::class, 'episodes']);
 
-        Route::middleware('auth')->group(function () {
+        Route::middleware(['auth', 'throttle:20,1'])->group(function () {
             // Rating
-            Route::post('/{id}/rating', [DoramaRatingController::class, 'store']);
-            Route::patch('/{id}/rating', [DoramaRatingController::class, 'update']);
-            Route::delete('/{id}/rating', [DoramaRatingController::class, 'destroy']);
+            Route::get('/{slug}/rating', [DoramaRatingController::class, 'show'])->withoutMiddleware('auth');
+            Route::post('/rating', [DoramaRatingController::class, 'store']);
+            Route::delete('/{slug}/rating', [DoramaRatingController::class, 'destroy']);
             // Favorite
-            Route::post('/favorite', [FavoriteDoramaController::class, 'show'])->withoutMiddleware('auth');
-            Route::post('/{id}/favorite', [FavoriteDoramaController::class, 'store']);
-            Route::patch('/{id}/favorite', [FavoriteDoramaController::class, 'update']);
-            Route::delete('/{id}/favorite', [FavoriteDoramaController::class, 'destroy']);
-            // Favorite Episode
-            Route::post('/{id}/remember-episode', [FavoriteDoramaController::class, 'rememberEpisode']);
-            Route::delete('/{id}/forget-episode', [FavoriteDoramaController::class, 'forgetEpisode']);
+            Route::get('/{slug}/favorite', [FavoriteDoramaController::class, 'show'])->withoutMiddleware('auth');
+            Route::post('/favorite', [FavoriteDoramaController::class, 'store']);
+            Route::delete('/favorite/{id}', [FavoriteDoramaController::class, 'destroy']);
         });
     });
 

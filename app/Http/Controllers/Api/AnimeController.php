@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Anime\recordAnimeViewAction;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Fields\CountriesFilter;
 use App\Http\Filters\Fields\GenresExcludeFilter;
@@ -13,14 +14,16 @@ use App\Http\Filters\Fields\TypesFilter;
 use App\Http\Filters\Fields\YearFromFilter;
 use App\Http\Filters\Fields\YearToFilter;
 use App\Http\Requests\SearchRequest;
-use App\Http\Resources\Animes\AnimesIndexResource;
-use App\Http\Resources\Animes\AnimesShowResource;
-use App\Http\Resources\Animes\AnimesWatchResource;
-use App\Http\Resources\Episodes\AnimeEpisodesResource;
+use App\Http\Resources\Animes\AnimeIndexResource;
+use App\Http\Resources\Animes\AnimeShowResource;
+use App\Http\Resources\Animes\AnimeWatchResource;
+use App\Http\Resources\Episodes\AnimeEpisodeResource;
+use App\Http\Resources\RelationsResource;
 use App\Models\Anime;
 use App\Reina;
-use App\Services\AnimesServices;
-use Illuminate\Http\JsonResponse;
+use App\Services\AnimeServices;
+use App\Services\EpisodeServices;
+use App\Services\FranchiseServices;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Pipeline;
 
@@ -44,44 +47,38 @@ class AnimeController extends Controller
             ->thenReturn();
         $animesFiltered = $animesPipeline['query'];
 
-        return AnimesIndexResource::collection($animesFiltered->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', $request->validated('page', 1)));
+        return AnimeIndexResource::collection($animesFiltered->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', $request->validated('page', 1)));
     }
 
-    public function show($slug, AnimesServices $animesService): JsonResponse
+    public function show($slug, AnimeServices $animesService): AnimeShowResource
     {
         $anime = $animesService->getDataFromCacheBySlug($slug);
-        $ratingUser = $animesService->ratingUserFor();
-        $favoriteUser = $animesService->favoriteUserFor();
 
-        return response()->json([
-            'dataAnime' => AnimesShowResource::make($anime),
-            'dataUserForAnime' => [
-                'rating' => $ratingUser,
-                'favorite' => [
-                    'folder_id' => $favoriteUser->anime_folder_id,
-                    'episode_id' => $favoriteUser->anime_episode_id,
-                ],
-            ],
-        ]);
+        RecordAnimeViewAction::execute($anime->id);
+
+        return AnimeShowResource::make($anime);
     }
 
-    public function watch($slug, AnimesServices $animesService): JsonResponse
+    public function watch($slug, AnimeServices $animesService): AnimeWatchResource
     {
         $anime = $animesService->getDataFromCacheBySlug($slug);
-        $ratingUser = $animesService->ratingUserFor();
-        $favoriteUser = $animesService->favoriteUserFor();
-        $episodes = $animesService->episodesFor();
 
-        return response()->json([
-            'dataAnime' => AnimesWatchResource::make($anime),
-            'dataUserForAnime' => [
-                'rating' => $ratingUser,
-                'favorite' => [
-                    'folder_id' => $favoriteUser->anime_folder_id,
-                    'episode_id' => $favoriteUser->anime_episode_id,
-                ],
-            ],
-            'dataEpisodes' => AnimeEpisodesResource::collection($episodes),
-        ]);
+        RecordAnimeViewAction::execute($anime->id);
+
+        return AnimeWatchResource::make($anime);
+    }
+
+    public function relations($slug, FranchiseServices $franchiseServices): AnonymousResourceCollection
+    {
+        $relations = $franchiseServices->relationsForAnimeById(getIdFromSlug($slug));
+
+        return RelationsResource::collection($relations);
+    }
+
+    public function episodes($slug, EpisodeServices $episodeServices): AnonymousResourceCollection
+    {
+        $episodes = $episodeServices->episodesForAnimeById(getIdFromSlug($slug));
+
+        return AnimeEpisodeResource::collection($episodes);
     }
 }

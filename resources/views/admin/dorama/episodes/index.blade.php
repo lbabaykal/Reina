@@ -60,7 +60,7 @@
                                 <a href="{{ route('admin.dorama.episodes.edit', [$dorama, $episode]) }}"
                                    class="hover:text-love"
                                 >
-                                    Реадактировать
+                                    Редактировать
                                 </a>
                             </td>
                             <td class="px-6 py-4">

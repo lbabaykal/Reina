@@ -36,7 +36,7 @@
                                 <a href="{{ route('admin.studios.edit', $studio->slug) }}"
                                    class="hover:text-love"
                                 >
-                                    Реадактировать
+                                    Редактировать
                                 </a>
                             </td>
                         </tr>

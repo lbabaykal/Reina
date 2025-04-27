@@ -21,6 +21,11 @@
                             >
                                 Опубликованные
                             </a>
+                            <a href="{{ route('admin.doramas.moderation') }}"
+                               class="my-10"
+                            >
+                                На модерации
+                            </a>
                             <a href="{{ route('admin.doramas.draft') }}"
                                class="my-10"
                             >
@@ -91,7 +96,7 @@
                                 <a href="{{ route('admin.doramas.edit', $dorama->slug) }}"
                                    class="hover:text-love"
                                 >
-                                    Реадактировать
+                                    Редактировать
                                 </a>
                             </td>
                         </tr>

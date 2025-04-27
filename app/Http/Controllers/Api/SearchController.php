@@ -13,9 +13,9 @@ use App\Http\Filters\Fields\TypesFilter;
 use App\Http\Filters\Fields\YearFromFilter;
 use App\Http\Filters\Fields\YearToFilter;
 use App\Http\Requests\SearchRequest;
-use App\Http\Resources\Animes\AnimesIndexResource;
+use App\Http\Resources\Animes\AnimeIndexResource;
 use App\Http\Resources\CountriesResource;
-use App\Http\Resources\Doramas\DoramasIndexResource;
+use App\Http\Resources\Doramas\DoramaIndexResource;
 use App\Http\Resources\GenresResource;
 use App\Http\Resources\StudiosResource;
 use App\Http\Resources\TypesResource;
@@ -68,9 +68,9 @@ class SearchController extends Controller
         $doramasTotalFound = $doramasFiltered['query']->count();
 
         return response()->json([
-            'dataAnimes' => AnimesIndexResource::collection($dataAnimes),
+            'dataAnimes' => AnimeIndexResource::collection($dataAnimes),
             'animesTotalFound' => $animesTotalFound,
-            'dataDoramas' => DoramasIndexResource::collection($dataDoramas),
+            'dataDoramas' => DoramaIndexResource::collection($dataDoramas),
             'doramasTotalFound' => $doramasTotalFound,
         ]);
     }

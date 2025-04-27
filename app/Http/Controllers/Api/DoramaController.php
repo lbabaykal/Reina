@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Dorama\RecordDoramaViewAction;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Fields\CountriesFilter;
 use App\Http\Filters\Fields\GenresExcludeFilter;
@@ -13,14 +14,16 @@ use App\Http\Filters\Fields\TypesFilter;
 use App\Http\Filters\Fields\YearFromFilter;
 use App\Http\Filters\Fields\YearToFilter;
 use App\Http\Requests\SearchRequest;
-use App\Http\Resources\Doramas\DoramasIndexResource;
-use App\Http\Resources\Doramas\DoramasShowResource;
-use App\Http\Resources\Doramas\DoramasWatchResource;
+use App\Http\Resources\Doramas\DoramaIndexResource;
+use App\Http\Resources\Doramas\DoramaShowResource;
+use App\Http\Resources\Doramas\DoramaWatchResource;
 use App\Http\Resources\Episodes\DoramaEpisodesResource;
+use App\Http\Resources\RelationsResource;
 use App\Models\Dorama;
 use App\Reina;
-use App\Services\DoramasServices;
-use Illuminate\Http\JsonResponse;
+use App\Services\DoramaServices;
+use App\Services\EpisodeServices;
+use App\Services\FranchiseServices;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Pipeline;
 
@@ -44,44 +47,38 @@ class DoramaController extends Controller
             ->thenReturn();
         $doramasFiltered = $doramasPipeLine['query'];
 
-        return DoramasIndexResource::collection($doramasFiltered->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', $request->validated('page', 1)));
+        return DoramaIndexResource::collection($doramasFiltered->paginate(Reina::COUNT_ARTICLES_FULL, ['*'], 'page', $request->validated('page', 1)));
     }
 
-    public function show($slug, DoramasServices $doramasService): JsonResponse
+    public function show($slug, DoramaServices $doramasService): DoramaShowResource
     {
         $dorama = $doramasService->getDataFromCacheBySlug($slug);
-        $ratingUser = $doramasService->ratingUserFor();
-        $favoriteUser = $doramasService->favoriteUserFor();
 
-        return response()->json([
-            'dataDorama' => DoramasShowResource::make($dorama),
-            'dataUserForDorama' => [
-                'rating' => $ratingUser,
-                'favorite' => [
-                    'folder_id' => $favoriteUser->dorama_folder_id,
-                    'episode_id' => $favoriteUser->dorama_episode_id,
-                ],
-            ],
-        ]);
+        RecordDoramaViewAction::execute($dorama->id);
+
+        return DoramaShowResource::make($dorama);
     }
 
-    public function watch($slug, DoramasServices $doramasService): JsonResponse
+    public function watch($slug, DoramaServices $doramasService): DoramaWatchResource
     {
         $dorama = $doramasService->getDataFromCacheBySlug($slug);
-        $ratingUser = $doramasService->ratingUserFor();
-        $favoriteUser = $doramasService->favoriteUserFor();
-        $episodes = $doramasService->episodesFor();
 
-        return response()->json([
-            'dataDorama' => DoramasWatchResource::make($dorama),
-            'dataUserForDorama' => [
-                'rating' => $ratingUser,
-                'favorite' => [
-                    'folder_id' => $favoriteUser->dorama_folder_id,
-                    'episode_id' => $favoriteUser->dorama_episode_id,
-                ],
-            ],
-            'dataEpisodes' => DoramaEpisodesResource::collection($episodes),
-        ]);
+        RecordDoramaViewAction::execute($dorama->id);
+
+        return DoramaWatchResource::make($dorama);
+    }
+
+    public function relations($slug, FranchiseServices $franchiseServices): AnonymousResourceCollection
+    {
+        $relations = $franchiseServices->relationsForDoramaById(getIdFromSlug($slug));
+
+        return RelationsResource::collection($relations);
+    }
+
+    public function episodes($slug, EpisodeServices $episodeServices): AnonymousResourceCollection
+    {
+        $episodes = $episodeServices->episodesForDoramaById(getIdFromSlug($slug));
+
+        return DoramaEpisodesResource::collection($episodes);
     }
 }

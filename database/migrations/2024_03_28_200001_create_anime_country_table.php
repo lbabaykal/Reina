@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Anime;
+use App\Models\Country;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('anime_country', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Anime::class)
+            $table->foreignIdFor(Anime::class)
                 ->constrained()
-                ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Country::class)
+            $table->foreignIdFor(Country::class)
                 ->constrained()
-                ->cascadeOnUpdate()
                 ->cascadeOnDelete();
         });
     }
