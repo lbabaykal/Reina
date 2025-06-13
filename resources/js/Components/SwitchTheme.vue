@@ -23,7 +23,7 @@ export default {
 <template>
     <button
         @click="toggleTheme"
-        class="cursor-pointer bg-black/60 hover:bg-black p-1.5 rounded-full shadow-md shadow-blue-500"
+        class="cursor-pointer transition-all duration-300 bg-white/70 dark:bg-black/70 hover:bg-black dark:hover:bg-white p-1.5 rounded-full shadow-md shadow-blue-500"
     >
         <SunSvg
             v-if="this.themeStore.isLight"

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\S3Enum;
 use App\Http\Requests\AdminPanel\AnimeUpdateRequest;
 use App\Models\Anime;
 use App\Services\Image\CoverService;
@@ -11,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class AnimeAdminServices
 {
@@ -19,8 +17,8 @@ class AnimeAdminServices
     {
         $anime = new Anime;
 
-        $anime->poster = (new PosterService)->setStorage(S3Enum::ANIMES->value)->save();
-        $anime->cover = (new CoverService)->setStorage(S3Enum::ANIMES->value)->save();
+        $anime->poster = new PosterService()->saveForAnime();
+        $anime->cover = new CoverService()->saveForAnime();
 
         $anime->slug = str()->slug($request->safe()->input('title_ru'));
         $anime->title_org = $request->safe()->input('title_org');
@@ -59,17 +57,18 @@ class AnimeAdminServices
                 $anime->countries()->attach($countries);
                 $anime->genres()->attach($genres);
                 $anime->studios()->attach($studios);
+                $anime->ratingStatistic()->create();
             });
 
             return redirect()->route('admin.animes.index')->with('message', "Аниме {$anime->title_ru} добавлено.");
         } catch (\Exception $e) {
 
             if (! is_null($anime->poster)) {
-                Storage::disk(S3Enum::ANIMES->value)->delete($anime->poster);
+                new PosterService()->deleteForAnime($anime->poster);
             }
 
             if (! is_null($anime->cover)) {
-                Storage::disk(S3Enum::ANIMES->value)->delete($anime->cover);
+                new CoverService()->deleteForAnime($anime->cover);
             }
 
             return redirect()->back()->with('message', 'Ошибка выполнения транзакции.'.$e->getMessage());
@@ -79,11 +78,11 @@ class AnimeAdminServices
     public function update(AnimeUpdateRequest $request, Model $anime): RedirectResponse
     {
         if (request()->has('poster')) {
-            $anime->poster = (new PosterService)->setStorage(S3Enum::ANIMES->value)->save() ?? $anime->poster;
+            $anime->poster = new PosterService()->saveForAnime() ?? $anime->poster;
         }
 
         if (request()->has('cover')) {
-            $anime->cover = (new CoverService)->setStorage(S3Enum::ANIMES->value)->save() ?? $anime->cover;
+            $anime->cover = new CoverService()->saveForAnime() ?? $anime->cover;
         }
 
         $anime->title_org = $request->safe()->input('title_org');

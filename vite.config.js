@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
+import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
     server: {
         host: '0.0.0.0',
+        // host: '2rxx6d-31-23-76-51.ru.tuna.am',
         port: 5173,
         // https: {
         //     cert: '/etc/ssl/certs/reina.online/Certificate.crt',
@@ -13,6 +14,7 @@ export default defineConfig({
         // },
         hmr: {
             host: 'reina.online',
+            // host: '2rxx6d-31-23-76-51.ru.tuna.am',
             port: 5173,
         },
         cors: true

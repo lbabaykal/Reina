@@ -2,36 +2,25 @@
 
 namespace App\Enums;
 
+use App\Interfaces\TranslationEnumInterface;
+use App\Traits\TranslationEnumTrait;
 use Illuminate\Support\Facades\Lang;
 
-enum TypesEpisodeEnum: string
+enum TypesEpisodeEnum: string implements TranslationEnumInterface
 {
+    use TranslationEnumTrait;
+
     case VOICEOVER = 'VOICEOVER';
     case DUBBING = 'DUBBING';
     case SUBTITLES = 'SUBTITLES';
 
-    public static function getName(TypesEpisodeEnum $episodeEnum): string
+    public static function translations(): array
     {
-        return match ($episodeEnum) {
-            self::VOICEOVER => Lang::get('enum.types_episode.voiceover'),
-            self::DUBBING => Lang::get('enum.types_episode.dubbing'),
-            self::SUBTITLES => Lang::get('enum.types_episode.subtitles'),
-            default => Lang::get('enum.types_episode.not_found'),
-        };
+        return [
+            self::VOICEOVER->value => Lang::get('enum_translation.types_episode.voiceover'),
+            self::DUBBING->value => Lang::get('enum_translation.types_episode.dubbing'),
+            self::SUBTITLES->value => Lang::get('enum_translation.types_episode.subtitles'),
+        ];
     }
 
-    public static function getAll(): array
-    {
-        return array_combine(self::values(), self::names());
-    }
-
-    public static function names(): array
-    {
-        return array_column(self::cases(), 'name');
-    }
-
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
 }

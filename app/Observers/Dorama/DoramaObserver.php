@@ -3,10 +3,10 @@
 namespace App\Observers\Dorama;
 
 use App\Enums\CacheEnum;
-use App\Enums\S3Enum;
 use App\Enums\StatusEnum;
 use App\Models\Dorama;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Image\CoverService;
+use App\Services\Image\PosterService;
 
 class DoramaObserver
 {
@@ -17,43 +17,35 @@ class DoramaObserver
 
     public function created(Dorama $dorama): void
     {
+        $dorama->slug = str()->slug($dorama->title_ru) . '-' . $dorama->id;
+        $dorama->saveQuietly();
+
         if ($dorama->status === StatusEnum::PUBLISHED->value) {
             $this->forgetCacheMainDorama();
         }
-
-        $dorama->slug = str()->slug($dorama->title_ru).'-'.$dorama->id;
-        $dorama->saveQuietly();
     }
 
     public function updating(Dorama $dorama): void
     {
         if ($dorama->isDirty('poster') && $dorama->getOriginal('poster')) {
-            Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->getOriginal('poster'));
-
-            $this->forgetCacheDorama($dorama);
-            $this->forgetCacheMainDorama();
+            new PosterService()->deleteForDorama($dorama->getOriginal('poster'));
         }
 
         if ($dorama->isDirty('cover') && $dorama->getOriginal('cover')) {
-            Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->getOriginal('cover'));
-
-            $this->forgetCacheDorama($dorama);
-            $this->forgetCacheMainDorama();
+            new CoverService()->deleteForDorama($dorama->getOriginal('cover'));
         }
 
         if ($dorama->isDirty('title_ru')) {
-            $dorama->slug = str()->slug($dorama->title_ru).'-'.$dorama->id;
-
-            cache()->store(CacheEnum::DORAMAS_STORE->value)->forget(CacheEnum::DORAMA->value.$dorama->getOriginal('id'));
+            $dorama->slug = str()->slug($dorama->title_ru) . '-' . $dorama->id;
         }
     }
 
     public function updated(Dorama $dorama): void
     {
         if (
-            $dorama->getOriginal('status') === StatusEnum::PUBLISHED->value
-            && $dorama->status !== StatusEnum::PUBLISHED->value
-            || $dorama->status === StatusEnum::PUBLISHED->value
+            $dorama->getOriginal('status') === StatusEnum::PUBLISHED
+            && $dorama->status !== StatusEnum::PUBLISHED
+            || $dorama->status === StatusEnum::PUBLISHED
         ) {
             $this->forgetCacheDorama($dorama);
             $this->forgetCacheMainDorama();
@@ -92,11 +84,11 @@ class DoramaObserver
         $dorama->episodes()->delete();
 
         if ($dorama->getOriginal('poster') !== null) {
-            Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->getOriginal('poster'));
+            new PosterService()->deleteForDorama($dorama->getOriginal('poster'));
         }
 
         if ($dorama->getOriginal('cover') !== null) {
-            Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->getOriginal('cover'));
+            new CoverService()->deleteForDorama($dorama->getOriginal('cover'));
         }
 
         $this->forgetCacheDorama($dorama);
@@ -115,6 +107,6 @@ class DoramaObserver
 
     public function forgetCacheDorama(Dorama $dorama): void
     {
-        cache()->store(CacheEnum::DORAMAS_STORE->value)->forget(CacheEnum::DORAMA->value.$dorama->id);
+        cache()->store(CacheEnum::DORAMAS_STORE->value)->forget(CacheEnum::DORAMA->value . $dorama->id);
     }
 }

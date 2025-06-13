@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\AgeRatingEnum;
+use App\Enums\S3\DiskEnum;
 use App\Enums\StatusEnum;
 use App\Observers\Anime\AnimeObserver;
 use App\Traits\AnimeAndDoramaTrait;
@@ -11,7 +12,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 #[ObservedBy([AnimeObserver::class])]
 class Anime extends Model
@@ -79,5 +82,30 @@ class Anime extends Model
     public function episodes(): HasMany
     {
         return $this->hasMany(AnimeEpisode::class);
+    }
+
+    public function characters(): BelongsToMany
+    {
+        return $this->belongsToMany(Character::class)
+            ->withPivot('role');
+    }
+
+    public function ratingStatistic(): HasOne
+    {
+        return $this->hasOne(AnimeRatingStatistic::class);
+    }
+
+    public function getPosterUrlAttribute(): ?string
+    {
+        return $this->poster
+            ? Storage::disk(DiskEnum::ANIMES->value)->url($this->poster)
+            : null;
+    }
+
+    public function getCoverUrlAttribute(): ?string
+    {
+        return $this->cover
+            ? Storage::disk(DiskEnum::ANIMES->value)->url($this->cover)
+            : null;
     }
 }

@@ -1,6 +1,9 @@
 <script>
+import PosterImage from '../Image/PosterImage.vue';
+
 export default {
     name: 'CardAnime',
+    components: { PosterImage },
     props: {
         id: Number,
         slug: String,
@@ -26,12 +29,11 @@ export default {
     <div class="flex aspect-5/7 w-full items-center justify-center text-white select-none">
         <router-link
             :to="{ name: 'animes.show', params: { slug: this.slug } }"
-            class="group w-95% relative aspect-5/7 overflow-hidden rounded-lg bg-gray-700 transition-all duration-500 hover:w-full hover:drop-shadow-[0_0_8px_rgb(255,0,0)]"
+            class="group w-95% bg-whiteSimple dark:bg-blackSimple relative aspect-5/7 overflow-hidden rounded-lg transition-all duration-500 hover:w-full hover:drop-shadow-[0_0_12px_rgb(255,0,0)]"
         >
-            <img
-                :src="poster"
+            <PosterImage
+                :poster="poster"
                 :alt="title"
-                class="h-full w-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110"
             />
 
             <div class="absolute top-1 right-1 rounded-md bg-black/60 px-2 py-1 duration-500">
@@ -49,7 +51,7 @@ export default {
             <div
                 class="invisible absolute bottom-0 flex h-14 w-full items-center justify-center bg-black/25 p-2 opacity-0 backdrop-blur transition-all duration-500 group-hover:visible group-hover:opacity-100"
             >
-                <span class="line-clamp-2 text-center">
+                <span class="line-clamp-2 text-center leading-5">
                     {{ title }}
                 </span>
             </div>

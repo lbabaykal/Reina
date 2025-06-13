@@ -14,8 +14,8 @@ class RecordDoramaViewAction
 
         $cacheKey = "dorama_{$doramaId}_viewed_{$ipAddress}";
 
-        if (! cache()->store(CacheEnum::DIFFERENT_STORE->value)->has($cacheKey)) {
-            cache()->store(CacheEnum::DIFFERENT_STORE->value)->put($cacheKey, true, now()->addHour());
+        if (! cache()->store(CacheEnum::VIEWS_STORE->value)->has($cacheKey)) {
+            cache()->store(CacheEnum::VIEWS_STORE->value)->put($cacheKey, true, now()->addHour());
 
             event(new DoramaViewedEvent($doramaId, $ipAddress, $userAgent));
         }

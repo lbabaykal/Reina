@@ -5,10 +5,11 @@ import Rating from '../../Components/Animes/Modals/Rating.vue';
 import Favorite from '../../Components/Animes/Modals/Favorite.vue';
 import WatchOnlineButton from '../../Components/ui/Buttons/WatchOnlineButton.vue';
 import { push } from 'notivue';
+import CoverImage from '../../Components/Image/CoverImage.vue';
 
 export default {
     name: 'ShowPage',
-    components: { Tabs, WatchOnlineButton, Favorite, Rating, LoadingSvg },
+    components: { CoverImage, Tabs, WatchOnlineButton, Favorite, Rating, LoadingSvg },
     props: {
         slug: String,
     },
@@ -132,7 +133,7 @@ export default {
                 </div>
 
                 <div class="my-1.5 flex w-full flex-row content-center items-center justify-center divide-x divide-red-500 text-gray-300">
-                    <div v-for="(dataAnimeGenre, index) in dataAnime.genres">
+                    <div v-for="(dataAnimeGenre) in dataAnime.genres">
                         <router-link
                             :to="{ name: 'animes.index', query: { genres: dataAnimeGenre.slug } }"
                             class="mx-2 tracking-wide text-nowrap underline decoration-1 underline-offset-4 hover:text-red-500 hover:decoration-red-500"
@@ -152,10 +153,7 @@ export default {
                 </div>
             </div>
 
-            <div
-                class="shadow-cover-white dark:shadow-cover-black absolute top-0 left-0 z-10 h-full w-full bg-cover bg-center"
-                :style="{ backgroundImage: `url(${dataAnime.cover})` }"
-            ></div>
+            <CoverImage :cover="dataAnime.cover" />
         </div>
 
         <Tabs

@@ -28,7 +28,10 @@ export default {
     watch: {
         'mediaPlayerStore.selectedEpisode'(newVal, oldVal) {
             const episode = this.mediaPlayerStore.dataEpisodes.find((episode) => episode.id === newVal);
-            this.mediaPlayerStore.dataTeams = episode.teams;
+
+            if (episode && Array.isArray(episode.teams) && episode.teams.length > 0) {
+                this.mediaPlayerStore.dataTeams = episode.teams;
+            }
         },
     },
 };

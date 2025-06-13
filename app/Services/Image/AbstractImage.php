@@ -2,41 +2,49 @@
 
 namespace App\Services\Image;
 
-use App\Services\Image\Interfaces\ImageInterface;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use App\Enums\S3\DiskEnum;
+use App\Enums\S3\FolderEnum;
 
-abstract class AbstractImage implements ImageInterface
+abstract class AbstractImage
 {
-    public string|null $storage;
-    public string|null $format;
-    public string|null $fileField;
-    public string|null $fileName;
-    public $disk;
+    protected ?string $formatImage;
 
-    public function setStorage($storage): ImageInterface
+    protected ?string $keyFileInRequest = null;
+
+    protected ?string $folder;
+
+    protected ?string $filePath;
+
+    protected string $disk;
+
+    public function setDisk(DiskEnum $disk): AbstractImage
     {
-        $this->storage = $storage;
+        $this->disk = $disk->value;
+
         return $this;
     }
 
-    public function setFormat($format): ImageInterface
+    /**
+     * @param  string  $formatImage  Format Supported: webp, jpeg, png, avif.
+     */
+    public function setFormatImage(string $formatImage): AbstractImage
     {
-        $this->format = $format;
+        $this->formatImage = $formatImage;
+
         return $this;
     }
 
-    public function setFileField($field): ImageInterface
+    public function setKeyFileInRequest(string $keyFileInRequest): AbstractImage
     {
-        $this->fileField = $field;
+        $this->keyFileInRequest = $keyFileInRequest;
+
         return $this;
     }
 
-    abstract public function save();
-
-    protected function generateUrl(): string
+    public function setFolder(FolderEnum $folder): AbstractImage
     {
-        return $this->fileField . '/' . date('m-Y') . '/' . Str::random(40);
-    }
+        $this->folder = $folder->value;
 
+        return $this;
+    }
 }

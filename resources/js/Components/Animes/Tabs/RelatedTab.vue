@@ -51,7 +51,7 @@ export default {
 </script>
 
 <template>
-    <div class="text-black dark:text-white grid w-full grid-flow-row grid-cols-5 place-items-center gap-3">
+    <div class="text-black dark:text-white w-full flex flex-wrap justify-center gap-5">
         <CardRelation
             v-if="dataLoading"
             v-for="dataRelation in dataRelations"

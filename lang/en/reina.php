@@ -33,4 +33,17 @@ return [
         'is_not_yours' => 'You are not the owner of this folder.',
         'limit' => 'Cannot create more than '.Reina::COUNT_FOLDERS.' folders.',
     ],
+    'enum' => [
+        'status' => [
+            'published' => 'Опубликовано',
+            'draft' => 'Черновик',
+            'in_archive' => 'В архиве',
+            'on_moderation' => 'На модерации',
+        ],
+        'types_episode' => [
+            'voiceover' => 'Озвучка',
+            'dubbing' => 'Дубляж',
+            'subtitles' => 'Субтитры',
+        ],
+    ],
 ];

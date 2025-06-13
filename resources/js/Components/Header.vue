@@ -27,7 +27,7 @@ export default {
     <div>
         <header
             ref="header"
-            class="fixed top-0 z-50 w-full bg-white text-black dark:bg-black dark:text-white"
+            class="fixed top-0 z-50 w-full bg-white/70 text-black dark:bg-black/70 dark:text-white backdrop-blur-sm"
         >
             <nav class="mx-auto flex h-14 items-center justify-between px-15">
                 <RouterLink

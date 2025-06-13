@@ -2,39 +2,28 @@
 
 namespace App\Enums;
 
-enum AgeRatingEnum: string
+use App\Interfaces\TranslationEnumInterface;
+use App\Traits\TranslationEnumTrait;
+
+enum AgeRatingEnum: string implements TranslationEnumInterface
 {
+    use TranslationEnumTrait;
+
     case ZERO = '0+';
     case SIX = '6+';
     case TWELVE = '12+';
     case SIXTEEN = '16+';
     case EIGHTEEN = '18+';
 
-    public static function getName(AgeRatingEnum $status): string
+    public static function translations(): array
     {
-        return match ($status) {
-            self::ZERO => '0+',
-            self::SIX => '6+',
-            self::TWELVE => '12+',
-            self::SIXTEEN => '16+',
-            self::EIGHTEEN => '18+',
-            default => 'Такого возрастного рейтинга нет!'
-        };
-    }
-
-    public static function getAll(): array
-    {
-        return array_combine(self::values(), self::names());
-    }
-
-    public static function names(): array
-    {
-        return array_column(self::cases(), 'name');
-    }
-
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
+        return [
+            self::ZERO->value => '0+',
+            self::SIX->value => '6+',
+            self::TWELVE->value => '12+',
+            self::SIXTEEN->value => '16+',
+            self::EIGHTEEN->value => '18+',
+        ];
     }
 
 }

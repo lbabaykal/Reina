@@ -1,9 +1,10 @@
 <script>
 import StarSvg from './Svg/StarSvg.vue';
+import PosterRelationImage from './Image/PosterRelationImage.vue';
 
 export default {
     name: 'CardRelation',
-    components: { StarSvg },
+    components: { PosterRelationImage, StarSvg },
     props: {
         id: Number,
         slug: String,
@@ -32,11 +33,7 @@ export default {
                 "
     >
         <div class="h-32 w-22 overflow-hidden shrink-0">
-            <img
-                :src="poster"
-                :alt="this.title_ru"
-                class="h-full w-full object-cover"
-            />
+            <PosterRelationImage :poster="poster" :alt="title_ru"/>
         </div>
 
         <div class="my-2 mx-3 w-full flex flex-col justify-between">
@@ -58,7 +55,6 @@ export default {
                     <div class="ml-1 font-semibold">{{ this.rating }}</div>
                 </div>
             </div>
-
         </div>
     </RouterLink>
 </template>

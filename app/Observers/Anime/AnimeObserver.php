@@ -3,10 +3,10 @@
 namespace App\Observers\Anime;
 
 use App\Enums\CacheEnum;
-use App\Enums\S3Enum;
 use App\Enums\StatusEnum;
 use App\Models\Anime;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Image\CoverService;
+use App\Services\Image\PosterService;
 
 class AnimeObserver
 {
@@ -17,43 +17,35 @@ class AnimeObserver
 
     public function created(Anime $anime): void
     {
-        if ($anime->status === StatusEnum::PUBLISHED->value) {
+        $anime->slug = str()->slug($anime->title_ru) . '-' . $anime->id;
+        $anime->saveQuietly();
+
+        if ($anime->status === StatusEnum::PUBLISHED) {
             $this->forgetCacheMainAnime();
         }
-
-        $anime->slug = str()->slug($anime->title_ru).'-'.$anime->id;
-        $anime->saveQuietly();
     }
 
     public function updating(Anime $anime): void
     {
         if ($anime->isDirty('poster') && $anime->getOriginal('poster')) {
-            Storage::disk(S3Enum::ANIMES->value)->delete($anime->getOriginal('poster'));
-
-            $this->forgetCacheAnime($anime);
-            $this->forgetCacheMainAnime();
+            new PosterService()->deleteForAnime($anime->getOriginal('poster'));
         }
 
         if ($anime->isDirty('cover') && $anime->getOriginal('cover')) {
-            Storage::disk(S3Enum::ANIMES->value)->delete($anime->getOriginal('cover'));
-
-            $this->forgetCacheAnime($anime);
-            $this->forgetCacheMainAnime();
+            new CoverService()->deleteForAnime($anime->getOriginal('cover'));
         }
 
         if ($anime->isDirty('title_ru')) {
-            $anime->slug = str()->slug($anime->title_ru).'-'.$anime->id;
-
-            cache()->store(CacheEnum::ANIMES_STORE->value)->forget(CacheEnum::ANIME->value.$anime->getOriginal('id'));
+            $anime->slug = str()->slug($anime->title_ru) . '-' . $anime->id;
         }
     }
 
     public function updated(Anime $anime): void
     {
         if (
-            $anime->getOriginal('status') === StatusEnum::PUBLISHED->value
-            && $anime->status !== StatusEnum::PUBLISHED->value
-            || $anime->status === StatusEnum::PUBLISHED->value
+            $anime->getOriginal('status') === StatusEnum::PUBLISHED
+            && $anime->status !== StatusEnum::PUBLISHED
+            || $anime->status === StatusEnum::PUBLISHED
         ) {
             $this->forgetCacheAnime($anime);
             $this->forgetCacheMainAnime();
@@ -92,11 +84,11 @@ class AnimeObserver
         $anime->episodes()->delete();
 
         if ($anime->getOriginal('poster') !== null) {
-            Storage::disk(S3Enum::ANIMES->value)->delete($anime->getOriginal('poster'));
+            new PosterService()->deleteForAnime($anime->getOriginal('poster'));
         }
 
         if ($anime->getOriginal('cover') !== null) {
-            Storage::disk(S3Enum::ANIMES->value)->delete($anime->getOriginal('cover'));
+            new CoverService()->deleteForAnime($anime->getOriginal('cover'));
         }
 
         $this->forgetCacheAnime($anime);
@@ -115,6 +107,6 @@ class AnimeObserver
 
     public function forgetCacheAnime(Anime $anime): void
     {
-        cache()->store(CacheEnum::ANIMES_STORE->value)->forget(CacheEnum::ANIME->value.$anime->id);
+        cache()->store(CacheEnum::ANIMES_STORE->value)->forget(CacheEnum::ANIME->value . $anime->id);
     }
 }

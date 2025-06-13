@@ -3,11 +3,13 @@
 use App\Http\Controllers\AdminPanel\AdminPanelController;
 use App\Http\Controllers\AdminPanel\AnimeAdminController;
 use App\Http\Controllers\AdminPanel\AnimeEpisodesAdminController;
+use App\Http\Controllers\AdminPanel\CharacterAdminController;
 use App\Http\Controllers\AdminPanel\CountryAdminController;
 use App\Http\Controllers\AdminPanel\DoramaAdminController;
 use App\Http\Controllers\AdminPanel\DoramaEpisodesAdminController;
 use App\Http\Controllers\AdminPanel\FranchiseAdminController;
 use App\Http\Controllers\AdminPanel\GenreAdminController;
+use App\Http\Controllers\AdminPanel\PersonAdminController;
 use App\Http\Controllers\AdminPanel\StudioAdminController;
 use App\Http\Controllers\AdminPanel\TypeAdminController;
 use Illuminate\Support\Facades\Route;
@@ -61,4 +63,7 @@ Route::domain('admin.'.env('APP_URL'))
         Route::resource('/studios', StudioAdminController::class)->except(['show', 'destroy']);
         Route::resource('/countries', CountryAdminController::class)->except(['show', 'destroy']);
         Route::resource('/franchises', FranchiseAdminController::class)->except(['show', 'destroy']);
+
+        Route::resource('/characters', CharacterAdminController::class)->except(['show']);
+        Route::resource('/persons', PersonAdminController::class)->except(['show']);
     });

@@ -4,6 +4,7 @@ import DescriptionTab from './Tabs/DescriptionTab.vue';
 import CharactersTab from './Tabs/CharactersTab.vue';
 import RelatedTab from './Tabs/RelatedTab.vue';
 import CreatorsTab from './Tabs/CreatorsTab.vue';
+import { push } from 'notivue';
 
 export default {
     name: 'Tabs',
@@ -72,14 +73,40 @@ export default {
                 ],
                 activeTab: 1,
             },
+            dataCharacters: {
+                id: Number,
+                slug: String,
+                full_name_org: String,
+                full_name_ru: String,
+                full_name_en: String,
+                photo: String,
+                role: String,
+            },
+            dataCharactersLoading: false,
         };
     },
     methods: {
+        getCharactersData() {
+            this.dataCharactersLoading = false;
+            axios
+                .get(`/api/animes/${this.dataAnime.slug}/characters`)
+                .then((response) => {
+                    this.dataCharacters = response.data.data;
+
+                    this.dataCharactersLoading = true;
+                })
+                .catch((error) => {
+                    push.error(error.response.data);
+                });
+        },
+        issetArray(array) {
+            return Array.isArray(array) && array.length > 0;
+        },
     },
     computed: {
         filteredTabs() {
             return this.dataTabs.tabs.filter((tab) => {
-                if (tab.id === 3) {
+                if (tab.id === 3 && !this.issetArray(this.dataCharacters)) {
                     return false;
                 }
 
@@ -95,13 +122,14 @@ export default {
             });
         },
     },
+    mounted() {
+        this.getCharactersData();
+    },
 };
 </script>
 
 <template>
-    <div
-        class="w-90% m-auto my-3 rounded-lg bg-white dark:bg-black"
-    >
+    <div class="w-90% m-auto my-3 rounded-lg bg-white select-none dark:bg-black">
         <ul class="flex justify-center text-center text-xl font-bold">
             <li
                 v-for="tab in filteredTabs"
@@ -113,7 +141,7 @@ export default {
                     @click="dataTabs.activeTab = tab.id"
                     class="inline-block cursor-pointer border-b-2 px-4 py-2.5 tracking-wide"
                     :class="{
-                        'border-red-400 text-red-400 hover:border-red-500 hover:text-red-500': dataTabs.activeTab === tab.id,
+                        'border-red-500 text-red-500': dataTabs.activeTab === tab.id,
                         'border-gray-400 text-gray-400 hover:border-black hover:text-black dark:hover:border-white dark:hover:text-white':
                             dataTabs.activeTab !== tab.id,
                     }"
@@ -135,7 +163,10 @@ export default {
                 :description="dataAnime.description"
             />
 
-            <CharactersTab v-if="dataTabs.activeTab === 3" />
+            <CharactersTab
+                v-if="dataTabs.activeTab === 3"
+                :dataCharacters="dataCharacters"
+            />
 
             <keep-alive>
                 <RelatedTab

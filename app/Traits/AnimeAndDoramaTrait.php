@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 trait AnimeAndDoramaTrait
 {
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -50,23 +50,5 @@ trait AnimeAndDoramaTrait
         }
 
         return static::query()->where('id', $matches[0])->firstOrFail($columns);
-    }
-
-    public function getPosterUrlAttribute(): string
-    {
-        $table = $this->getTable();
-
-        return $this->poster
-            ? Storage::disk('s3_'.$table)->url($this->poster)
-            : Storage::disk('s3_'.$table)->url('no_poster.png');
-    }
-
-    public function getCoverUrlAttribute(): string
-    {
-        $table = $this->getTable();
-
-        return $this->cover
-            ? Storage::disk('s3_'.$table)->url($this->cover)
-            : Storage::disk('s3_'.$table)->url('no_cover.jpg');
     }
 }

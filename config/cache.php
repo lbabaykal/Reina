@@ -108,6 +108,12 @@ return [
             'connection' => env('REDIS_CACHE_CONNECTION', 'different'),
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
         ],
+
+        'redis_views' => [
+            'driver' => 'redis',
+            'connection' => env('REDIS_CACHE_CONNECTION', 'views'),
+            'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
+        ],
     ],
 
     /*

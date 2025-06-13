@@ -2,69 +2,73 @@
 
 namespace App\Services\Image;
 
+use App\Enums\S3\DiskEnum;
+use App\Enums\S3\FolderEnum;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageInterface;
 
 class ImageService extends AbstractImage
 {
-    private $image;
+    private ImageInterface $image;
 
     public function __construct()
     {
-        $this->setFormat('webp');
-        $this->setStorage('images');
+        $this->setDisk(DiskEnum::IMAGES);
+        $this->setFolder(FolderEnum::IMAGES);
+        $this->setFormatImage('webp');
     }
 
-    public function save(): null|string
+    public function save(): ?string
     {
+        return $this->processImageSave();
+    }
 
-        $this->disk = Storage::disk($this->storage);
+    protected function delete(string $filePath): void
+    {
+        Storage::disk($this->disk)->delete($filePath);
+    }
 
-        if (! request()->hasFile($this->fileField)) {
+    private function processImageSave(): ?string
+    {
+        if (! request()->hasFile($this->keyFileInRequest)) {
             return null;
         }
 
-        switch ($this->format) {
-            case 'source':
-                $this->image = request()->file($this->fileField);
-                break;
-            case 'webp':
-                $this->image = ImageManager::gd()
-                    ->read(request()->file($this->fileField))
-                    ->toWebp(80)
-                    ->toFilePointer();
-                break;
-            case 'avif':
-                $this->image = ImageManager::gd()
-                    ->read(request()->file($this->fileField))
-                    ->toAvif(80)
-                    ->toFilePointer();
-                break;
-            case 'jpeg':
-                $this->image = ImageManager::gd()
-                    ->read(request()->file($this->fileField))
-                    ->toJpeg(80)
-                    ->toFilePointer();
-                break;
-            case 'png':
-                $this->image = ImageManager::gd()
-                    ->read(request()->file($this->fileField))
-                    ->toPng()
-                    ->toFilePointer();
-                break;
-            default:
-                return null;
-        }
+        $this->image = ImageManager::gd()->read(request()->file($this->keyFileInRequest));
+        $this->image = $this->configureImage($this->image);
 
         try {
-            $this->fileName = $this->generateUrl() . '.' . $this->format;
-            $this->disk->put($this->fileName, $this->image);
+            $image = $this->encode();
+            $this->filePath = $this->generateFilePath();
+            Storage::disk($this->disk)->put($this->filePath, $image);
 
-            return $this->fileName;
+            return $this->filePath;
         } catch (\Exception $e) {
-            return null; //TODO Add Logging
+            // TODO Добавить логирование и переписать под будущее
+            return redirect()->back()->with('message', 'Ошибка сохранения изображения.');
         }
-
     }
 
+    protected function configureImage(ImageInterface $image): ImageInterface
+    {
+        return $image;
+    }
+
+    private function encode(): mixed
+    {
+        return match ($this->formatImage) {
+            'webp' => $this->image->toWebp(80)->toFilePointer(),
+            'jpeg' => $this->image->toJpeg(80)->toFilePointer(),
+            'png' => $this->image->toPng()->toFilePointer(),
+            'avif' => $this->image->toAvif(80)->toFilePointer(),
+            default => throw new \RuntimeException("Unsupported format: {$this->formatImage}"),
+        };
+    }
+
+    private function generateFilePath(): string
+    {
+        return $this->folder.'/'.date('m-Y').'/'.Str::random(40).'.'.$this->formatImage;
+    }
 }

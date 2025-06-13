@@ -36,6 +36,7 @@ export const useMediaPlayerStore = reactive({
     async getAnimeEpisodesData(slug) {
         this.slug = slug;
         this.dataMediaPlayerLoading = false;
+        this.resetData();
         await axios
             .get(`/api/animes/${this.slug}/episodes`)
             .then((response) => {
@@ -56,6 +57,7 @@ export const useMediaPlayerStore = reactive({
     async getDoramaEpisodesData(slug) {
         this.slug = slug;
         this.dataMediaPlayerLoading = false;
+        this.resetData();
         await axios
             .get(`/api/doramas/${this.slug}/episodes`)
             .then((response) => {
@@ -85,4 +87,10 @@ export const useMediaPlayerStore = reactive({
     toggleTeamsMenu() {
         this.teamMenu = !this.teamMenu;
     },
+    resetData() {
+        this.dataEpisodes = [];
+        this.dataTeams = [];
+        this.selectedEpisode = null;
+        this.selectedTeam = null;
+    }
 });

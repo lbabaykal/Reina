@@ -41,8 +41,9 @@ Route::domain(env('APP_URL'))->group(function () {
         Route::get('/{slug}/watch', [AnimeController::class, 'watch']);
         Route::get('/{slug}/relations', [AnimeController::class, 'relations']);
         Route::get('/{slug}/episodes', [AnimeController::class, 'episodes']);
+        Route::get('/{slug}/characters', [AnimeController::class, 'characters']);
 
-        Route::middleware(['auth', 'throttle:20,1'])->group(function () {
+        Route::middleware(['auth', 'throttle:50,1'])->group(function () {
             // Rating
             Route::get('/{slug}/rating', [AnimeRatingController::class, 'show'])->withoutMiddleware('auth');
             Route::post('/rating', [AnimeRatingController::class, 'store']);
@@ -62,8 +63,9 @@ Route::domain(env('APP_URL'))->group(function () {
         Route::get('/{slug}/watch', [DoramaController::class, 'watch']);
         Route::get('/{slug}/relations', [DoramaController::class, 'relations']);
         Route::get('/{slug}/episodes', [DoramaController::class, 'episodes']);
+        Route::get('/{slug}/persons', [DoramaController::class, 'persons']);
 
-        Route::middleware(['auth', 'throttle:20,1'])->group(function () {
+        Route::middleware(['auth', 'throttle:50,1'])->group(function () {
             // Rating
             Route::get('/{slug}/rating', [DoramaRatingController::class, 'show'])->withoutMiddleware('auth');
             Route::post('/rating', [DoramaRatingController::class, 'store']);

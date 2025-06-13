@@ -14,11 +14,6 @@ use Illuminate\Support\Carbon;
 
 class DoramaShowResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
@@ -47,5 +42,4 @@ class DoramaShowResource extends JsonResource
             'franchise' => FranchiseResource::make($this->franchise),
         ];
     }
-
 }

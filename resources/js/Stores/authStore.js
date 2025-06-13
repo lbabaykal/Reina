@@ -24,6 +24,9 @@ export const useAuthStore = defineStore('auth', {
                         };
 
                         this.storeUser(authData);
+                        if (localStorage.getItem('folders') === null) {
+                            useFoldersStore().getFolders();
+                        }
                     } else {
                         this.destroyUser();
                     }

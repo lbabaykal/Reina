@@ -40,6 +40,41 @@ class Test extends Command
 
 //        Franchise::query()->find(1)->delete();
 
+/*        Schema::create('anime_rating_statistics', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Anime::class)->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('assessment_1')->default(0);
+            $table->unsignedBigInteger('assessment_2')->default(0);
+            $table->unsignedBigInteger('assessment_3')->default(0);
+            $table->unsignedBigInteger('assessment_4')->default(0);
+            $table->unsignedBigInteger('assessment_5')->default(0);
+            $table->unsignedBigInteger('assessment_6')->default(0);
+            $table->unsignedBigInteger('assessment_7')->default(0);
+            $table->unsignedBigInteger('assessment_8')->default(0);
+            $table->unsignedBigInteger('assessment_9')->default(0);
+            $table->unsignedBigInteger('assessment_10')->default(0);
+            $table->unsignedBigInteger('count_assessments')->default(0);
+            $table->float('rating', 2)->default(0);
+            $table->timestamps();
+        });
+
+        Schema::create('dorama_rating_statistics', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Dorama::class)->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('assessment_1')->default(0);
+            $table->unsignedBigInteger('assessment_2')->default(0);
+            $table->unsignedBigInteger('assessment_3')->default(0);
+            $table->unsignedBigInteger('assessment_4')->default(0);
+            $table->unsignedBigInteger('assessment_5')->default(0);
+            $table->unsignedBigInteger('assessment_6')->default(0);
+            $table->unsignedBigInteger('assessment_7')->default(0);
+            $table->unsignedBigInteger('assessment_8')->default(0);
+            $table->unsignedBigInteger('assessment_9')->default(0);
+            $table->unsignedBigInteger('assessment_10')->default(0);
+            $table->unsignedBigInteger('count_assessments')->default(0);
+            $table->float('rating', 2)->default(0);
+            $table->timestamps();
+        });*/
 
 
         $endTime = microtime(true);

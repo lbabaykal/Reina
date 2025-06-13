@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\S3Enum;
 use App\Http\Requests\AdminPanel\DoramaUpdateRequest;
 use App\Models\Dorama;
 use App\Services\Image\CoverService;
@@ -11,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class DoramaAdminServices
 {
@@ -19,8 +17,8 @@ class DoramaAdminServices
     {
         $dorama = new Dorama;
 
-        $dorama->poster = (new PosterService)->setStorage(S3Enum::DORAMAS->value)->save();
-        $dorama->cover = (new CoverService)->setStorage(S3Enum::DORAMAS->value)->save();
+        $dorama->poster = new PosterService()->saveForDorama();
+        $dorama->cover = new CoverService()->saveForDorama();
 
         $dorama->slug = str()->slug($request->safe()->input('title_ru'));
         $dorama->title_org = $request->safe()->input('title_org');
@@ -59,17 +57,18 @@ class DoramaAdminServices
                 $dorama->countries()->attach($countries);
                 $dorama->genres()->attach($genres);
                 $dorama->studios()->attach($studios);
+                $dorama->ratingStatistic()->create();
             });
 
             return redirect()->route('admin.doramas.index')->with('message', "Дорама {$dorama->title_ru} добавлена.");
         } catch (\Exception $e) {
 
             if (! is_null($dorama->poster)) {
-                Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->poster);
+                new PosterService()->deleteForDorama($dorama->poster);
             }
 
             if (! is_null($dorama->cover)) {
-                Storage::disk(S3Enum::DORAMAS->value)->delete($dorama->cover);
+                new CoverService()->deleteForDorama($dorama->cover);
             }
 
             return redirect()->back()->with('message', 'Ошибка выполнения транзакции.'.$e->getMessage());
@@ -79,11 +78,11 @@ class DoramaAdminServices
     public function update(DoramaUpdateRequest $request, Model $dorama): RedirectResponse
     {
         if (request()->has('poster')) {
-            $dorama->poster = (new PosterService)->setStorage(S3Enum::DORAMAS->value)->save() ?? $dorama->poster;
+            $dorama->poster = new PosterService()->saveForDorama() ?? $dorama->poster;
         }
 
         if (request()->has('cover')) {
-            $dorama->cover = (new CoverService)->setStorage(S3Enum::DORAMAS->value)->save() ?? $dorama->cover;
+            $dorama->cover = new CoverService()->saveForDorama() ?? $dorama->cover;
         }
 
         $dorama->title_org = $request->safe()->input('title_org');

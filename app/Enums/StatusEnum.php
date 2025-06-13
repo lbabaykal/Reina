@@ -2,38 +2,27 @@
 
 namespace App\Enums;
 
+use App\Interfaces\TranslationEnumInterface;
+use App\Traits\TranslationEnumTrait;
 use Illuminate\Support\Facades\Lang;
 
-enum StatusEnum: string
+enum StatusEnum: string implements TranslationEnumInterface
 {
+    use TranslationEnumTrait;
+
     case DRAFT = 'DRAFT';
     case PUBLISHED = 'PUBLISHED';
     case IN_ARCHIVE = 'IN_ARCHIVE';
     case ON_MODERATION = 'ON_MODERATION';
 
-    public static function getName(StatusEnum $status): string
+    public static function translations(): array
     {
-        return match ($status) {
-            self::PUBLISHED => Lang::get('enum.status.published'),
-            self::DRAFT => Lang::get('enum.status.draft'),
-            self::IN_ARCHIVE => Lang::get('enum.status.in_archive'),
-            self::ON_MODERATION => Lang::get('enum.status.on_moderation'),
-            default => Lang::get('enum.status.not_found'),
-        };
+        return [
+            self::PUBLISHED->value => Lang::get('enum_translation.status.published'),
+            self::DRAFT->value => Lang::get('enum_translation.status.draft'),
+            self::IN_ARCHIVE->value => Lang::get('enum_translation.status.in_archive'),
+            self::ON_MODERATION->value => Lang::get('enum_translation.status.on_moderation'),
+        ];
     }
 
-    public static function getAll(): array
-    {
-        return array_combine(self::values(), self::names());
-    }
-
-    public static function names(): array
-    {
-        return array_column(self::cases(), 'name');
-    }
-
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
 }

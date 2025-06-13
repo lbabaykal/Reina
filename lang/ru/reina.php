@@ -46,20 +46,10 @@ return [
         'by_release_date_as' => 'По дате выхода ▲',
         'by_release_date_desc' => 'По дате выхода ▼',
     ],
-    'enum' => [
-        'status' => [
-            'published' => 'Опубликовано',
-            'draft' => 'Черновик',
-            'in_archive' => 'В архиве',
-            'on_moderation' => 'На модерации',
-            'not_found' => 'Такого статуса нет!',
-        ],
-        'types_episode' => [
-            'voiceover' => 'Озвучка',
-            'dubbing' => 'Дубляж',
-            'subtitles' => 'Субтитры',
-            'not_found' => 'Такого типа эпизодов нет!',
-        ],
+    'role' => [
+        'main' => 'Главный герой',
+        'secondary' => 'Второстепенный герой',
+        'episodic' => 'Эпизодический герой',
     ],
 ];
 

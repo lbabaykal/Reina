@@ -2,67 +2,36 @@
 
 namespace App\Services\Image;
 
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
+use App\Enums\S3\DiskEnum;
+use App\Enums\S3\FolderEnum;
 
-class CoverService extends AbstractImage
+class CoverService extends ImageService
 {
-    private $image;
-
     public function __construct()
     {
-        $this->setFileField('cover');
-        $this->setFormat('webp');
-        $this->setStorage('images');
+        parent::__construct();
+
+        $this->setFolder(FolderEnum::COVERS);
+        $this->setKeyFileInRequest('cover');
     }
 
-    public function save(): null|string
+    public function saveForAnime(): ?string
     {
-
-        $this->disk = Storage::disk($this->storage);
-
-        if (! request()->hasFile($this->fileField)) {
-            return null;
-        }
-
-        switch ($this->format) {
-            case 'webp':
-                $this->image = ImageManager::gd()
-                    ->read(request()->file($this->fileField))
-                    ->toWebp(80)
-                    ->toFilePointer();
-                break;
-            case 'avif':
-                $this->image = ImageManager::gd()
-                    ->read(request()->file($this->fileField))
-                    ->toAvif(80)
-                    ->toFilePointer();
-                break;
-            case 'jpeg':
-                $this->image = ImageManager::gd()
-                    ->read(request()->file($this->fileField))
-                    ->toJpeg(80)
-                    ->toFilePointer();
-                break;
-            case 'png':
-                $this->image = ImageManager::gd()
-                    ->read(request()->file($this->fileField))
-                    ->toPng()
-                    ->toFilePointer();
-                break;
-            default:
-                return null;
-        }
-
-        try {
-            $this->fileName = $this->generateUrl() . '.' . $this->format;
-            $this->disk->put($this->fileName, $this->image);
-
-            return $this->fileName;
-        } catch (\Exception $e) {
-            return null; //TODO Add Logging
-        }
-
+        return $this->setDisk(DiskEnum::ANIMES)->save();
     }
 
+    public function saveForDorama(): ?string
+    {
+        return $this->setDisk(DiskEnum::DORAMAS)->save();
+    }
+
+    public function deleteForAnime(string $filePath): void
+    {
+        $this->setDisk(DiskEnum::ANIMES)->delete($filePath);
+    }
+
+    public function deleteForDorama(string $filePath): void
+    {
+        $this->setDisk(DiskEnum::DORAMAS)->delete($filePath);
+    }
 }

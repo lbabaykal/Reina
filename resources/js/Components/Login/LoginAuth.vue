@@ -73,7 +73,7 @@ export default {
         v-show="isDropdownUserMenu"
         class="bg-whiteSimple dark:bg-blackSimple absolute top-15 right-14 w-72 overflow-hidden rounded-md select-none shadow-lg"
     >
-        <div class="flex items-center border-b-2 border-b-blue-600">
+        <div class="flex items-center border-b-1 border-b-black-500 dark:border-b-white-500">
             <img
                 :src="dataUser.avatar"
                 class="m-3 size-16 rounded-full bg-cover bg-center"
@@ -87,7 +87,7 @@ export default {
 
         <div
             @click="toggleUserMenu"
-            class="flex flex-col text-lg"
+            class="flex flex-col text-lg py-2"
         >
             <RouterLink
                 :to="{ name: 'admin' }"

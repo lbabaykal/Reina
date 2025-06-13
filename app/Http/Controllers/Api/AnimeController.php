@@ -17,11 +17,13 @@ use App\Http\Requests\SearchRequest;
 use App\Http\Resources\Animes\AnimeIndexResource;
 use App\Http\Resources\Animes\AnimeShowResource;
 use App\Http\Resources\Animes\AnimeWatchResource;
+use App\Http\Resources\CharacterResource;
 use App\Http\Resources\Episodes\AnimeEpisodeResource;
 use App\Http\Resources\RelationsResource;
 use App\Models\Anime;
 use App\Reina;
 use App\Services\AnimeServices;
+use App\Services\CharacterServices;
 use App\Services\EpisodeServices;
 use App\Services\FranchiseServices;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -80,5 +82,12 @@ class AnimeController extends Controller
         $episodes = $episodeServices->episodesForAnimeById(getIdFromSlug($slug));
 
         return AnimeEpisodeResource::collection($episodes);
+    }
+
+    public function characters($slug, CharacterServices $characterServices): AnonymousResourceCollection
+    {
+        $characters = $characterServices->charactersForAnimeById(getIdFromSlug($slug));
+
+        return CharacterResource::collection($characters);
     }
 }
