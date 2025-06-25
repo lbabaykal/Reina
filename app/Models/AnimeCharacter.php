@@ -2,19 +2,26 @@
 
 namespace App\Models;
 
-use App\Enums\RoleEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AnimeCharacter extends Model
 {
-    protected $fillable = [
-        'anime_id',
-        'character_id',
-        'role',
-    ];
+    protected $table = 'anime_character';
 
-    protected $casts = [
-        'role' => RoleEnum::class,
-    ];
+    public function character(): BelongsTo
+    {
+        return $this->belongsTo(Character::class);
+    }
+
+    public function anime(): BelongsTo
+    {
+        return $this->belongsTo(Anime::class);
+    }
+
+    public function characterRole(): BelongsTo
+    {
+        return $this->belongsTo(CharacterRole::class);
+    }
 
 }

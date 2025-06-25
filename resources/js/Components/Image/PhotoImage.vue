@@ -1,9 +1,15 @@
 <script>
+import LogoSvg from '../Svg/LogoSvg.vue';
+
 export default {
     name: 'PhotoImage',
+    components: { LogoSvg },
     props: {
         photo: String,
-        alt: String,
+        alt: {
+            type: String,
+            default: '',
+        }
     },
 };
 </script>
@@ -13,13 +19,13 @@ export default {
         v-if="photo"
         :src="photo"
         :alt="alt"
-        class="min-h-32 w-full"
+        class="min-h-32 w-full rounded-full"
     />
 
     <div
         v-else
-        class="text-md flex min-h-32 w-full items-center justify-center text-center font-semibold text-black dark:text-white border border-gray-500"
+        class="text-md flex min-h-32 w-full items-center justify-center rounded-full border border-gray-500"
     >
-        Нет изображения
+        <LogoSvg classes="size-10 filter grayscale" />
     </div>
 </template>

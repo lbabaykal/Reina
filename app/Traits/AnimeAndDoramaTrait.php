@@ -9,7 +9,6 @@ use App\Models\Studio;
 use App\Models\Type;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Storage;
 
 trait AnimeAndDoramaTrait
 {

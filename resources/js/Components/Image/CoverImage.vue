@@ -1,6 +1,9 @@
 <script>
+import LogoSvg from '../Svg/LogoSvg.vue';
+
 export default {
     name: 'CoverImage',
+    components: { LogoSvg },
     props: {
         cover: String,
     },
@@ -16,8 +19,8 @@ export default {
 
     <div
         v-else
-        class="shadow-cover-white dark:shadow-cover-black absolute top-0 left-0 z-10 flex size-full items-center justify-center text-3xl font-semibold text-black dark:text-white"
+        class="shadow-cover-white dark:shadow-cover-black absolute top-0 left-0 z-10 flex size-full items-center justify-center"
     >
-        Нет изображения
+        <LogoSvg classes="size-20 filter grayscale" />
     </div>
 </template>

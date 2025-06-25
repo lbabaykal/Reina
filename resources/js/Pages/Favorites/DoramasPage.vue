@@ -1,6 +1,6 @@
 <script>
 import CardDorama from '../../Components/Doramas/CardDorama.vue';
-import CardLoading from '../../Components/CardLoading.vue';
+import CardLoading from '../../Components/Cards/CardLoading.vue';
 import Pagination from '../../Components/Pagination.vue';
 import Folders from '../../Components/Doramas/Folders.vue';
 import { push } from 'notivue';

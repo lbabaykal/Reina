@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Enums\CacheEnum;
-use App\Enums\StatusEnum;
 use App\Http\Requests\AdminPanel\CharacterStoreRequest;
 use App\Http\Requests\AdminPanel\CharacterUpdateRequest;
 use App\Models\Anime;
@@ -62,7 +61,10 @@ class CharacterServices
         return cache()->store(CacheEnum::DIFFERENT_STORE->value)
             ->flexible(CacheEnum::ANIME_CHARACTERS->value.$id, [1200, 1800], function () use ($anime) {
                 return $anime->characters()
-                    ->select(['characters.id', 'characters.slug', 'characters.full_name_org', 'characters.full_name_ru', 'characters.full_name_en', 'characters.photo'])
+                    ->with([
+                        'character:id,slug,full_name_org,full_name_ru,full_name_en,photo',
+                        'characterRole:id,slug',
+                    ])
                     ->get();
             });
     }

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Character;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PersonsResource extends JsonResource
+class CharacterResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -16,7 +16,6 @@ class PersonsResource extends JsonResource
             'full_name_ru' => $this->full_name_ru,
             'full_name_en' => $this->full_name_en,
             'photo' => $this->photoUrl,
-            'role' => $this->pivot?->role,
         ];
     }
 }

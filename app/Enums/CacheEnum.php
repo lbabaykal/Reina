@@ -14,6 +14,7 @@ enum CacheEnum: string
     case ANIME = 'anime:';
     case ANIME_EPISODES = 'anime_episodes:';
     case ANIME_CHARACTERS = 'anime_characters:';
+    case ANIME_PERSONS = 'anime_persons:';
 
     case DORAMAS_STORE = 'redis_doramas';
     case MAIN_DORAMAS = 'main_doramas';

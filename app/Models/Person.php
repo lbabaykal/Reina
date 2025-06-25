@@ -29,6 +29,12 @@ class Person extends Model
         'date_of_birth' => 'date',
     ];
 
+    public function animes(): BelongsToMany
+    {
+        return $this->belongsToMany(Anime::class)
+            ->withPivot('role');
+    }
+
     public function doramas(): BelongsToMany
     {
         return $this->belongsToMany(Dorama::class)

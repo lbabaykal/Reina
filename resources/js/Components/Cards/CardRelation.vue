@@ -1,6 +1,6 @@
 <script>
-import StarSvg from './Svg/StarSvg.vue';
-import PosterRelationImage from './Image/PosterRelationImage.vue';
+import StarSvg from '../Svg/StarSvg.vue';
+import PosterRelationImage from '../Image/PosterRelationImage.vue';
 
 export default {
     name: 'CardRelation',
@@ -27,8 +27,8 @@ export default {
     <RouterLink
         :to="{ name: this.relation_type + '.show', params: { slug: this.slug } }"
         class="flex flex-row w-80 h-32 rounded-md overflow-hidden
-                bg-whiteFon hover:bg-whiteActive
-                dark:bg-blackFon dark:hover:bg-blackActive
+                bg-whiteSimple hover:bg-whiteActive
+                dark:bg-blackSimple dark:hover:bg-blackActive
                 transition-all duration-300
                 "
     >

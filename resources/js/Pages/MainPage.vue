@@ -1,7 +1,7 @@
 <script>
 import CardDorama from '../Components/Doramas/CardDorama.vue';
 import CardAnime from '../Components/Animes/CardAnime.vue';
-import CardLoading from '../Components/CardLoading.vue';
+import CardLoading from '../Components/Cards/CardLoading.vue';
 import { push } from 'notivue';
 
 export default {

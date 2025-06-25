@@ -28,8 +28,8 @@ return new class extends Migration
             $table->foreignIdFor(Country::class)->nullable()->constrained();
             $table->foreignIdFor(Franchise::class)->nullable()->constrained()->nullOnDelete();
             $table->enum('age_rating', ['0+', '6+', '12+', '16+', '18+'])->default('18+');
-            $table->unsignedInteger('episodes_released');
-            $table->unsignedInteger('episodes_total');
+            $table->unsignedInteger('episodes_released')->default(0);
+            $table->unsignedInteger('episodes_total')->default(0);
             $table->unsignedInteger('duration');
             $table->date('release');
             $table->text('description')->nullable();

@@ -17,15 +17,18 @@ use App\Http\Requests\SearchRequest;
 use App\Http\Resources\Animes\AnimeIndexResource;
 use App\Http\Resources\Animes\AnimeShowResource;
 use App\Http\Resources\Animes\AnimeWatchResource;
-use App\Http\Resources\CharacterResource;
+use App\Http\Resources\Character\CharactersResource;
 use App\Http\Resources\Episodes\AnimeEpisodeResource;
 use App\Http\Resources\RelationsResource;
+use App\Http\Resources\StaffResource;
 use App\Models\Anime;
 use App\Reina;
 use App\Services\AnimeServices;
 use App\Services\CharacterServices;
 use App\Services\EpisodeServices;
 use App\Services\FranchiseServices;
+use App\Services\PersonServices;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Pipeline;
 
@@ -84,10 +87,17 @@ class AnimeController extends Controller
         return AnimeEpisodeResource::collection($episodes);
     }
 
-    public function characters($slug, CharacterServices $characterServices): AnonymousResourceCollection
+    public function characters($slug, CharacterServices $characterServices): CharactersResource
     {
         $characters = $characterServices->charactersForAnimeById(getIdFromSlug($slug));
 
-        return CharacterResource::collection($characters);
+        return new CharactersResource($characters);
+    }
+
+    public function staff($slug, PersonServices $personServices): StaffResource
+    {
+        $persons = $personServices->personsForAnimeById(getIdFromSlug($slug));
+
+        return new StaffResource($persons);
     }
 }

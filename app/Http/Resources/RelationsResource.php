@@ -16,7 +16,6 @@ class RelationsResource extends JsonResource
             'poster' => $this->posterUrl,
             'type' => TypesResource::make($this->type),
             'title_ru' => $this->title_ru,
-            'episodes_released' => $this->episodes_released,
             'episodes_total' => $this->episodes_total,
             'release' => Carbon::parse($this->release)->isoFormat('DD.MM.YYYY'),
             'rating' => $this->rating,

@@ -1,33 +1,64 @@
 <script>
-import CardCharacter from '../CardCharacter.vue';
+import CardCharacter from '../../Cards/CardCharacter.vue';
+import { push } from 'notivue';
+import TabLoading from '../../Tabs/TabLoading.vue';
+import TabNotData from '../../Tabs/TabNotData.vue';
 
 export default {
     name: 'CharactersTab',
-    components: { CardCharacter },
+    components: { TabNotData, TabLoading, CardCharacter },
     props: {
-        dataCharacters: Array,
+        slug: String,
     },
     data() {
-        return {};
+        return {
+            /**
+             * @type {{
+             *   mains: Array,
+             *   secondaries: Array,
+             *   episodics: Array,
+             * }}
+             */
+            dataCharacters: {},
+            dataLoading: false,
+        };
     },
-    methods: {},
-    computed: {
-        mainCharacters() {
-            return this.dataCharacters.filter((character) => character.role === 'MAIN');
+    methods: {
+        getCharactersData() {
+            this.dataLoading = false;
+            axios
+                .get(`/api/animes/${this.slug}/characters`)
+                .then((response) => {
+                    this.dataCharacters = response.data.data;
+                })
+                .catch((error) => {
+                    push.error(error.response.data);
+                })
+                .finally(() => {
+                    this.dataLoading = true;
+                });
         },
-        secondaryCharacters() {
-            return this.dataCharacters.filter((character) => character.role === 'SECONDARY');
+        issetArrayOrObject(value) {
+            if (Array.isArray(value)) {
+                return value.length > 0;
+            } else if (value && typeof value === 'object') {
+                return Object.keys(value).length > 0;
+            }
+            return false;
         },
-        episodicCharacters() {
-            return this.dataCharacters.filter((character) => character.role === 'EPISODIC');
-        },
+    },
+    mounted() {
+        this.getCharactersData();
     },
 };
 </script>
 
 <template>
-    <div class="">
-        <div class="flex flex-col">
+    <div
+        v-if="dataLoading && issetArrayOrObject(dataCharacters)"
+        class=""
+    >
+        <div v-if="dataCharacters.mains" class="flex flex-col">
             <div class="flex items-center justify-center py-2 text-center text-xl font-semibold text-white">
                 <span class="text-2xl text-red-500">❮</span>
                 <span class="px-3 text-xl text-black dark:text-white">Главные герои</span>
@@ -35,7 +66,7 @@ export default {
             </div>
             <div class="flex flex-wrap justify-center gap-2.5">
                 <CardCharacter
-                    v-for="dataCharacter in mainCharacters"
+                    v-for="dataCharacter in dataCharacters.mains"
                     :slug="dataCharacter.slug"
                     :photo="dataCharacter.photo"
                     :full_name_ru="dataCharacter.full_name_ru"
@@ -43,7 +74,7 @@ export default {
             </div>
         </div>
 
-        <div class="flex flex-col">
+        <div v-if="dataCharacters.secondaries" class="flex flex-col">
             <div class="flex items-center justify-center py-2 text-center text-xl font-semibold text-white">
                 <span class="text-2xl text-red-500">❮</span>
                 <span class="px-3 text-xl text-black dark:text-white">Второстепенные герои</span>
@@ -51,7 +82,7 @@ export default {
             </div>
             <div class="flex flex-wrap justify-center gap-2.5">
                 <CardCharacter
-                    v-for="dataCharacter in secondaryCharacters"
+                    v-for="dataCharacter in dataCharacters.secondaries"
                     :slug="dataCharacter.slug"
                     :photo="dataCharacter.photo"
                     :full_name_ru="dataCharacter.full_name_ru"
@@ -59,7 +90,7 @@ export default {
             </div>
         </div>
 
-        <div class="flex flex-col">
+        <div v-if="dataCharacters.episodics" class="flex flex-col">
             <div class="flex items-center justify-center py-2 text-center text-xl font-semibold text-white">
                 <span class="text-2xl text-red-500">❮</span>
                 <span class="px-3 text-xl text-black dark:text-white">Эпизодические герои</span>
@@ -67,7 +98,7 @@ export default {
             </div>
             <div class="flex flex-wrap justify-center gap-2.5">
                 <CardCharacter
-                    v-for="dataCharacter in episodicCharacters"
+                    v-for="dataCharacter in dataCharacters.episodics"
                     :slug="dataCharacter.slug"
                     :photo="dataCharacter.photo"
                     :full_name_ru="dataCharacter.full_name_ru"
@@ -75,4 +106,14 @@ export default {
             </div>
         </div>
     </div>
+
+    <TabNotData
+        v-else-if="dataLoading && !issetArrayOrObject(dataCharacters)"
+        title="Персонажи не заполнены"
+    />
+
+    <TabLoading
+        v-else
+        classes="fill-red-500"
+    />
 </template>

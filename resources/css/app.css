@@ -22,21 +22,26 @@
     --shadow-cover-black: inset 0 -80px 100px 25px rgba(0, 0, 0, 1);
     --shadow-cover-white: inset 0 -80px 100px 25px rgba(232, 232, 232, 1);
 
-    --color-white11: #edebe9;
-
     /*--color-blackFon: rgba(16, 18, 20, 1);*/
     /*--color-blackActive: rgba(53, 56, 91, 1);*/
     --color-blackFon: rgba(20, 22, 28, 1);
     --color-blackSimple: rgba(36, 40, 48, 1);
     --color-blackActive: rgba(54, 58, 70, 1);
 
+
     /*--color-whiteSimple: rgb(255, 255, 255);*/
     /*--color-whiteActive: rgb(230, 230, 235);*/
     /*--color-whiteFon: rgb(220, 220, 225);*/
 
-    --color-whiteFon: rgb(238, 238, 238);
-    --color-whiteSimple: rgb(255, 255, 255);
-    --color-whiteActive: rgb(230, 230, 230);
+    /*--color-whiteFon: rgb(238, 238, 238);*/
+    /*--color-whiteSimple: rgb(255, 255, 255);*/
+    /*--color-whiteActive: rgb(230, 230, 230);*/
+
+
+    --color-whiteFon: rgb(240, 240, 240, 1);
+    --color-whiteSimple: rgb(235, 235, 235, 1);
+    --color-whiteActive: rgb(210, 210, 210, 1);
+
 
     --color-blackBack: rgba(30, 30, 36, 1);
     --color-blackBack2: rgba(38, 38, 38, 1);

@@ -84,10 +84,14 @@ class Anime extends Model
         return $this->hasMany(AnimeEpisode::class);
     }
 
-    public function characters(): BelongsToMany
+    public function characters(): HasMany
     {
-        return $this->belongsToMany(Character::class)
-            ->withPivot('role');
+        return $this->hasMany(AnimeCharacter::class);
+    }
+
+    public function persons(): HasMany
+    {
+        return $this->hasMany(AnimePerson::class);
     }
 
     public function ratingStatistic(): HasOne

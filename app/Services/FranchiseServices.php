@@ -42,8 +42,8 @@ class FranchiseServices
             ->flexible(CacheEnum::FRANCHISE->value.$franchiseId, [1200, 1800], function () use ($franchiseId) {
                 return Franchise::query()
                     ->with([
-                        'animes:id,slug,poster,type_id,title_ru,release,rating,franchise_id' => ['type'],
-                        'doramas:id,slug,poster,type_id,title_ru,release,rating,franchise_id' => ['type'],
+                        'animes:id,slug,poster,type_id,title_ru,release,rating,franchise_id,episodes_total' => ['type'],
+                        'doramas:id,slug,poster,type_id,title_ru,release,rating,franchise_id,episodes_total' => ['type'],
                     ])
                     ->find($franchiseId);
             });

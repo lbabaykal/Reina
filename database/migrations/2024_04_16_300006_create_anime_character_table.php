@@ -2,6 +2,7 @@
 
 use App\Models\Anime;
 use App\Models\Character;
+use App\Models\CharacterRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,15 +19,17 @@ return new class extends Migration
             $table->foreignIdFor(Character::class)
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->enum('role', ['MAIN', 'SECONDARY', 'EPISODIC'])->default('SECONDARY');
+            $table->foreignIdFor(CharacterRole::class)
+                ->constrained()
+                ->cascadeOnDelete();
             $table->timestamps();
 
-            $table->unique(['anime_id', 'character_id']);
+            $table->unique(['anime_id', 'character_id', 'character_role_id']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('anime_characters');
+        Schema::dropIfExists('anime_character');
     }
 };

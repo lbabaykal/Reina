@@ -2,6 +2,7 @@
 
 use App\Models\Dorama;
 use App\Models\Person;
+use App\Models\PersonRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,15 +19,17 @@ return new class extends Migration
             $table->foreignIdFor(Person::class)
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->enum('role', ['MAIN', 'SECONDARY', 'EPISODIC'])->default('SECONDARY');
+            $table->foreignIdFor(PersonRole::class)
+                ->constrained()
+                ->cascadeOnDelete();
             $table->timestamps();
 
-            $table->unique(['dorama_id', 'person_id']);
+            $table->unique(['dorama_id', 'person_id', 'person_role_id']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('dorama_persons');
+        Schema::dropIfExists('dorama_person');
     }
 };

@@ -4,9 +4,12 @@ namespace App\Console\Commands;
 
 use App\Models\Anime;
 use App\Models\AnimeEpisode;
+use App\Models\CharacterRole;
 use App\Models\Dorama;
 use App\Models\DoramaEpisode;
 use App\Models\Franchise;
+use App\Models\Person;
+use App\Models\PersonRole;
 use App\Models\Team;
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
@@ -83,3 +86,4 @@ class Test extends Command
         echo "Test - Command complete\n";
     }
 }
+

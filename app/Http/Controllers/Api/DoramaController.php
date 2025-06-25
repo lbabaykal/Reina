@@ -18,8 +18,9 @@ use App\Http\Resources\Doramas\DoramaIndexResource;
 use App\Http\Resources\Doramas\DoramaShowResource;
 use App\Http\Resources\Doramas\DoramaWatchResource;
 use App\Http\Resources\Episodes\DoramaEpisodesResource;
-use App\Http\Resources\PersonsResource;
+use App\Http\Resources\Person\PersonResource;
 use App\Http\Resources\RelationsResource;
+use App\Http\Resources\StaffResource;
 use App\Models\Dorama;
 use App\Reina;
 use App\Services\DoramaServices;
@@ -84,11 +85,11 @@ class DoramaController extends Controller
         return DoramaEpisodesResource::collection($episodes);
     }
 
-    public function persons($slug, PersonServices $personServices): AnonymousResourceCollection
+    public function staff($slug, PersonServices $personServices): StaffResource
     {
         $persons = $personServices->personsForDoramaById(getIdFromSlug($slug));
 
-        return PersonsResource::collection($persons);
+        return new StaffResource($persons);
     }
 
 }

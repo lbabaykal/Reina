@@ -1,6 +1,6 @@
 <script>
 import CardAnime from '../../Components/Animes/CardAnime.vue';
-import CardLoading from '../../Components/CardLoading.vue';
+import CardLoading from '../../Components/Cards/CardLoading.vue';
 import Pagination from '../../Components/Pagination.vue';
 import Search from '../../Components/Search.vue';
 import { push } from 'notivue';

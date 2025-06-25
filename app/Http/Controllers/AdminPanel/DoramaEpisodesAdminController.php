@@ -10,7 +10,6 @@ use App\Models\Dorama;
 use App\Models\DoramaEpisode;
 use App\Reina;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class DoramaEpisodesAdminController extends Controller

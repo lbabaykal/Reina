@@ -84,10 +84,9 @@ class Dorama extends Model
         return $this->hasMany(DoramaEpisode::class);
     }
 
-    public function persons(): BelongsToMany
+    public function persons(): HasMany
     {
-        return $this->belongsToMany(Person::class)
-            ->withPivot('role');
+        return $this->hasMany(DoramaPerson::class);
     }
 
     public function ratingStatistic(): HasOne
