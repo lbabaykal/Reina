@@ -73,18 +73,18 @@ class AnimeController extends Controller
         return AnimeWatchResource::make($anime);
     }
 
-    public function relations($slug, FranchiseServices $franchiseServices): AnonymousResourceCollection
-    {
-        $relations = $franchiseServices->relationsForAnimeById(getIdFromSlug($slug));
-
-        return RelationsResource::collection($relations);
-    }
-
     public function episodes($slug, EpisodeServices $episodeServices): AnonymousResourceCollection
     {
         $episodes = $episodeServices->episodesForAnimeById(getIdFromSlug($slug));
 
         return AnimeEpisodeResource::collection($episodes);
+    }
+
+    public function relations($slug, FranchiseServices $franchiseServices): AnonymousResourceCollection
+    {
+        $relations = $franchiseServices->relationsForAnimeById(getIdFromSlug($slug));
+
+        return RelationsResource::collection($relations);
     }
 
     public function characters($slug, CharacterServices $characterServices): CharactersResource

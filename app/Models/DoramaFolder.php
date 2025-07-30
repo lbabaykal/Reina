@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use App\Observers\Dorama\DoramaFolderObserver;
+use App\Policies\Folders\DoramaFolderPolicy;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[UsePolicy(DoramaFolderPolicy::class)]
 #[ObservedBy([DoramaFolderObserver::class])]
 class DoramaFolder extends Model
 {

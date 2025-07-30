@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Account\Settings\ChangePasswordController;
+use App\Http\Controllers\Account\Settings\ChangeProfileController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
@@ -25,6 +27,8 @@ Route::middleware('guest')
 
 //  Auth
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('update-profile', ChangeProfileController::class);
+    Route::post('change-password', ChangePasswordController::class);
     Route::post('logout', LogoutController::class)->name('logout');
 
     // Нужен для редиректа middleware

@@ -52,24 +52,6 @@ class DoramaServices
         ];
     }
 
-    //    public function episodesFor(Dorama|string|int|null $dorama = null): \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
-    //    {
-    //        $this->checkModel($dorama);
-    //
-    //        return new EpisodeServices()->episodesForDoramaById($this->dorama->id);
-    //    }
-    //
-    //    public function relationsFor(Dorama|string|int|null $dorama = null): \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
-    //    {
-    //        $this->checkModel($dorama);
-    //
-    //        if (is_null($this->dorama->franchise_id)) {
-    //            return collect();
-    //        }
-    //
-    //        return new FranchiseServices()->relationsForDoramaById($this->dorama->franchise_id);
-    //    }
-
     protected function checkModel(Dorama|string|int|null $dorama): void
     {
         if ($this->dorama === null) {

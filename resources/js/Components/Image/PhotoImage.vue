@@ -19,12 +19,12 @@ export default {
         v-if="photo"
         :src="photo"
         :alt="alt"
-        class="min-h-32 w-full rounded-full"
+        class="min-h-32 w-full rounded-full border border-gray-500"
     />
 
     <div
         v-else
-        class="text-md flex min-h-32 w-full items-center justify-center rounded-full border border-gray-500"
+        class="flex min-h-32 w-full items-center justify-center rounded-full border border-gray-500"
     >
         <LogoSvg classes="size-10 filter grayscale" />
     </div>

@@ -51,7 +51,9 @@ return [
         'secondary' => 'Второстепенный герой',
         'episodic' => 'Эпизодический герой',
     ],
+    'settings' => [
+        'change_profile_successful' => 'Профиль успешно обновлен.',
+        'change_password_successful' => 'Пароль успешно изменён.',
+    ],
+
 ];
-
-
-

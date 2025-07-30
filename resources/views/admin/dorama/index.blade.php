@@ -73,8 +73,9 @@
                     <tbody>
                     @foreach($doramas as $dorama)
                         <tr class="odd:bg-white dark:odd:bg-gray-900 even:bg-gray-50 dark:even:bg-gray-800 border-b dark:border-gray-700">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <a href="{{ route('dorama.show', $dorama) }}">{{ $dorama->title_ru }}</a>
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+{{--                                <a href="{{ route('admin.dorama.show', $dorama) }}">{{ $dorama->title_ru }}</a>--}}
+                                <a href="#">{{ $dorama->title_ru }}</a>
                             </th>
                             <td class="px-6 py-4">
                                 {{ $dorama->type->title_ru }}

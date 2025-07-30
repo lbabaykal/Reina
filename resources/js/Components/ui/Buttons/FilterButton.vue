@@ -14,7 +14,7 @@ export default {
 
 <template>
     <button
-        class="bg-whiteSimple dark:bg-blackSimple hover:bg-whiteActive dark:hover:bg-blackActive flex w-56 cursor-pointer items-center justify-between rounded-md border-b border-red-400 px-3 py-2 font-medium text-black shadow-md transition-all duration-200 dark:text-white"
+        class="dark:hover:bg-blackActive hover:bg-whiteActive flex w-56 cursor-pointer items-center justify-between rounded-md border-b border-red-400 bg-white px-3 py-2 font-medium text-black shadow-md transition-all duration-200 dark:bg-black dark:text-white"
         :class="[isFiltersMenu ? 'dark:!bg-blackActive !bg-whiteActive' : '']"
         type="button"
     >

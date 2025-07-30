@@ -111,14 +111,14 @@ export default {
 
             <keep-alive>
                 <RelatedTab
-                    v-if="dataTabs.activeTab === 4"
+                    v-if="dataTabs.activeTab === 3"
                     :slug="dataDorama.slug"
                 />
             </keep-alive>
 
             <keep-alive>
                 <StaffTab
-                    v-if="dataTabs.activeTab === 5"
+                    v-if="dataTabs.activeTab === 4"
                     :slug="dataDorama.slug"
                 />
             </keep-alive>

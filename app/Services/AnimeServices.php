@@ -54,24 +54,6 @@ class AnimeServices
         ];
     }
 
-    //    public function episodesFor(Anime|string|int|null $anime = null): \Illuminate\Database\Eloquent\Collection
-    //    {
-    //        $this->checkModel($anime);
-    //
-    //        return new EpisodeServices()->episodesForAnimeById($this->anime->id);
-    //    }
-    //
-    //    public function relationsFor(Anime|string|int|null $anime = null): \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
-    //    {
-    //        $this->checkModel($anime);
-    //
-    //        if (is_null($this->anime->franchise_id)) {
-    //            return collect();
-    //        }
-    //
-    //        return new FranchiseServices()->relationsForAnimeById($this->anime->franchise_id);
-    //    }
-
     protected function checkModel(Anime|string|int|null $anime): void
     {
         if ($this->anime === null) {

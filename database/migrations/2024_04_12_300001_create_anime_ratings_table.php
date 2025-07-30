@@ -14,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Anime::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->unsignedTinyInteger('assessment');
+            $table->unsignedInteger('assessment');
         });
     }
 

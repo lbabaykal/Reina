@@ -53,8 +53,6 @@
     --color-white2: rgb(242, 242, 242);
     --color-white3: rgb(220, 220, 220);
 
-
-
     --spacing-4\.5: 1.125rem;   /* 18px */
     --spacing-15: 3.75rem; /* 60px */
     --spacing-16: 4rem;    /* 64px */
@@ -62,6 +60,7 @@
     --spacing-17: 4.25rem; /* 68px */
     --spacing-18: 4.5rem;  /* 72px */
     --spacing-22: 5.5rem;  /* 88px */
+    --spacing-30: 7.5rem;  /* 120px */
     --spacing-50: 12.5rem;  /* 200px */
     --spacing-68: 17rem;   /* 272px */
     --spacing-76: 19rem;   /* 304px */
@@ -150,6 +149,7 @@
     --spacing-HD: 1280px;
 
     --animate-shine: shine 4s linear infinite;
+    --animate-spin-slow: spin 10s linear infinite;
 
     @keyframes shine {
         0% {

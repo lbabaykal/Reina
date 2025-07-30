@@ -1,8 +1,8 @@
 <script>
-import CardLoading from '../../Components/Cards/CardLoading.vue';
-import CardAnime from '../../Components/Animes/CardAnime.vue';
-import Pagination from '../../Components/Pagination.vue';
-import Folders from '../../Components/Animes/Folders.vue';
+import CardLoading from '../../../Components/Cards/CardLoading.vue';
+import CardAnime from '../../../Components/Animes/CardAnime.vue';
+import Pagination from '../../../Components/Pagination.vue';
+import Folders from '../../../Components/Animes/Folders.vue';
 import { push } from 'notivue';
 
 export default {

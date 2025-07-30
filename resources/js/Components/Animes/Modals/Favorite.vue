@@ -93,7 +93,7 @@ export default {
     >
         <button
             type="button"
-            class="group flex cursor-pointer flex-row items-center rounded-sm bg-gray-600/80 p-2 text-red-500 hover:bg-gray-500"
+            class="group flex cursor-pointer flex-row items-center rounded-sm bg-gray-700 p-2 hover:bg-gray-600"
             @click="toggleFavoriteModal"
             :disabled="isFavoriteDataLoading"
         >

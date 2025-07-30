@@ -157,7 +157,7 @@ export default {
 
 <template>
     <div class="w-full">
-        <nav class="flex flex-row justify-between m-4">
+        <nav class="m-4 flex flex-row justify-between">
             <div class="relative">
                 <SortingButton
                     @click="toggleSorting"
@@ -203,7 +203,7 @@ export default {
                     placeholder="Поиск по ключевым словам..."
                     v-model="selectedSearchData.title"
                     @keydown.enter="routerPush"
-                    class="dark:bg-blackSimple dark:hover:bg-blackActive dark:focus:bg-blackActive hover:bg-whiteActive focus:bg-whiteActive bg-whiteSimple h-10 w-144 rounded-s-md border-b border-b-gray-600 px-3 text-center text-black shadow-md transition duration-300 hover:text-black focus:border-b-red-400 focus:text-black dark:text-white dark:hover:text-white dark:focus:text-white"
+                    class="dark:hover:bg-blackActive hover:bg-whiteActive dark:focus:bg-blackActive focus:bg-whiteActive h-10 w-144 rounded-s-md border-b border-b-gray-600 bg-white px-3 text-center text-black shadow-md transition duration-300 hover:text-black focus:border-b-red-400 focus:text-black dark:bg-black dark:text-white dark:hover:text-white dark:focus:text-white"
                 />
 
                 <button
@@ -223,7 +223,7 @@ export default {
 
         <div
             v-show="isFiltersMenu"
-            class="dark:bg-blackSimple bg-whiteSimple text-black dark:text-white"
+            class="dark:bg-black bg-white text-black dark:text-white"
         >
             <div class="flex flex-row justify-center">
                 <div class="mx-5 w-60 select-none">

@@ -71,18 +71,18 @@ class DoramaController extends Controller
         return DoramaWatchResource::make($dorama);
     }
 
-    public function relations($slug, FranchiseServices $franchiseServices): AnonymousResourceCollection
-    {
-        $relations = $franchiseServices->relationsForDoramaById(getIdFromSlug($slug));
-
-        return RelationsResource::collection($relations);
-    }
-
     public function episodes($slug, EpisodeServices $episodeServices): AnonymousResourceCollection
     {
         $episodes = $episodeServices->episodesForDoramaById(getIdFromSlug($slug));
 
         return DoramaEpisodesResource::collection($episodes);
+    }
+
+    public function relations($slug, FranchiseServices $franchiseServices): AnonymousResourceCollection
+    {
+        $relations = $franchiseServices->relationsForDoramaById(getIdFromSlug($slug));
+
+        return RelationsResource::collection($relations);
     }
 
     public function staff($slug, PersonServices $personServices): StaffResource

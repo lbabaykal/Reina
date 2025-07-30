@@ -6,8 +6,10 @@ use App\Enums\AgeRatingEnum;
 use App\Enums\S3\DiskEnum;
 use App\Enums\StatusEnum;
 use App\Observers\Anime\AnimeObserver;
+use App\Policies\AnimePolicy;
 use App\Traits\AnimeAndDoramaTrait;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
+#[UsePolicy(AnimePolicy::class)]
 #[ObservedBy([AnimeObserver::class])]
 class Anime extends Model
 {

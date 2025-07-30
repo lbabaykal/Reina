@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use App\Observers\Anime\AnimeFolderObserver;
+use App\Policies\Folders\AnimeFolderPolicy;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[UsePolicy(AnimeFolderPolicy::class)]
 #[ObservedBy([AnimeFolderObserver::class])]
 class AnimeFolder extends Model
 {

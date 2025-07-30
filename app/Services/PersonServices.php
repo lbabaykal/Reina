@@ -18,7 +18,7 @@ class PersonServices
     {
         $validated = $request->validated();
 
-        $person = new Person();
+        $person = new Person;
         $person->photo = new PhotoService()->saveForPerson();
         $person->full_name_org = $validated['full_name_org'];
         $person->full_name_ru = $validated['full_name_ru'];
@@ -62,7 +62,7 @@ class PersonServices
             ->findOrFail($id);
 
         return cache()->store(CacheEnum::DIFFERENT_STORE->value)
-            ->flexible(CacheEnum::ANIME_PERSONS->value . $id, [1200, 1800], function () use ($anime) {
+            ->flexible(CacheEnum::ANIME_PERSONS->value.$id, [1200, 1800], function () use ($anime) {
                 return $anime->persons()
                     ->with([
                         'person:id,slug,full_name_org,full_name_ru,full_name_en,photo',
@@ -79,7 +79,7 @@ class PersonServices
             ->findOrFail($id);
 
         return cache()->store(CacheEnum::DIFFERENT_STORE->value)
-            ->flexible(CacheEnum::DORAMAS_PERSONS->value . $id, [1200, 1800], function () use ($dorama) {
+            ->flexible(CacheEnum::DORAMAS_PERSONS->value.$id, [1200, 1800], function () use ($dorama) {
                 return $dorama->persons()
                     ->with([
                         'person:id,slug,full_name_org,full_name_ru,full_name_en,photo',

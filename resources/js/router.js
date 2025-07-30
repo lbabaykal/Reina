@@ -80,21 +80,44 @@ const router = createRouter({
             },
             children: [
                 {
+                    path: 'profile',
+                    component: () => import('./Pages/Account/ProfilePage.vue'),
+                    name: 'account.profile',
+                },
+                {
+                    path: 'settings',
+                    redirect: '/account/settings/profile',
+                    component: () => import('./Layouts/SettingsLayout.vue'),
+                    name: 'account.settings',
+                    children: [
+                        {
+                            path: 'profile',
+                            component: () => import('./Pages/Account/Settings/ProfilePage.vue'),
+                            name: 'account.settings.profile',
+                        },
+                        {
+                            path: 'security',
+                            component: () => import('./Pages/Account/Settings/SecurityPage.vue'),
+                            name: 'account.settings.security',
+                        }
+                    ],
+                },
+                {
                     path: 'favorites',
                     children: [
                         {
                             path: '',
-                            component: () => import('./Pages/Favorites/IndexPage.vue'),
+                            component: () => import('./Pages/Account/Favorites/IndexPage.vue'),
                             name: 'favorites.index',
                         },
                         {
                             path: 'animes',
-                            component: () => import('./Pages/Favorites/AnimesPage.vue'),
+                            component: () => import('./Pages/Account/Favorites/AnimesPage.vue'),
                             name: 'favorites.animes.index',
                         },
                         {
                             path: 'doramas',
-                            component: () => import('./Pages/Favorites/DoramasPage.vue'),
+                            component: () => import('./Pages/Account/Favorites/DoramasPage.vue'),
                             name: 'favorites.doramas.index',
                         },
                     ],
@@ -156,7 +179,7 @@ const router = createRouter({
                 },
             ],
         },
-        {   path: '/admin', component: () => { window.location.href = 'https://admin.reina.online' },
+        {   path: '/admin', component: () => { window.location.href = 'http://admin.reina.online' },
             name: 'admin'
         },
     ],

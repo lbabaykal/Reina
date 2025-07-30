@@ -18,13 +18,13 @@ class CharactersResource extends JsonResource
 
         $characters = $this->resource;
 
-        $grouped = $characters->groupBy(fn($character) => $character->characterRole->slug);
+        $grouped = $characters->groupBy(fn ($character) => $character->characterRole->slug);
 
         $result = [];
 
         foreach ($roleSlugs as $roleSlug) {
             $items = $grouped->get($roleSlug->slug, collect())
-                ->map(fn($character) => new CharacterResource($character->character))
+                ->map(fn ($character) => new CharacterResource($character->character))
                 ->values();
 
             $result[$roleSlug->slug] = $items->isNotEmpty() ? $items : null;

@@ -14,7 +14,7 @@ export default {
     <div
         v-if="cover"
         class="shadow-cover-white dark:shadow-cover-black absolute top-0 left-0 z-10 h-full w-full bg-cover bg-center"
-        :style="{ backgroundImage: `url(${cover})` }"
+        :style="{ backgroundImage: `url(${this.cover})` }"
     ></div>
 
     <div
