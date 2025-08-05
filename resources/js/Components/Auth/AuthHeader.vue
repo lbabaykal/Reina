@@ -16,7 +16,7 @@ export default {
         <router-link
             :to="{ name: 'register' }"
             class="w-36 border-b-2 border-transparent py-3 text-center"
-            :class="$route.name === 'register' ? 'border-blue-400! text-black' : 'hover:border-blue-400 hover:text-black'"
+            :class="$route.name === 'register' ? 'border-sky-400! text-black' : 'hover:border-sky-400 hover:text-black'"
         >
             Регистрации
         </router-link>

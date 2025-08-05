@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CacheEnum;
 use App\Observers\StudiosObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Collection;
@@ -40,11 +41,11 @@ class Studio extends Model
 
     public function cache(): Collection
     {
-        if (cache()->has($this->getTable())) {
-            return cache()->get($this->getTable());
+        if (cache()->store(CacheEnum::DIFFERENT_STORE->value)->has($this->getTable())) {
+            return cache()->store(CacheEnum::DIFFERENT_STORE->value)->get($this->getTable());
         }
 
-        return cache()->rememberForever($this->getTable(), function () {
+        return cache()->store(CacheEnum::DIFFERENT_STORE->value)->rememberForever($this->getTable(), function () {
             return self::query()->orderBy('id')->get();
         });
     }

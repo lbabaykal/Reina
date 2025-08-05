@@ -106,7 +106,7 @@ export default {
 <template>
     <ToolTip
         message="Оценить"
-        classes="py-2 px-4 bg-gray-600 text-yellow-500"
+        classes="py-2 px-4 bg-gray-600 text-yellow-400"
     >
         <button
             type="button"

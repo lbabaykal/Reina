@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\CacheEnum;
 use App\Models\Studio;
 
 class StudiosObserver
@@ -20,11 +21,11 @@ class StudiosObserver
 
     public function saved(): void
     {
-        cache()->forget('studios');
+        cache()->store(CacheEnum::DIFFERENT_STORE->value)->forget('studios');
     }
 
     public function deleted(): void
     {
-        cache()->forget('studios');
+        cache()->store(CacheEnum::DIFFERENT_STORE->value)->forget('studios');
     }
 }

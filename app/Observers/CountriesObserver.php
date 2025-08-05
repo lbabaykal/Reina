@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\CacheEnum;
 use App\Models\Country;
 
 class CountriesObserver
@@ -20,12 +21,12 @@ class CountriesObserver
 
     public function saved(): void
     {
-        cache()->forget('countries');
+        cache()->store(CacheEnum::DIFFERENT_STORE->value)->forget('countries');
     }
 
     public function deleted(): void
     {
-        cache()->forget('countries');
+        cache()->store(CacheEnum::DIFFERENT_STORE->value)->forget('countries');
     }
 
 }

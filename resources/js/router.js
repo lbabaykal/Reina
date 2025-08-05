@@ -147,9 +147,16 @@ const router = createRouter({
                     },
                 },
                 {
-                    path: 'verify-email', component: () => import('./Pages/Auth/VerifyEmail.vue'),
-                    name: 'verification.notice',
+                    path: 'hash-verify-email/:id/:hash', component: () => import('./Pages/Auth/HashVerifyEmail.vue'),
+                    name: 'verification.verify',
+                    props: route => ({
+                        id: route.params.id,
+                        hash: route.params.hash,
+                        expires: route.query.expires,
+                        signature: route.query.signature,
+                    }),
                     meta: {
+                        middleware: [auth],
                     },
                 },
                 {

@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\CacheEnum;
 use App\Models\Genre;
 
 class GenresObserver
@@ -20,12 +21,12 @@ class GenresObserver
 
     public function saved(): void
     {
-        cache()->forget('genres');
+        cache()->store(CacheEnum::DIFFERENT_STORE->value)->forget('genres');
     }
 
     public function deleted(): void
     {
-        cache()->forget('genres');
+        cache()->store(CacheEnum::DIFFERENT_STORE->value)->forget('genres');
     }
 
 }

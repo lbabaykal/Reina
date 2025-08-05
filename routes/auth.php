@@ -9,34 +9,28 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Middleware\AuthThrottleMiddleware;
 use Illuminate\Support\Facades\Route;
 
-// TODO Переделать весь этот мусор
-
-//  Guest
-Route::middleware('guest')
+Route::middleware(['guest', AuthThrottleMiddleware::class])
     ->group(function () {
+        Route::post('login', LoginController::class);
         Route::post('register', RegisterController::class);
-        Route::post('login', LoginController::class)->name('login');
-        Route::post('forgot-password', ForgotPasswordController::class)->name('password.email');
-        Route::post('reset-password', ResetPasswordController::class)->name('password.store');
-
-        // Нужен для формирования роута для отправки сообщения на почту
+        Route::post('reset-password', ResetPasswordController::class);
+        Route::post('forgot-password', ForgotPasswordController::class);
         Route::get('reset-password/{token}')->name('password.reset');
     });
 
-//  Auth
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('update-profile', ChangeProfileController::class);
     Route::post('change-password', ChangePasswordController::class);
     Route::post('logout', LogoutController::class)->name('logout');
 
-    // Нужен для редиректа middleware
     Route::get('verify-email')->name('verification.notice');
 
-    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:3,1')->name('verification.send');
+    Route::post('email/verification-notification', EmailVerificationNotificationController::class)
+        ->middleware('throttle:5,1')->name('verification.send');
 
-    Route::get('hash-verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:3,1'])->name('verification.verify');
+    Route::post('hash-verify-email/{id}/{hash}', VerifyEmailController::class)
+        ->middleware(['signed', 'throttle:5,1'])->name('verification.verify');
 });

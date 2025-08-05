@@ -4,7 +4,7 @@ import LogoSvg from '../Svg/LogoSvg.vue';
 
 export default {
     name: 'AuthWindow',
-    components: { LogoSvg, AuthHeader: AuthHeader },
+    components: { LogoSvg, AuthHeader },
 };
 </script>
 

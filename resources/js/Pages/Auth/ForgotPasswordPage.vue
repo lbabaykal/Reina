@@ -1,65 +1,51 @@
 <script>
-import AuthWindow from "../../Components/Login/AuthWindow.vue";
-import axios from "axios";
-import router from "../../router.js";
-import GoogleLogoSvg from "../../Components/Svg/Auth/GoogleLogoSvg.vue";
-import YandexLogoSvg from "../../Components/Svg/Auth/YandexLogoSvg.vue";
-import VkLogoSvg from "../../Components/Svg/Auth/VkLogoSvg.vue";
-import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
-import { push } from 'notivue';
+import axios from 'axios';
+import GoogleLogoSvg from '../../Components/Svg/Auth/GoogleLogoSvg.vue';
+import YandexLogoSvg from '../../Components/Svg/Auth/YandexLogoSvg.vue';
+import VkLogoSvg from '../../Components/Svg/Auth/VkLogoSvg.vue';
+import LoadingSvg from '../../Components/Svg/LoadingSvg.vue';
+import AuthWindow from '../../Components/Auth/AuthWindow.vue';
 
 export default {
-    name: "ForgotPasswordPage",
-    components: {LoadingSvg, VkLogoSvg, YandexLogoSvg, GoogleLogoSvg, AuthWindow: AuthWindow},
+    name: 'ForgotPasswordPage',
+    components: { LoadingSvg, VkLogoSvg, YandexLogoSvg, GoogleLogoSvg, AuthWindow },
     data() {
         return {
             email: null,
-            response: null,
             errors: {},
-            loading: false
-        }
+            forgotPasswordLoading: true,
+        };
     },
     methods: {
         forgotPassword() {
-            this.loading = true;
-            this.errors = {};
-            this.response = null;
-
-            axios.post('/forgot-password', {
-                email: this.email,
-            })
-            .then(response => {
-                if (response.status === 200) {
-                    this.response = response.data.status;
-                }
-                // router.push({name: "main"});
-            })
-            .catch(error => {
-                if (error.response.status === 422) {
-                    this.errors = error.response.data.errors;
-                }
-            })
-            .finally(() => {
-                this.loading = false;
-            });
+            this.forgotPasswordLoading = false;
+            axios
+                .post('/forgot-password', {
+                    email: this.email,
+                })
+                .then((response) => {
+                    // router.push({name: "login"});
+                })
+                .catch((error) => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors;
+                    }
+                })
+                .finally(() => {
+                    this.forgotPasswordLoading = true;
+                });
         },
     },
-}
+};
 </script>
 
 <template>
     <AuthWindow>
-        <div v-if="!loading" class="w-full text-center py-8 font-bold text-2xl text-green-500">
-            Восстановление пароля
-        </div>
-
-        <loadingSvg v-if="loading"
-                    classes="w-16 py-4 fill-green-500"
-        />
+        <div class="w-full py-8 text-center text-2xl font-bold text-green-500">Восстановление пароля</div>
 
         <div class="flex flex-col items-center text-black">
             <input
-                class="w-80 border border-b-2 border-gray-300 py-1 rounded-sm focus:border-green-400 focus:ring-0"
+                class="hover:bg-whiteFon w-80 rounded-sm border border-b-2 border-gray-300 px-1.5 py-1 duration-300 focus:border-green-400"
                 name="email"
                 type="email"
                 v-model="email"
@@ -67,22 +53,31 @@ export default {
                 required
             />
 
-            <span v-if="errors.email"
-                  class="w-90% pt-1 text-red-500 text-center"
+            <span
+                v-if="errors.email"
+                class="w-90% mt-1 text-center text-red-500"
             >
                 {{ errors.email[0] }}
             </span>
 
-            <span v-if="response"
-                  class="w-90% pt-1 text-green-500 text-center"
+            <span
+                v-if="errors.throttle"
+                class="w-90% my-1 text-center text-red-500"
             >
-                {{ response }}
+                {{ errors.throttle[0] }}
             </span>
 
-            <button @click.prevent="forgotPassword"
-                    class="px-10 py-1 my-5 font-bold text-lg text-white bg-green-700 hover:bg-green-600 rounded-md"
+            <button
+                @click="forgotPassword"
+                class="relative my-4 cursor-pointer rounded-md bg-green-500 px-10 py-1 text-lg font-bold text-white hover:bg-green-600"
             >
                 Восстановить пароль
+                <span
+                    v-if="!forgotPasswordLoading"
+                    class="absolute top-0 left-0 flex w-full items-center justify-center rounded-md bg-green-500"
+                >
+                    <LoadingSvg classes="w-9 fill-white" />
+                </span>
             </button>
         </div>
     </AuthWindow>

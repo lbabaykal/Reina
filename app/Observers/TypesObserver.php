@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\CacheEnum;
 use App\Models\Type;
 
 class TypesObserver
@@ -20,11 +21,11 @@ class TypesObserver
 
     public function saved(): void
     {
-        cache()->forget('types');
+        cache()->store(CacheEnum::DIFFERENT_STORE->value)->forget('types');
     }
 
     public function deleted(): void
     {
-        cache()->forget('types');
+        cache()->store(CacheEnum::DIFFERENT_STORE->value)->forget('types');
     }
 }

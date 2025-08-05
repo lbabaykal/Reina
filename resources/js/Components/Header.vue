@@ -1,6 +1,6 @@
 <script>
 import LogoSvg from './Svg/LogoSvg.vue';
-import LoginMenu from './Login/LoginMenu.vue';
+import LoginMenu from './Auth/LoginMenu.vue';
 
 export default {
     name: 'Header',

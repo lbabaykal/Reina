@@ -28,7 +28,7 @@ export default {
             class="group flex flex-row items-center rounded-md px-1 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
             :class="{ 'bg-black text-white dark:bg-white dark:text-black': route.name === 'account.settings.security' }"
         >
-            <ShieldSvg classes="m-1.5 size-7 stroke-blue-500 fill-blue-500" />
+            <ShieldSvg classes="m-1.5 size-7 stroke-sky-500 fill-sky-500" />
             <span class="ml-2 w-full"> Безопасность </span>
         </RouterLink>
     </div>

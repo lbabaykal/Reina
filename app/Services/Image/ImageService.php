@@ -4,6 +4,7 @@ namespace App\Services\Image;
 
 use App\Enums\S3\DiskEnum;
 use App\Enums\S3\FolderEnum;
+use App\Exceptions\ImageStorageException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
@@ -39,15 +40,22 @@ class ImageService extends AbstractImage
         $this->image = ImageManager::gd()->read(request()->file($this->keyFileInRequest));
         $this->image = $this->configureImage($this->image);
 
+        $image = $this->encode();
+        $this->filePath = $this->generateFilePath();
         try {
-            $image = $this->encode();
-            $this->filePath = $this->generateFilePath();
-            Storage::disk($this->disk)->put($this->filePath, $image);
+            $saved = Storage::disk($this->disk)->put($this->filePath, $image);
+
+            if (! $saved) {
+                throw ImageStorageException::imageSaving();
+            }
 
             return $this->filePath;
         } catch (\Exception $e) {
-            // TODO Добавить логирование и переписать под будущее
-            return redirect()->back()->with('message', 'Ошибка сохранения изображения.');
+            if ($e instanceof ImageStorageException) {
+                throw $e;
+            }
+
+            throw ImageStorageException::imageService();
         }
     }
 

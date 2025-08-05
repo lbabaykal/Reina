@@ -58,7 +58,7 @@ class CharacterServices
             ->select(['id'])
             ->findOrFail($id);
 
-        return cache()->store(CacheEnum::DIFFERENT_STORE->value)
+        return cache()->store(CacheEnum::ANIMES_STORE->value)
             ->flexible(CacheEnum::ANIME_CHARACTERS->value.$id, [1200, 1800], function () use ($anime) {
                 return $anime->characters()
                     ->with([

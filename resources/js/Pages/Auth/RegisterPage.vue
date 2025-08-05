@@ -1,5 +1,4 @@
 <script>
-import AuthWindow from '../../Components/Login/AuthWindow.vue';
 import { useAuthStore } from '../../Stores/authStore.js';
 import axios from 'axios';
 import router from '../../router.js';
@@ -7,11 +6,11 @@ import GoogleLogoSvg from '../../Components/Svg/Auth/GoogleLogoSvg.vue';
 import YandexLogoSvg from '../../Components/Svg/Auth/YandexLogoSvg.vue';
 import VkLogoSvg from '../../Components/Svg/Auth/VkLogoSvg.vue';
 import LoadingSvg from '../../Components/Svg/LoadingSvg.vue';
-import { push } from 'notivue';
+import AuthWindow from '../../Components/Auth/AuthWindow.vue';
 
 export default {
     name: 'RegisterPage',
-    components: { LoadingSvg, VkLogoSvg, YandexLogoSvg, GoogleLogoSvg, AuthWindowComponent: AuthWindow },
+    components: { LoadingSvg, VkLogoSvg, YandexLogoSvg, GoogleLogoSvg, AuthWindow },
     data() {
         return {
             name: null,
@@ -20,12 +19,12 @@ export default {
             password_confirmation: null,
             errors: {},
             authStore: useAuthStore(),
-            loading: false,
+            registerLoading: true,
         };
     },
     methods: {
         register() {
-            this.loading = true;
+            this.registerLoading = false;
             axios
                 .get('/sanctum/csrf-cookie')
                 .then(() => {
@@ -47,7 +46,7 @@ export default {
                 })
                 .catch((error) => {})
                 .finally(() => {
-                    this.loading = false;
+                    this.registerLoading = true;
                 });
         },
     },
@@ -55,22 +54,12 @@ export default {
 </script>
 
 <template>
-    <AuthWindowComponent>
-        <div
-            v-if="!loading"
-            class="w-full py-8 text-center text-2xl font-bold text-blue-500"
-        >
-            Регистрации
-        </div>
-
-        <loadingSvg
-            v-if="loading"
-            classes="w-16 py-4 fill-blue-500"
-        />
+    <AuthWindow>
+        <div class="w-full py-8 text-center text-2xl font-bold text-sky-500">Регистрации</div>
 
         <div class="flex flex-col items-center text-black">
             <input
-                class="w-80 rounded-sm border border-b-2 border-gray-300 py-1 focus:border-blue-400 focus:ring-0"
+                class="hover:bg-whiteFon w-80 rounded-sm border border-b-2 border-gray-300 px-1.5 py-1 duration-300 focus:border-sky-400"
                 name="name"
                 type="text"
                 v-model="name"
@@ -80,13 +69,13 @@ export default {
 
             <span
                 v-if="errors.name"
-                class="w-90% pt-1 text-center text-red-500"
+                class="w-90% mt-1 text-center text-red-500"
             >
                 {{ errors.name[0] }}
             </span>
 
             <input
-                class="mt-4 w-80 rounded-sm border border-b-2 border-gray-300 py-1 focus:border-blue-400 focus:ring-0"
+                class="hover:bg-whiteFon mt-4 w-80 rounded-sm border border-b-2 border-gray-300 px-1.5 py-1 duration-300 focus:border-sky-400"
                 name="email"
                 type="email"
                 v-model="email"
@@ -96,13 +85,13 @@ export default {
 
             <span
                 v-if="errors.email"
-                class="w-90% pt-1 text-center text-red-500"
+                class="w-90% mt-1 text-center text-red-500"
             >
                 {{ errors.email[0] }}
             </span>
 
             <input
-                class="mt-4 w-80 rounded-sm border border-b-2 border-gray-300 py-1 focus:border-blue-400 focus:ring-0"
+                class="hover:bg-whiteFon mt-4 w-80 rounded-sm border border-b-2 border-gray-300 px-1.5 py-1 duration-300 focus:border-sky-400"
                 name="password"
                 type="password"
                 v-model="password"
@@ -111,7 +100,7 @@ export default {
             />
 
             <input
-                class="mt-4 w-80 rounded-sm border border-b-2 border-gray-300 py-1 focus:border-blue-400 focus:ring-0"
+                class="hover:bg-whiteFon mt-4 w-80 rounded-sm border border-b-2 border-gray-300 px-1.5 py-1 duration-300 focus:border-sky-400"
                 name="password_confirmation"
                 type="password"
                 v-model="password_confirmation"
@@ -121,16 +110,29 @@ export default {
 
             <span
                 v-if="errors.password"
-                class="w-90% pt-1 text-center text-red-500"
+                class="w-90% mt-1 text-center text-red-500"
             >
                 {{ errors.password[0] }}
             </span>
 
+            <span
+                v-if="errors.throttle"
+                class="w-90% my-1 text-center text-red-500"
+            >
+                {{ errors.throttle[0] }}
+            </span>
+
             <button
-                @click.prevent="register"
-                class="my-5 rounded-md bg-blue-700 px-10 py-1 text-lg font-bold text-white hover:bg-blue-600"
+                @click="register"
+                class="relative my-4 cursor-pointer rounded-md bg-sky-500 px-10 py-1 text-lg font-bold text-white hover:bg-sky-600"
             >
                 Зарегистрироваться
+                <span
+                    v-if="!registerLoading"
+                    class="absolute top-0 left-0 flex w-full items-center justify-center rounded-md bg-sky-500"
+                >
+                    <LoadingSvg classes="w-9 fill-white" />
+                </span>
             </button>
 
             <div class="flex w-full items-center justify-around text-black">
@@ -145,5 +147,5 @@ export default {
                 <YandexLogoSvg classes="w-10 h-10 mx-4" />
             </div>
         </div>
-    </AuthWindowComponent>
+    </AuthWindow>
 </template>

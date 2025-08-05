@@ -3,7 +3,7 @@ import Header from "../Components/Header.vue";
 
 export default {
     name: "MainLayout",
-    components: {Header}
+    components: { Header }
 }
 </script>
 

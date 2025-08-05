@@ -50,7 +50,7 @@ Route::domain('admin.'.env('APP_URL'))
 
             Route::get('/draft', [DoramaAdminController::class, 'draft'])->name('draft');
             Route::get('/published', [DoramaAdminController::class, 'published'])->name('published');
-            Route::get('/in-archive', [DoramaAdminController::class, 'archive'])->name('archive');
+            Route::get('/in-archive', [DoramaAdminController::class, 'inArchive'])->name('archive');
             Route::get('/on-moderation', [DoramaAdminController::class, 'onModeration'])->name('moderation');
             Route::get('/deleted', [DoramaAdminController::class, 'deleted'])->name('deleted');
             Route::get('/{slug}/restore', [DoramaAdminController::class, 'restore'])->name('restore');

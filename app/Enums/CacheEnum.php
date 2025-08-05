@@ -6,6 +6,7 @@ enum CacheEnum: string
 {
     case VIEWS_STORE = 'redis_views';
 
+    case PEOPLE_STORE = 'redis_people';
     case DIFFERENT_STORE = 'redis_different';
     case FRANCHISE = 'franchise:';
 

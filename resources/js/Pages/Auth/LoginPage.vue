@@ -1,68 +1,63 @@
 <script>
-
-import AuthWindow from "../../Components/Login/AuthWindow.vue";
-import GoogleLogoSvg from "../../Components/Svg/Auth/GoogleLogoSvg.vue";
-import VkLogoSvg from "../../Components/Svg/Auth/VkLogoSvg.vue";
-import YandexLogoSvg from "../../Components/Svg/Auth/YandexLogoSvg.vue";
-import {useAuthStore} from "../../Stores/authStore.js";
-import axios from "axios";
-import router from "../../router.js";
-import AuthLayout from "../../Layouts/AuthLayout.vue";
-import LoadingSvg from "../../Components/Svg/LoadingSvg.vue";
+import GoogleLogoSvg from '../../Components/Svg/Auth/GoogleLogoSvg.vue';
+import VkLogoSvg from '../../Components/Svg/Auth/VkLogoSvg.vue';
+import YandexLogoSvg from '../../Components/Svg/Auth/YandexLogoSvg.vue';
+import { useAuthStore } from '../../Stores/authStore.js';
+import axios from 'axios';
+import router from '../../router.js';
+import AuthLayout from '../../Layouts/AuthLayout.vue';
+import LoadingSvg from '../../Components/Svg/LoadingSvg.vue';
+import AuthWindow from '../../Components/Auth/AuthWindow.vue';
 
 export default {
-    name: "LoginPage",
-    components: {LoadingSvg, AuthLayout, YandexLogoSvg, VkLogoSvg, GoogleLogoSvg, AuthWindow: AuthWindow},
+    name: 'LoginPage',
+    components: { LoadingSvg, AuthLayout, YandexLogoSvg, VkLogoSvg, GoogleLogoSvg, AuthWindow },
     data() {
         return {
             email: null,
             password: null,
             errors: {},
             authStore: useAuthStore(),
-            loading: false,
-        }
+            loginLoading: true,
+        };
     },
     methods: {
         login() {
-            this.loading = true;
-            axios.get("/sanctum/csrf-cookie")
+            this.loginLoading = false;
+            axios
+                .get('/sanctum/csrf-cookie')
                 .then(() => {
-                    axios.post('/login', {
-                        email: this.email,
-                        password: this.password
-                    })
-                        .then(response => {
-                            this.authStore.getUser(); //TODO должно возвращать данные пользователя сразу
-                            router.push({name: "main"});
+                    axios
+                        .post('/login', {
+                            email: this.email,
+                            password: this.password,
                         })
-                        .catch(error => {
+                        .then((response) => {
+                            this.authStore.getUser();
+                            router.push({ name: 'main' });
+                        })
+                        .catch((error) => {
                             if (error.response.status === 422) {
                                 this.errors = error.response.data.errors;
                             }
                         });
                 })
-                .catch(error => {})
+                .catch((error) => {})
                 .finally(() => {
-                    this.loading = false;
+                    this.loginLoading = true;
                 });
         },
     },
-}
+};
 </script>
 
 <template>
     <AuthWindow>
-        <div v-if="!loading" class="w-full text-center py-8 font-bold text-2xl text-rose-500">
-            Авторизация
-        </div>
-
-        <loadingSvg v-if="loading"
-                    classes="w-16 py-4 fill-rose-500"
-        />
+        <div class="w-full py-8 text-center text-2xl font-bold text-rose-500">Авторизация</div>
 
         <div class="flex flex-col items-center text-black">
             <input
-                class="w-80 border border-b-2 border-gray-300 py-1 rounded-sm focus:border-rose-400 focus:ring-0"
+                class="hover:bg-whiteFon w-80 rounded-sm border border-b-2 border-gray-300 px-1.5 py-1 duration-300 focus:border-rose-500"
                 name="email"
                 type="email"
                 v-model="email"
@@ -70,14 +65,15 @@ export default {
                 required
             />
 
-            <span v-if="errors.email"
-                  class="w-90% pt-1 text-red-500 text-center"
+            <span
+                v-if="errors.email"
+                class="w-90% mt-1 text-center text-red-500"
             >
                 {{ errors.email[0] }}
             </span>
 
             <input
-                class="w-80 border border-b-2 border-gray-300 py-1 mt-4 rounded-sm focus:border-rose-400 focus:ring-0"
+                class="hover:bg-whiteFon mt-4 w-80 rounded-sm border border-b-2 border-gray-300 px-1.5 py-1 duration-300 focus:border-rose-500"
                 name="password"
                 type="password"
                 v-model="password"
@@ -85,28 +81,43 @@ export default {
                 required
             />
 
-            <span v-if="errors.password"
-                  class="90% pt-1 text-red-500 text-center"
+            <span
+                v-if="errors.password"
+                class="w-90% mt-1 text-center text-red-500"
             >
                 {{ errors.password[0] }}
             </span>
 
-            <button @click.prevent="login"
-                    class="px-10 py-1 my-5 font-bold text-lg text-white bg-rose-700 hover:bg-rose-600 rounded-md"
+            <span
+                v-if="errors.throttle"
+                class="w-90% my-1 text-center text-red-500"
+            >
+                {{ errors.throttle[0] }}
+            </span>
+
+            <button
+                @click="login"
+                class="relative my-4 cursor-pointer rounded-md bg-rose-500 px-10 py-1 text-lg font-bold text-white hover:bg-rose-600"
             >
                 Войти
+                <span
+                    v-if="!loginLoading"
+                    class="absolute top-0 left-0 flex w-full items-center justify-center rounded-md bg-rose-500"
+                >
+                    <LoadingSvg classes="w-9 fill-white" />
+                </span>
             </button>
 
-            <div class="w-full flex items-center text-black justify-around">
-                <hr class="w-40 h-0.5 bg-neutral-400"/>
+            <div class="flex w-full items-center justify-around text-black">
+                <hr class="h-0.5 w-40 bg-neutral-400" />
                 <div class="px-6">или</div>
-                <hr class="w-40 h-0.5 bg-neutral-400"/>
+                <hr class="h-0.5 w-40 bg-neutral-400" />
             </div>
 
             <div class="flex flex-row py-5">
-                <GoogleLogoSvg classes="w-10 h-10 mx-4"/>
-                <VkLogoSvg classes="w-10 h-10 mx-4"/>
-                <YandexLogoSvg classes="w-10 h-10 mx-4"/>
+                <GoogleLogoSvg classes="w-10 h-10 mx-4" />
+                <VkLogoSvg classes="w-10 h-10 mx-4" />
+                <YandexLogoSvg classes="w-10 h-10 mx-4" />
             </div>
         </div>
     </AuthWindow>

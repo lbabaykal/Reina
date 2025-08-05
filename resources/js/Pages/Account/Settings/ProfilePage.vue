@@ -1,5 +1,4 @@
 <script>
-import { useAuthStore } from '../../../Stores/authStore.js';
 import LoadingSvg from '../../../Components/Svg/LoadingSvg.vue';
 import CloudUploadSvg from '../../../Components/Svg/CloudUploadSvg.vue';
 import TrashSvg from '../../../Components/Svg/TrashSvg.vue';
@@ -12,24 +11,28 @@ export default {
     components: { AvatarImage, TrashSvg, CloudUploadSvg, LoadingSvg },
     data() {
         return {
-            avatar: null,
-            name: null,
             errors: {},
-            authStore: useAuthStore(),
+            userData: null,
             userDataLoading: false,
             userDataUpdateLoading: true,
-
             selectedNewAvatar: null,
             previewAvatar: null,
         };
     },
     methods: {
-        async getUserData() {
+        getUserData() {
             this.userDataLoading = false;
-            await this.authStore.getUser();
-            this.avatar = this.authStore.user.avatar;
-            this.name = this.authStore.user.name;
-            this.userDataLoading = true;
+            axios
+                .get('/api/user-data-all')
+                .then((response) => {
+                    this.userData = response.data.user;
+                })
+                .catch((error) => {
+                    push.error(error.response.data);
+                })
+                .finally(() => {
+                    this.userDataLoading = true;
+                });
         },
         updateUserData() {
             this.userDataUpdateLoading = false;
@@ -38,7 +41,7 @@ export default {
                     '/update-profile',
                     {
                         avatar: this.selectedNewAvatar,
-                        name: this.name,
+                        name: this.userData.name,
                     },
                     {
                         headers: {
@@ -50,6 +53,7 @@ export default {
                     push.success(response.data);
                     this.getUserData();
                     this.previewAvatar = null;
+                    this.selectedNewAvatar = null;
                 })
                 .catch((error) => {
                     if (error.response.status === 422) {
@@ -91,16 +95,16 @@ export default {
     <section class="w-240">
         <div
             v-if="userDataLoading"
-            class="flex flex-col space-y-5 space-x-5"
+            class="flex flex-col space-y-5"
         >
-            <div class="flex space-x-5">
+            <div class="flex space-y-5 space-x-5">
                 <div class="flex min-h-28 w-1/2 flex-col rounded-md bg-white p-3 text-black dark:bg-black dark:text-white">
-                    <div class="mb-2.5 text-lg leading-none font-semibold">Аватар</div>
+                    <div class="mb-1.5 text-lg leading-none font-semibold">Аватар</div>
                     <div class="flex flex-row justify-between">
                         <div>
                             <label
                                 for="avatar"
-                                class="hover:bg-whiteSimple dark:hover:bg-blackSimple flex size-30 cursor-pointer items-center justify-center overflow-hidden rounded-md border-2 border-dashed border-gray-500"
+                                class="hover:bg-whiteSimple dark:hover:bg-blackSimple flex size-30 cursor-pointer items-center justify-center overflow-hidden rounded-md border-2 border-dashed border-gray-500 duration-300"
                             >
                                 <CloudUploadSvg classes="size-12" />
                             </label>
@@ -137,7 +141,7 @@ export default {
                         <div>
                             <div class="size-30 shrink-0 overflow-hidden rounded-md">
                                 <AvatarImage
-                                    :avatar="this.avatar"
+                                    :avatar="this.userData.avatar"
                                     class="rounded-md border border-gray-500"
                                 />
                             </div>
@@ -146,44 +150,51 @@ export default {
 
                     <span
                         v-if="errors.avatar"
-                        class="w-90% pt-1 text-center text-red-500"
+                        class="mt-1.5 text-red-500"
                     >
                         {{ errors.avatar[0] }}
+                    </span>
+
+                    <span
+                        v-if="errors.storage"
+                        class="mt-1.5 text-red-500"
+                    >
+                        {{ errors.storage[0] }}
                     </span>
                 </div>
 
                 <div class="h-full w-1/2 rounded-md bg-white p-3 text-black dark:bg-black dark:text-white">
-                    <div class="mb-1 text-lg font-semibold">Имя</div>
-                    <input
-                        type="text"
-                        v-model="name"
-                        required
-                        class="hover:bg-whiteFon focus:bg-whiteFon dark:hover:bg-blackSimple dark:focus:bg-blackSimple w-2/3 rounded-md border border-gray-500 px-2 py-1 duration-300"
-                    />
-                    <span
+                    <div class="mb-1.5 text-lg font-semibold">Имя</div>
+                    <div class="flex">
+                        <input
+                            type="text"
+                            v-model="userData.name"
+                            required
+                            class="hover:bg-whiteFon focus:bg-whiteFon dark:hover:bg-blackSimple dark:focus:bg-blackSimple w-2/3 rounded-md border border-gray-500 px-2 py-1 duration-300"
+                        />
+                    </div>
+                    <div
                         v-if="errors.name"
-                        class="w-90% pt-1 text-center text-red-500"
+                        class="mt-1.5 text-red-500"
                     >
                         {{ errors.name[0] }}
-                    </span>
+                    </div>
                 </div>
             </div>
 
             <div class="flex w-full items-center justify-center">
                 <button
-                    v-if="userDataUpdateLoading"
                     @click="updateUserData"
-                    class="h-8 w-26 cursor-pointer rounded-md bg-lime-500 text-white hover:bg-lime-600"
+                    class="relative cursor-pointer rounded-md bg-lime-500 px-3 py-1.5 text-white hover:bg-lime-600 duration-300"
                 >
                     Сохранить
+                    <span
+                        v-if="!userDataUpdateLoading"
+                        class="absolute top-0 left-0 flex w-full items-center justify-center rounded-md bg-lime-400"
+                    >
+                        <LoadingSvg classes="w-7 fill-white" />
+                    </span>
                 </button>
-
-                <div
-                    v-else
-                    class="flex h-8 w-26 items-center justify-center rounded-md bg-lime-400"
-                >
-                    <LoadingSvg classes="w-8 fill-white" />
-                </div>
             </div>
         </div>
 

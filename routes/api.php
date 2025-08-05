@@ -1,16 +1,17 @@
 <?php
 
-use App\Http\Controllers\Api\AnimeController;
-use App\Http\Controllers\Api\DoramaController;
-use App\Http\Controllers\Api\Anime\FavoriteAnimeController;
-use App\Http\Controllers\Api\Dorama\FavoriteDoramaController;
-use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\Anime\AnimeFolderController;
-use App\Http\Controllers\Api\Dorama\DoramaFolderController;
-use App\Http\Controllers\Api\MainController;
 use App\Http\Controllers\Api\Anime\AnimeRatingController;
+use App\Http\Controllers\Api\Anime\FavoriteAnimeController;
+use App\Http\Controllers\Api\AnimeController;
+use App\Http\Controllers\Api\Dorama\DoramaFolderController;
 use App\Http\Controllers\Api\Dorama\DoramaRatingController;
+use App\Http\Controllers\Api\Dorama\FavoriteDoramaController;
+use App\Http\Controllers\Api\DoramaController;
+use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\MainController;
 use App\Http\Controllers\Api\SearchController;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Route;
 
 Route::domain(env('APP_URL'))->group(function () {
@@ -20,12 +21,24 @@ Route::domain(env('APP_URL'))->group(function () {
         if ($authCheck) {
             return response()->json([
                 'authenticated' => $authCheck,
-                'user' => new \App\Http\Resources\UserLoginResource(auth()->user()),
+                'user' => new \App\Http\Resources\UserDataResource(auth()->user()),
             ]);
         } else {
             return response()->json([
                 'authenticated' => $authCheck,
             ]);
+        }
+    });
+
+    Route::get('/user-data-all', function () {
+        $authCheck = auth()->check();
+
+        if ($authCheck) {
+            return response()->json([
+                'user' => new \App\Http\Resources\UserDataAllResource(auth()->user()),
+            ]);
+        } else {
+            throw new AuthenticationException;
         }
     });
 
@@ -44,13 +57,13 @@ Route::domain(env('APP_URL'))->group(function () {
         Route::get('/{slug}/characters', [AnimeController::class, 'characters']);
         Route::get('/{slug}/staff', [AnimeController::class, 'staff']);
 
-        Route::middleware(['auth', 'throttle:50,1'])->group(function () {
+        Route::middleware(['auth', 'verified', 'throttle:50,1'])->group(function () {
             // Rating
-            Route::get('/{slug}/rating', [AnimeRatingController::class, 'show'])->withoutMiddleware('auth');
+            Route::get('/{slug}/rating', [AnimeRatingController::class, 'show'])->withoutMiddleware(['auth', 'verified']);
             Route::post('/rating', [AnimeRatingController::class, 'store']);
             Route::delete('/{slug}/rating', [AnimeRatingController::class, 'destroy']);
             // Favorite
-            Route::get('/{slug}/favorite', [FavoriteAnimeController::class, 'show'])->withoutMiddleware('auth');
+            Route::get('/{slug}/favorite', [FavoriteAnimeController::class, 'show'])->withoutMiddleware(['auth', 'verified']);
             Route::post('/favorite', [FavoriteAnimeController::class, 'store']);
             Route::delete('/favorite/{id}', [FavoriteAnimeController::class, 'destroy']);
         });
@@ -66,13 +79,13 @@ Route::domain(env('APP_URL'))->group(function () {
         Route::get('/{slug}/episodes', [DoramaController::class, 'episodes']);
         Route::get('/{slug}/staff', [DoramaController::class, 'staff']);
 
-        Route::middleware(['auth', 'throttle:50,1'])->group(function () {
+        Route::middleware(['auth', 'verified', 'throttle:50,1'])->group(function () {
             // Rating
-            Route::get('/{slug}/rating', [DoramaRatingController::class, 'show'])->withoutMiddleware('auth');
+            Route::get('/{slug}/rating', [DoramaRatingController::class, 'show'])->withoutMiddleware(['auth', 'verified']);
             Route::post('/rating', [DoramaRatingController::class, 'store']);
             Route::delete('/{slug}/rating', [DoramaRatingController::class, 'destroy']);
             // Favorite
-            Route::get('/{slug}/favorite', [FavoriteDoramaController::class, 'show'])->withoutMiddleware('auth');
+            Route::get('/{slug}/favorite', [FavoriteDoramaController::class, 'show'])->withoutMiddleware(['auth', 'verified']);
             Route::post('/favorite', [FavoriteDoramaController::class, 'store']);
             Route::delete('/favorite/{id}', [FavoriteDoramaController::class, 'destroy']);
         });
@@ -80,7 +93,6 @@ Route::domain(env('APP_URL'))->group(function () {
 
     Route::prefix('favorites')->name('favorites.')->group(function () {
         Route::get('/', [FavoriteController::class, 'index']);
-        Route::get('/{id}', [FavoriteController::class, 'show']);
     });
 
     // Folders

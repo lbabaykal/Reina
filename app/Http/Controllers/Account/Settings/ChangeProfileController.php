@@ -17,7 +17,7 @@ class ChangeProfileController extends Controller
         $user = $request->user();
         $user->name = $validated['name'];
 
-        if (request()->has('avatar')) {
+        if ($request->has('avatar')) {
             $user->avatar = new AvatarService()->saveAvatar() ?? $user->avatar;
         }
 

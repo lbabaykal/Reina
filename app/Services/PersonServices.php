@@ -61,7 +61,7 @@ class PersonServices
             ->select(['id'])
             ->findOrFail($id);
 
-        return cache()->store(CacheEnum::DIFFERENT_STORE->value)
+        return cache()->store(CacheEnum::ANIMES_STORE->value)
             ->flexible(CacheEnum::ANIME_PERSONS->value.$id, [1200, 1800], function () use ($anime) {
                 return $anime->persons()
                     ->with([
@@ -78,7 +78,7 @@ class PersonServices
             ->select(['id'])
             ->findOrFail($id);
 
-        return cache()->store(CacheEnum::DIFFERENT_STORE->value)
+        return cache()->store(CacheEnum::DORAMAS_STORE->value)
             ->flexible(CacheEnum::DORAMAS_PERSONS->value.$id, [1200, 1800], function () use ($dorama) {
                 return $dorama->persons()
                     ->with([
